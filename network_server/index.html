@@ -1,0 +1,6 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>联网拧紧 · 数据中心</title><link rel="stylesheet" href="/style.css"></head><body>
+<header><small>ESP32 · Wi-Fi · ROUTER</small><h1>联网拧紧数据中心</h1><p>只读观测 · 所有网络运动控制锁定</p></header>
+<main><section><label>API 密钥 <input id="token" type="password" autocomplete="off" placeholder="仅保存在当前页面内存"></label><button id="connect">查看数据</button><button id="export">导出当前页 CSV</button><p id="message">等待连接。这里不会启动电机。</p></section>
+<section class="metrics"><article><span>已落库观测</span><strong id="samples">—</strong></article><article><span>作业结果</span><strong id="results">—</strong></article><article><span>网络控制权限</span><strong>锁定</strong></article></section>
+<section><h2>设备最近接收记录</h2><p>回补数据不等于实时在线；母线为未验收估值，Iq 电流不等于扭矩。</p><div id="devices"></div></section>
+<section><h2>观测与作业结果</h2><label>类型 <select id="kind"><option value="">全部</option><option value="1">作业结果</option><option value="0">遥测</option></select></label><button id="next">下一页</button><button id="reset">第一页</button><div class="scroll"><table><thead><tr><th>ID</th><th>服务器接收时间</th><th>设备</th><th>会话 / 序号</th><th>作业 / 周期</th><th>阶段 / 结果</th><th>角度° / 转速rpm</th><th>Iq mA</th><th>母线估值V / 质量</th></tr></thead><tbody id="rows"></tbody></table></div></section></main><script src="/app.js"></script></body></html>

@@ -1,0 +1,12 @@
+[Unit]
+Description=Configure LubanCat can0 at 500 kbit/s for read-only HMI
+BindsTo=sys-subsystem-net-devices-can0.device
+After=sys-subsystem-net-devices-can0.device
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/libexec/lubancat-can0-setup.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

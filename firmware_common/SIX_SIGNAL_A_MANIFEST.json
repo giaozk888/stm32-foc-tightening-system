@@ -1,0 +1,20 @@
+{
+  "profile": "SD_LOW_SIX_SIGNALS",
+  "image": "foc2_app_a/build/SixSignalQualification20261013/foc2.bin",
+  "slot": "A",
+  "bytes": 149828,
+  "sha256": "8769374cec2038667aa505bbfbd909b5ddb2010d95dccbbb2294a498aad1fe45",
+  "bridge_compiled": false,
+  "motor_qualified": false,
+  "pwm_hz": 20000,
+  "reference_duty_percent": 50,
+  "capture_pairs": 3600,
+  "independent_guard_ms": 190,
+  "logic_channels": ["UH_PC0", "UL_PB13", "VH_PC1", "VL_PB0", "WH_PC2", "WL_PB1", "SD_PC6"],
+  "build_flags": ["ZERO_RETEST_BOOT", "ZERO_MEDIAN_DIAGNOSTIC", "SWITCH_FEEDBACK_DIAGNOSTIC", "SWITCH_SIGNAL_ONLY_DIAGNOSTIC", "UART_FIRMWARE_TRANSFER"],
+  "limitations": [
+    "Signal-only standalone fixture, not the B457 FreeRTOS FOC guardian",
+    "Four-point trend is observer-only; it does not authorize bridge operation",
+    "Logic signals do not prove MOSFET gate deadtime or hardware overcurrent response"
+  ]
+}

@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.22)
+project(tighten_synthetic_host LANGUAGES CXX)
+enable_testing()
+add_executable(tighten_synthetic_test test.cpp ../../firmware_common/tighten_synthetic_bench.cpp)
+target_include_directories(tighten_synthetic_test PRIVATE ../../firmware_common)
+target_compile_features(tighten_synthetic_test PRIVATE cxx_std_17)
+target_compile_options(tighten_synthetic_test PRIVATE -Wall -Wextra -Werror -pedantic -UNDEBUG)
+add_test(NAME synthetic_fixture_contract COMMAND tighten_synthetic_test)

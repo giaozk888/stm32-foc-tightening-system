@@ -1,0 +1,10 @@
+[Unit]
+Description=Renew the short-lived tightening IP certificate
+Wants=network-online.target
+After=network-online.target nginx.service
+
+[Service]
+Type=oneshot
+ExecStart=/snap/bin/certbot renew --quiet --cert-name tightening-public-ip
+TimeoutStartSec=1h
+UMask=0077

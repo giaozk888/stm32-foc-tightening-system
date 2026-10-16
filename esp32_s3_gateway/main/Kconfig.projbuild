@@ -1,0 +1,63 @@
+menu "STM32 Router UART link"
+
+    config STM32_LINK_TX_GPIO
+        int "ESP32 UART1 TX GPIO (to STM32 RX)"
+        range 0 48
+        default 17
+        help
+            Software default only. Verify your exact ESP32-S3 board pinout
+            before connecting any wire.
+
+    config STM32_LINK_RX_GPIO
+        int "ESP32 UART1 RX GPIO (from STM32 TX)"
+        range 0 48
+        default 18
+        help
+            Software default only. Verify your exact ESP32-S3 board pinout
+            before connecting any wire.
+
+    config STM32_LINK_BAUD
+        int "STM32 link baud rate"
+        range 9600 2000000
+        default 115200
+
+endmenu
+
+menu "Read-only network gateway"
+    config GATEWAY_ROUTER_ENABLE
+        bool "Enable read-only R1 Router over trusted-LAN TCP"
+        default n
+        help
+            Numeric PING/STATUS and discovery; bounded read-only RPC requires
+            a second explicit flag. No motor, parameter or firmware writes.
+            Keep this port off the public Internet.
+
+    config GATEWAY_ROUTER_PORT
+        # The RPC flag is an independent opt-in; existing Router builds stay
+        # discovery/numeric-diagnostic only.
+        int "Read-only Router TCP port (one upstream peer)"
+        depends on GATEWAY_ROUTER_ENABLE
+        range 1024 65535
+        default 21000
+
+    config GATEWAY_ROUTER_RPC_ENABLE
+        bool "Forward bounded read-only Pigweed unary RPC to STM32 node 1"
+        depends on GATEWAY_ROUTER_ENABLE
+        default n
+        help
+            Ping/GetStatus/GetParams/GetDiagnostics only. No Transfer,
+            motion, firmware writes, or authentication. Trusted LAN only.
+
+    config GATEWAY_MODBUS_PORT
+        int "Modbus TCP observation port (unit 1, FC04 only)"
+        range 1 65535
+        default 502
+    config GATEWAY_ROUTER_TRANSFER_ENABLE
+        bool "Forward bounded binary Transfer fragments (trusted LAN only)"
+        depends on GATEWAY_ROUTER_RPC_ENABLE
+        default n
+        help
+            R1 type 9, maximum 1024 bytes per binary packet. Does not execute
+            bytes or open firmware writes. STM32 permits Read/history and
+            encoder snapshots only. CRC is not authentication.
+endmenu

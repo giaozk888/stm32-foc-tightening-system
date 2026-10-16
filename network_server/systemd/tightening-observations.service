@@ -1,0 +1,21 @@
+[Unit]
+Description=Read-only tightening observation server (no motor commands)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=cat
+WorkingDirectory=/home/cat/tightening_network
+EnvironmentFile=/home/cat/tightening_network/server.env
+ExecStart=/usr/bin/python3 -m network_server.server --bind 0.0.0.0 --port 8088 --allow-lan-http --db /home/cat/tightening_network/network_data/observations.sqlite3
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/home/cat/tightening_network/network_data
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

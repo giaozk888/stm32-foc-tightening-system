@@ -1,0 +1,28 @@
+[Unit]
+Description=LubanCat read-only tightening HMI on MIPI display
+Requires=lubancat-can0.service
+After=lubancat-can0.service systemd-user-sessions.service systemd-udev-settle.service
+Wants=systemd-udev-settle.service
+Conflicts=lightdm.service lubanmao-mipi-camera-eglfs.service lubanmao-mipi-camera.service
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/cat/lubancat_hmi
+RuntimeDirectory=lubancat-hmi
+RuntimeDirectoryMode=0700
+Environment=QT_QPA_PLATFORM=eglfs
+Environment=QT_QPA_EGLFS_INTEGRATION=eglfs_kms
+Environment=QT_QPA_EGLFS_KMS_ATOMIC=1
+Environment=QT_QPA_EGLFS_KMS_CONFIG=/home/cat/lubanmao-cpp-rknn/eglfs_kms_overlay.json
+Environment=QT_QPA_EVDEV_TOUCHSCREEN_PARAMETERS=/dev/input/event2
+Environment=XDG_RUNTIME_DIR=/run/lubancat-hmi
+ExecStartPre=/bin/sleep 8
+ExecStart=/usr/bin/openvt -f -c 1 -s -w -- /home/cat/lubancat_hmi/build_tracker/lubancat_hmi
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

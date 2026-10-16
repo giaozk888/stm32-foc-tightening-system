@@ -1,0 +1,22 @@
+{
+  "profile": "DISCONNECTED_50MS",
+  "image": "foc2_app_b/build/FilteredBridge20261013/foc2.bin",
+  "slot": "B",
+  "bytes": 152420,
+  "sha256": "eb13779af465650dc7a82ac99b0a494e1e0796bb783a2e76b5b10020d4779ca9",
+  "motor_qualified": false,
+  "bridge_test_pairs": 1000,
+  "deadline_us": 50000,
+  "periodic_guard_us": 25,
+  "raw_policy": "12-bit validity and 75us maximum interpair gap, not amplitude trip",
+  "filtered_policy": "same four-point selector, reconstructed W, 4A two-of-three, pending cutoff fails",
+  "repair_budget": {"per_32": 6, "consecutive": 4},
+  "waveform_evidence": "USER_ATTESTED, not automatically measured",
+  "hardware_overcurrent_trip_timing_verified": false,
+  "limitations": [
+    "Motor U/V/W power leads must be disconnected; fixed identical 50% three-phase PWM, no PI or FOC",
+    "Guardian software cutoff is not an external certified cutoff; IRQ latency is not electrical gate timing",
+    "Median calibration passing does not qualify real motor current precision",
+    "Original normal-control and hard-off FOC profiles keep their protections"
+  ]
+}

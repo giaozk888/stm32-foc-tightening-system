@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.22)
+project(can_fd_host LANGUAGES C CXX)
+enable_testing()
+add_executable(can_fd_wire_test can_fd_wire_test.cpp ../../firmware_common/can_fd_probe.c)
+target_include_directories(can_fd_wire_test PRIVATE ../../firmware_common)
+target_compile_options(can_fd_wire_test PRIVATE -Wall -Wextra -Werror -pedantic)
+add_test(NAME can_fd_wire_test COMMAND can_fd_wire_test)

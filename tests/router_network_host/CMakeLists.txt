@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.22)
+project(router_network_host C)
+enable_testing()
+add_executable(router_wire_probe wire_probe.c ../../firmware_common/router_network.c)
+target_include_directories(router_wire_probe PRIVATE ../../firmware_common)
+target_compile_features(router_wire_probe PRIVATE c_std_11)
+target_compile_options(router_wire_probe PRIVATE -Wall -Wextra -Werror -pedantic -UNDEBUG)
+foreach(slot a b)
+    add_executable(router_network_${slot}_test contract_test.c
+        ../../firmware_common/router_network.c ../../foc2_app_${slot}/Core/Src/router.c)
+    target_include_directories(router_network_${slot}_test PRIVATE
+        ../uart_zero_copy_host/mocks ../../firmware_common ../../foc2_app_${slot}/Core/Inc)
+    target_compile_definitions(router_network_${slot}_test PRIVATE ROUTER_READ_ONLY_NETWORK=1)
+    target_compile_features(router_network_${slot}_test PRIVATE c_std_11)
+    target_compile_options(router_network_${slot}_test PRIVATE -Wall -Wextra -Werror -pedantic -UNDEBUG)
+    add_test(NAME router_network_${slot}_real_core COMMAND router_network_${slot}_test)
+endforeach()

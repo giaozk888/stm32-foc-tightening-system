@@ -1,0 +1,95 @@
+# Provisioning and data are private; do not commit Wi-Fi/API credentials.
+esp32_s3_gateway/local_config/
+network_data/
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+__pycache__/
+# Full Flash/NVS backups and task SSH private keys can contain secrets.
+/safety_backups/
+/container_artifacts/
+/refactor_backups/
+
+# Build outputs and generated caches (all boards and host tools).
+build*/
+*_build/
+Debug/
+Release/
+out/
+.cache/
+.pytest_cache/
+node_modules/
+.venv/
+venv/
+*.py[cod]
+*.o
+*.obj
+*.a
+*.lib
+*.exe
+*.dll
+*.pdb
+*.ilk
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+*.su
+*.stackdump
+compile_commands.json
+CMakeCache.txt
+CMakeFiles/
+sdkconfig
+sdkconfig.old
+
+# Private configuration, authentication material, backups and runtime data.
+/tmp/
+/eim_config.toml
+local_config/
+.env
+.env.*
+!.env.example
+*.env
+!*.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+authorized_keys*
+known_hosts*
+.ssh/
+.aws/
+*backup*/
+*backups*/
+*.sqlite*
+*.db
+*.log
+*.jsonl
+*.sr
+*.pvs
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.tgz
+/Session 1
+/foc2 - 副本/
+/network_server/test_artifacts/
+/lubancat_hmi/test-exports/
+/lubancat_hmi/evidence*/
+/lubancat_hmi/*.png
+
+# Personal interview/vault copies are separate from the source project.
+/嵌入式实习面试笔记/
+/obsidian_updates_20261004/
+
+# Machine-local editor and IDE state.
+.metadata/
+.idea/
+*.code-workspace
+*.launch
+*.DS_Store
+Thumbs.db

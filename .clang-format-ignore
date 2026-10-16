@@ -1,0 +1,9 @@
+third_party/**
+**/Drivers/**
+**/Middlewares/**
+**/build*/**
+**/out/**
+**/generated/**
+safety_backups/**
+refactor_backups/**
+esp32_s3_gateway/local_config/**

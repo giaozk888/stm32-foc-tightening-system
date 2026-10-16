@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="panel-token" content="__PANEL_TOKEN__">
+  <title>STM32G474 上位机</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">LOCAL CONTROL DESK / COM5</p>
+        <h1>STM32G474 <span>上位机</span></h1>
+        <p class="subtitle">运行状态 · 双槽固件 · ESP32 链路 · 实时数据</p>
+      </div>
+      <div class="head-status">
+        <span id="conn-dot" class="dot"></span>
+        <strong id="connection">未连接</strong>
+        <small id="last-rx">等待设备数据</small>
+      </div>
+    </header>
+
+    <section class="toolbar" aria-label="连接与诊断">
+      <div class="port-group">
+        <label for="port">STM32 串口</label>
+        <select id="port"><option value="COM5">COM5</option></select>
+        <button id="scan" class="button ghost">刷新端口</button>
+      </div>
+      <div class="actions">
+        <button id="connect" class="button primary">连接</button>
+        <button id="refresh" class="button ghost" disabled>立即刷新</button>
+        <button id="ping" class="button ghost" disabled>ESP PING</button>
+        <a id="download" class="button ghost" href="/api/log.csv" download="stm32_log.csv">导出 CSV</a>
+      </div>
+    </section>
+
+    <p class="safety-note"><span>只读模式</span> 本界面不会发送 START、STOP、参数写入或固件升级命令；ESP PING 仅测试通信。母线值为 ADC 估算，VTEMP 显示引脚电压而非温度。</p>
+    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+    <section class="section-head">
+      <div><p class="eyebrow">SYSTEM OVERVIEW</p><h2>设备概览</h2></div>
+      <span class="refresh-hint">连接后每 5 秒自动刷新</span>
+    </section>
+    <section class="metrics" aria-label="设备状态">
+      <article class="metric"><span>运行模式</span><strong id="mode">—</strong><small>FOC / 拧紧状态</small></article>
+      <article class="metric"><span>故障 FLT</span><strong id="fault">—</strong><small>0 表示当前未报故障</small></article>
+      <article class="metric"><span>FOC 频率</span><strong id="foc">—</strong><small>次 / 秒</small></article>
+      <article class="metric"><span>位置</span><strong id="position">—</strong><small>机械角度 · deg</small></article>
+      <article class="metric"><span>实测 Iq</span><strong id="iq">—</strong><small>q 轴电流 · mA</small></article>
+      <article class="metric"><span>母线估算</span><strong id="vbus">—</strong><small>VBUS ADC · V</small></article>
+      <article class="metric"><span>当前 / 确认槽</span><strong id="slots">—</strong><small id="pending">待试槽 —</small></article>
+      <article class="metric"><span>ESP32 节点</span><strong id="esp">—</strong><small id="ping-status">未测试 PING</small></article>
+    </section>
+
+    <section class="section-head trend-head">
+      <div><p class="eyebrow">LIVE SIGNALS</p><h2>实时趋势</h2></div>
+      <span class="refresh-hint">最近 120 个遥测样本；非高频示波器</span>
+    </section>
+    <section class="charts">
+      <article class="chart-card"><div class="chart-title"><span>位置 POS</span><strong id="position-now">— deg</strong></div><canvas id="position-chart" aria-label="位置曲线"></canvas></article>
+      <article class="chart-card"><div class="chart-title"><span>实测 Iq</span><strong id="iq-now">— mA</strong></div><canvas id="iq-chart" aria-label="Iq 电流曲线"></canvas></article>
+    </section>
+
+    <section class="section-head log-head">
+      <div><p class="eyebrow">SERIAL FEED</p><h2>设备日志</h2></div>
+      <div class="log-meta"><span>发现帧收 / 发：<b id="discovery">— / —</b></span><span>Router 解析错误：<b id="parse-errors">—</b></span></div>
+    </section>
+    <section class="log-panel"><div id="log" class="log" aria-live="off"><p class="log-empty">连接 COM5 后显示串口输出。</p></div></section>
+    <footer>本机地址 127.0.0.1 · 数据仅在本机浏览器与 Python 串口进程之间传输 · 不等于安全认证</footer>
+  </main>
+</body>
+</html>
