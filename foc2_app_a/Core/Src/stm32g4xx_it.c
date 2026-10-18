@@ -20,6 +20,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "foc_hot_path.h"
+#include "foc_fast_path_profile.h"
+#include "foc_preempt_probe.h"
 #if defined(FOC_ADC_WINDOW)
 #include "foc_adc_timing_stm32.h"
 #endif
@@ -213,6 +215,17 @@ if (g_rtos_started != 0U)
   */
 FOC_RAM_PATH void ADC1_2_IRQHandler(void)
 {
+#if defined(FOC_FAST_CURRENT_REJECT)
+#if defined(FOC_PREEMPT_COMMIT_PROBE)
+  uint32_t current_profile_start=FocPreempt_Begin();
+#else
+  uint32_t current_profile_start=DWT->CYCCNT;
+#endif
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+  ProtectedLoop_PwmEntry(); /* First control action, before ADC read/math. */
+#endif
+  FocProfile_Begin();
+#endif
   /* USER CODE BEGIN ADC1_2_IRQn 0 */
 
   /* USER CODE END ADC1_2_IRQn 0 */
@@ -222,6 +235,9 @@ FOC_RAM_PATH void ADC1_2_IRQHandler(void)
 #if defined(FOC_PROTECTED_CLOSED_LOOP)
   ProtectedLoop_AdcIrq();
   FocAdcTiming_IrqExit(timing_start);
+#if defined(FOC_FAST_CURRENT_REJECT)
+  ProtectedLoop_AdcProfileEnd(current_profile_start);
+#endif
 #else
   HAL_ADC_IRQHandler(&hadc1);
 #if defined(FOC_ADC_WINDOW)

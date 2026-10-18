@@ -31,7 +31,9 @@ static inline FocOcConfirmResult BridgeFilter_Push(
 {
     if (s->protection.result==FOC_OC_TRIPPED) return s->protection.result;
     if (s->pairs>=BRIDGE_FILTER_PAIRS || now_us>=BRIDGE_FILTER_MAX_US)
-        return FocFp_Trip(&s->protection,FOC_FP_TIMEOUT,0U);
+        return FocFp_TripTimeout(&s->protection,
+            s->pairs>=BRIDGE_FILTER_PAIRS ? FOC_TO_BRIDGE_PAIR_BUDGET : FOC_TO_BRIDGE_WINDOW,
+            now_us,0U,BRIDGE_FILTER_MAX_US,0U);
     /* Catch a missed 50us pair, not just a stopped stream. */
     if (s->protection.seq_valid &&
         (uint32_t)(now_us-s->protection.last_us)>75U)

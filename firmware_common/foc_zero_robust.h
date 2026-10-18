@@ -1,8 +1,12 @@
 #ifndef FOC_ZERO_ROBUST_H
 #define FOC_ZERO_ROBUST_H
 #include "foc_current_zero.h"
-/* Independent zero estimator. Five-sample block
- * medians, eight 500-physical-pair segments; no samples/time are compressed.
+#if defined(FOC_ZERO_VALID_ADMISSION)
+#include "foc_zero_valid_admission.h"
+#endif
+/* Independent zero estimator. Five-sample block medians. Historical profiles
+ * use eight 500-physical-pair segments. FOC_ZERO_VALID_ADMISSION instead uses
+ * eight 500-accepted-pair segments and bounded physical collection/rejection.
  * All segment means must agree within the EXISTING five-count drift limit.
  * No per-segment outlier quota; segment counters are diagnostic only.
  * FOC_ZERO_TOTAL_BUDGET_OFF is the historical hard-off experiment.
@@ -30,12 +34,20 @@ enum { FOC_ROBUST_BAD_ADC=1U, FOC_ROBUST_BAD_NOMINAL=2U,
        /* Bit 16 is reserved for historical segment-budget receipts. */
        FOC_ROBUST_BAD_INLIERS=32U,
        FOC_ROBUST_CENTER_SPAN=64U, FOC_ROBUST_SEGMENT_DRIFT=128U };
+#if defined(FOC_ZERO_VALID_ADMISSION)
+enum { FOC_ZERO_ADMIT_REJECT_LIMIT=256U, FOC_ZERO_ADMIT_CONSEC_LIMIT=512U,
+       FOC_ZERO_ADMIT_TOTAL_LIMIT=1024U };
+#endif
 typedef struct {
     uint16_t u[5],v[5];
     uint16_t flags;
     uint8_t fill,segments;
-    uint32_t outliers,segment_outliers,segment_u,segment_v;
+    union { uint32_t outliers; uint32_t reject_count; };
+    uint32_t segment_outliers,segment_u,segment_v;
     uint32_t segment_min_u,segment_max_u,segment_min_v,segment_max_v;
+#if defined(FOC_ZERO_VALID_ADMISSION)
+    uint32_t total_count,consecutive_reject,max_consecutive_reject;
+#endif
 } FocZeroRobust;
 void FocZeroRobust_Begin(FocZeroRobust *s);
 void FocZeroRobust_Push(FocZeroRobust *s,FocZeroCal *c,uint16_t u,uint16_t v);

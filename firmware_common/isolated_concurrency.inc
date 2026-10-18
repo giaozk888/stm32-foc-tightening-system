@@ -31,6 +31,14 @@ static void FocFeedbackBinding_Disarm(void);
 
 static void IsolatedZero_Fail(FocZeroReason reason)
 {
+#if defined(FOC_TIMEOUT_DIAGNOSTICS)
+    if (reason==FOC_ZERO_TIMEOUT) {
+        DRIVER_SD_GPIO_Port->BSRR=(uint32_t)DRIVER_SD_Pin<<16U;
+        TIM1->BDTR &= ~TIM_BDTR_MOE; TIM1->CCER=0U;
+        FaultDiag_Capture(FOC_DIAG_STARTUP,7U,FOC_TO_STARTUP_ZERO,
+            HAL_GetTick()-isolated_start_ms,FOC_ZERO_TIMEOUT_MS);
+    }
+#endif
 #if defined(FOC_FEEDBACK_SAFETY_BINDING)
     FocFeedbackBinding_EmergencyOff(FOC_FP_ZERO_INVALID);
 #endif

@@ -2,6 +2,8 @@
 #define FOC_FEEDBACK_SAFETY_CANDIDATE_H
 #include "foc_filtered_protection_candidate.h"
 #include "foc_current_median.h"
+#include "foc_current_fast_reject.h"
+#include "foc_current_feedback_polarity.h"
 #if defined(FOC_REPAIR_WINDOW_TRACE)
 #include "foc_repair_trace.h"
 #endif
@@ -31,13 +33,17 @@ typedef struct {
     uint16_t u, v;
     uint8_t repaired_mask, ready;
 } FocFeedbackFrame;
-typedef struct {
+typedef struct FocFeedbackSafety {
     FocFeedbackSafetyConfig cfg;
     FocCurrentMedian filter;
     FocFilteredProtection protection;
     uint32_t seq[4], us[4];
     float angle[4];
     FocFeedbackFrame frame;
+#if defined(FOC_FAST_CURRENT_REJECT)
+    FocCurrentValidation validation;
+    uint16_t raw_trip_counts;
+#endif
 #if defined(FOC_REPAIR_WINDOW_TRACE)
     FocRepairTrace trace;
 #endif
@@ -49,11 +55,21 @@ static inline FocOcConfirmResult FocFeedbackSafety_Begin(
 {
     *s = (FocFeedbackSafety){0};
     s->cfg = cfg;
-    FocCurrentMedian_Begin(&s->filter);
+#if !defined(FOC_FAST_CURRENT_REJECT)
+    FocCurrentMedian_Begin(&s->filter); /* Historical experiment only. */
+#endif
     FocOcConfirmResult result = FocFp_Begin(&s->protection, cfg.protection, now_us);
     if (cfg.zero_u > 4095U || cfg.zero_v > 4095U ||
         !FocOcConfirm_Finite(cfg.count_to_A) || !(cfg.count_to_A > 0.0f))
         return FocFp_Trip(&s->protection, FOC_FP_CONFIG, 0U);
+#if defined(FOC_FAST_CURRENT_REJECT)
+    float counts = cfg.protection.soft_A / cfg.count_to_A;
+    if (!FocOcConfirm_Finite(counts) || counts < 1.0f || counts > 8190.0f)
+        return FocFp_Trip(&s->protection, FOC_FP_CONFIG, 0U);
+    /* floor: abs(raw current) > this integer means > configured trip amps. */
+    s->raw_trip_counts = (uint16_t)counts;
+    FocCurrentValidation_Begin(&s->validation, cfg.zero_u, cfg.zero_v);
+#endif
     return result;
 }
 
@@ -61,7 +77,15 @@ static inline FocOcConfirmResult FocFeedbackSafety_Begin(
  * stops. The invariant argument must come from the caller's output-register
  * check (hard-OFF for diagnostic callers; the separately bounded session for
  * the motor caller). It is not independent hardware shutdown verification. */
-FOC_HOT_INLINE FocOcConfirmResult FocFeedbackSafety_Poll(
+#if FOC_CURRENT_FAULT_TRACE_ENABLE
+/* Trace-build size trade-off only: share the unchanged guard wrapper between
+ * Push/Take/health callers rather than replicate it beside diagnostic exits.
+ * Production keeps its original always-inline/O2 path. Re-measure MCU timing. */
+static FOC_RAM_PATH __attribute__((noinline,unused,optimize("Os")))
+#else
+FOC_HOT_INLINE
+#endif
+FocOcConfirmResult FocFeedbackSafety_Poll(
     FocFeedbackSafety *s, uint32_t now_us, uint32_t flags, uint8_t hard_off_verified)
 {
     if (hard_off_verified != 1U) flags |= FOC_FB_OUTPUT_LOCK_LOST;
@@ -73,15 +97,61 @@ FOC_HOT_INLINE FocOcConfirmResult FocFeedbackSafety_Poll(
 /* Feed each PHYSICAL pair once. Input angle is the software angle estimate
  * associated with that callback, not proof of the encoder hardware timestamp.
  * No caller-supplied filtered sample can bypass the actual selector or its
- * repair accounting. Raw amplitude is NOT an overcurrent decision here. */
+ * repair accounting. FAST_CURRENT_REJECT instead splits raw safety from
+ * feedback validity; historical filtered-only safety is not used there. */
 FOC_HOT_INLINE FocOcConfirmResult FocFeedbackSafety_Push(
     FocFeedbackSafety *s, uint32_t seq, uint32_t now_us,
     uint16_t raw_u, uint16_t raw_v, float angle,
     uint32_t flags, uint8_t hard_off_verified)
 {
     s->frame.ready = 0U;
+#if FOC_CURRENT_FAULT_TRACE_ENABLE
+    FocCurrentTrace_Begin(seq,now_us,raw_u,raw_v,s,angle);
+    FocOcConfirmResult trace_result;
+#endif
     if (FocFeedbackSafety_Poll(s, now_us, flags, hard_off_verified) == FOC_OC_TRIPPED)
+    {
+#if FOC_CURRENT_FAULT_TRACE_ENABLE
+        trace_result=s->protection.result;
+        goto current_trace_protection_done; /* Share only the diagnostic exit. */
+#else
+        FOC_TRACE_CALL(FocCurrentTrace_Protection(&s->protection));
         return s->protection.result;
+#endif
+    }
+#if defined(FOC_FAST_CURRENT_REJECT)
+    /* Raw safety sees EVERY physical pair, before any controller rejection. */
+    s->validation.last_path=FOC_CURRENT_PATH_NONE;
+    FocOcConfirmResult result = FocFp_PushRawSafety(&s->protection,seq,now_us,
+        raw_u,raw_v,s->cfg.zero_u,s->cfg.zero_v,s->raw_trip_counts,flags);
+#if FOC_CURRENT_FAULT_TRACE_ENABLE
+    trace_result=result;
+current_trace_protection_done:
+    result=trace_result;
+#endif
+    FOC_TRACE_CALL(FocCurrentTrace_Protection(&s->protection));
+    if (result == FOC_OC_TRIPPED) return result;
+    int valid = FocCurrentValidation_Push(&s->validation,raw_u,raw_v);
+    FOC_TRACE_CALL(FocCurrentTrace_Discriminator(valid,s->validation.last_path));
+    if (valid < 0) {
+        FocOcConfirmResult fault=FocFp_Trip(&s->protection,FOC_FP_CURRENT_INVALID,0U);
+        FOC_TRACE_CALL(FocCurrentTrace_Protection(&s->protection));
+        return fault;
+    }
+    if (!valid) return result; /* No float conversion, repair, or fake frame. */
+    if (!FocOcConfirm_Finite(angle)) {
+        FocOcConfirmResult fault=FocFp_Trip(&s->protection,FOC_FP_FEEDBACK_INVALID,0U);
+        FOC_TRACE_CALL(FocCurrentTrace_Protection(&s->protection));
+        return fault;
+    }
+    float iu = FocCurrentFeedback_FromRaw(raw_u,s->cfg.zero_u,s->cfg.count_to_A);
+    float iv = FocCurrentFeedback_FromRaw(raw_v,s->cfg.zero_v,s->cfg.count_to_A);
+    s->frame = (FocFeedbackFrame){ .source_seq=seq,.source_us=now_us,
+        .measurement_angle=angle,.actuation_angle=angle,
+        .iu_A=iu,.iv_A=iv,.iw_A=-(iu+iv),.u=raw_u,.v=raw_v,.ready=1U };
+    FocFp_Increment(&s->protection.feedback_pairs);
+    return result;
+#else /* Historical research selector: absent from the new realtime path. */
     if (raw_u > 4095U || raw_v > 4095U)
         return FocFp_Trip(&s->protection, FOC_FP_RAW_INVALID, 0U);
     if (!FocOcConfirm_Finite(angle))
@@ -124,6 +194,7 @@ FOC_HOT_INLINE FocOcConfirmResult FocFeedbackSafety_Push(
         };
     }
     return result;
+#endif
 }
 
 /* At most one consumption per Push. Recheck freshness and health at consumption,
@@ -136,7 +207,11 @@ FOC_HOT_INLINE int FocFeedbackSafety_Take(
 {
     *out = (FocFeedbackFrame){0};
     if (FocFeedbackSafety_Poll(s, now_us, flags, hard_off_verified) == FOC_OC_TRIPPED ||
-        !s->frame.ready) return 0;
+        !s->frame.ready) {
+        if (s->protection.result==FOC_OC_TRIPPED)
+            FOC_TRACE_CALL(FocCurrentTrace_Protection(&s->protection));
+        return 0;
+    }
     *out = s->frame;
     s->frame.ready = 0U;
     return 1;

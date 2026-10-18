@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "foc_hot_path.h"
+#include "foc_fast_path_profile.h"
 #define ADC_IT_JEOC (1U<<5)
 #define ADC_IT_JEOS (1U<<6)
 #define ADC_FLAG_JEOC ADC_IT_JEOC
@@ -23,7 +24,24 @@ static uint32_t pair_misses,recorded,power,fault,event_during_math;
 static uint8_t adc_fault;
 static uint8_t pair_returns_zero;
 static uint16_t iu_inj_raw,iv_inj_raw;
+#if defined(FOC_FAST_CURRENT_REJECT)
+#include "foc_feedback_safety_candidate.h"
+#include "foc_guard_integer.h"
+static FocFeedbackFrame cl_frame;
+static FocFeedbackSafety fast_safety;
+static uint8_t cl_current_path,cl_armed=1U;
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+static uint32_t foc_pending_held;
+#endif
+static float encoder_theta_e_pred,encoder_omega_e_rad_s;
+#define FOC_TS_S 0.00005f
+#define TWO_PI_F 6.28318530718f
+#define CL_BAD_ENCODER 32U
+static unsigned pwm_writes;
+static float command_d,command_q;
+#else
 static struct { uint16_t u,v; } cl_frame;
+#endif
 #if defined(FOC_LATEST_ORIGINAL_FSM)
 enum { CL_READY,CL_RUNNING,CL_FAULT };
 static struct { unsigned state; } cl_session;
@@ -64,7 +82,17 @@ static void clear(ADC_HandleTypeDef *h,uint32_t flags)
 { assert(mask && !math_calls); ++acks; h->Instance->ISR&=~flags; }
 #define __HAL_ADC_CLEAR_FLAG(h,flags) clear((h),(flags))
 #define __HAL_ADC_DISABLE_IT(h,bits) ((h)->Instance->IER&=~(bits))
-static void ProtectedLoop_EmergencyOff(uint32_t flags) { power=0U; fault|=flags; }
+static void ProtectedLoop_EmergencyOff(uint32_t flags) {
+    power=0U; fault|=flags;
+#if defined(FOC_FAST_CURRENT_REJECT)
+    cl_armed=0U;
+#endif
+}
+#if defined(FOC_FAST_CURRENT_REJECT)
+static void ProtectedLoop_AdvanceAngle(void) {
+    encoder_theta_e_pred+=encoder_omega_e_rad_s*FOC_TS_S;
+}
+#endif
 static void HAL_ADC_IRQHandler(ADC_HandleTypeDef *h)
 {
     assert(!power && fault && !(h->Instance->IER&(ADC_IT_JEOC|ADC_IT_JEOS)));
@@ -77,13 +105,26 @@ static void FocAdcTiming_RecordRaw(uint16_t u,uint16_t v)
 }
 static int ProtectedLoop_Pair(uint16_t u,uint16_t v)
 { assert(!mask && recorded==1U && injected_seq_count==1U); ++seq_calls;
+#if defined(FOC_FAST_CURRENT_REJECT)
+  FocOcConfirmResult r=FocFeedbackSafety_Push(&fast_safety,1U,123U,u,v,encoder_theta_e_pred,0U,1U);
+  cl_current_path=fast_safety.validation.last_path;
+  if (r==FOC_OC_TRIPPED) ProtectedLoop_EmergencyOff(CL_BAD_ADC);
+  return FocFeedbackSafety_Take(&fast_safety,123U,0U,1U,&cl_frame);
+#else
   cl_frame.u=u; cl_frame.v=v; return !pair_returns_zero; }
+#endif
+#if defined(FOC_FAST_CURRENT_REJECT)
+}
+#endif
 static void FOC_CurrentLoopStep(uint16_t u,uint16_t v,uint16_t raw_u,uint16_t raw_v)
 {
     assert(!mask && u==raw_u && v==raw_v && acks==2U); ++math_calls;
 #if defined(FOC_LATEST_ORIGINAL_FSM)
     /* Integration stub intentionally accumulates PI memory each step. */
     foc_int_d_V+=.125f; foc_int_q_V-=.125f;
+#endif
+#if defined(FOC_FAST_CURRENT_REJECT)
+    command_d+=.25f; command_q-=.25f; ++pwm_writes;
 #endif
 #if defined(FOC_FAST_MATH)
     DWT->CYCCNT+=170U;

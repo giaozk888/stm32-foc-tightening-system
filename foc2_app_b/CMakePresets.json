@@ -2,6 +2,95 @@
     "version": 3,
     "configurePresets": [
         {
+            "name": "SpeedBrakeTrackTrial",
+            "inherits": "VoltageX2Trial",
+            "cacheVariables": { "FOC_SPEED_BRAKE_TRACK": "ON" }
+        },
+        {
+            "name": "VoltageX2Trial",
+            "inherits": "SpeedBumplessTrial",
+            "cacheVariables": { "FOC_VOLTAGE_X2_TRIAL": "ON" }
+        },
+        {
+            "name": "SpeedBumplessTrial",
+            "inherits": "ZeroValidAdmissionTrial",
+            "cacheVariables": { "FOC_SPEED_BUMPLESS": "ON" }
+        },
+        {
+            "name": "ZeroValidAdmissionTrial",
+            "inherits": "SpeedStartupBrakeTrial",
+            "cacheVariables": { "FOC_ZERO_VALID_ADMISSION": "ON" }
+        },
+        {
+            "name": "SpeedStartupBrakeTrial",
+            "inherits": "LoadedFsmTrial",
+            "cacheVariables": { "FOC_SPEED_STARTUP_BRAKE": "ON" }
+        },
+        {
+            "name": "LoadedFsmTrial",
+            "inherits": "ProtectedPipelineClosedLoop",
+            "cacheVariables": { "FOC_LOADED_FSM_TRIAL": "ON" }
+        },
+        {
+            "name": "CurrentPolarityComputeOnly",
+            "inherits": "EncoderFocFirst",
+            "cacheVariables": {
+                "FOC_CURRENT_FEEDBACK_SIGN": "1",
+                "FOC_HEAVY_PROFILE_ENABLE": "OFF"
+            }
+        },
+        {
+            "name": "CurrentFaultTrace",
+            "inherits": "ProtectedPipelineClosedLoop",
+            "cacheVariables": { "FOC_CURRENT_FAULT_TRACE_ENABLE": "ON" }
+        },
+        {
+            "name": "ProtectedPipelineClosedLoop",
+            "inherits": "FastCurrentReject",
+            "cacheVariables": {
+                "FOC_CURRENT_FAULT_TRACE_ENABLE": "OFF",
+                "FOC_PWM_PIPELINE_CLOSED_LOOP": "ON",
+                "FOC_ONE_CYCLE_PWM_PIPELINE": "ON",
+                "FOC_PREEMPT_COMMIT_PROBE": "ON",
+                "AS5047P_DMA_FOC_FIRST": "ON",
+                "FOC_FAST_REJECT_COMPUTE_ONLY": "OFF",
+                "FOC_HEAVY_PROFILE_ENABLE": "OFF"
+            }
+        },
+        {
+            "name": "EncoderFocFirst",
+            "inherits": "OneCyclePwmPipeline",
+            "cacheVariables": { "AS5047P_DMA_FOC_FIRST": "ON" }
+        },
+        {
+            "name": "OneCyclePwmPipeline",
+            "inherits": "PreemptCommitProbe",
+            "cacheVariables": { "FOC_ONE_CYCLE_PWM_PIPELINE": "ON" }
+        },
+        {
+            "name": "PreemptCommitProbe",
+            "inherits": "FastCurrentRejectComputeOnly",
+            "cacheVariables": { "FOC_PREEMPT_COMMIT_PROBE": "ON" }
+        },
+        {
+            "name": "FastPathTiming",
+            "inherits": "FastCurrentRejectComputeOnly",
+            "cacheVariables": { "FOC_FAST_PATH_PROFILE": "ON" }
+        },
+        {
+            "name": "FastCurrentReject",
+            "inherits": "RcSamplingOptimizedCandidate",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "FOC_ENABLE_LEGACY_CURRENT_REPAIR": "OFF"
+            }
+        },
+        {
+            "name": "FastCurrentRejectComputeOnly",
+            "inherits": "FastCurrentReject",
+            "cacheVariables": { "FOC_FAST_REJECT_COMPUTE_ONLY": "ON" }
+        },
+        {
             "name": "RcDeferredShadow",
             "inherits": "RcBoundaryLite",
             "cacheVariables": { "FOC_RC_DEFERRED_SHADOW": "ON" }
@@ -257,6 +346,7 @@
             "inherits": "RouterTransferReadOnly",
             "cacheVariables": {
                 "FOC_PROTECTED_CLOSED_LOOP": "ON",
+                "FOC_ENABLE_LEGACY_CURRENT_REPAIR": "ON",
                 "FOC_ADC_WINDOW": "ON",
                 "FOC_ADC_SENSE_TOPOLOGY": "LOW_SIDE_UV",
                 "FOC_CURRENT_SPIKE_ONLY": "ON",
@@ -313,6 +403,21 @@
         }
     ],
     "buildPresets": [
+        { "name": "SpeedBrakeTrackTrial", "configurePreset": "SpeedBrakeTrackTrial" },
+        { "name": "VoltageX2Trial", "configurePreset": "VoltageX2Trial" },
+        { "name": "CurrentPolarityComputeOnly", "configurePreset": "CurrentPolarityComputeOnly" },
+        { "name": "CurrentFaultTrace", "configurePreset": "CurrentFaultTrace" },
+        { "name": "ProtectedPipelineClosedLoop", "configurePreset": "ProtectedPipelineClosedLoop" },
+        { "name": "LoadedFsmTrial", "configurePreset": "LoadedFsmTrial" },
+        { "name": "SpeedStartupBrakeTrial", "configurePreset": "SpeedStartupBrakeTrial" },
+        { "name": "ZeroValidAdmissionTrial", "configurePreset": "ZeroValidAdmissionTrial" },
+        { "name": "SpeedBumplessTrial", "configurePreset": "SpeedBumplessTrial" },
+        { "name": "EncoderFocFirst", "configurePreset": "EncoderFocFirst" },
+        { "name": "OneCyclePwmPipeline", "configurePreset": "OneCyclePwmPipeline" },
+        { "name": "PreemptCommitProbe", "configurePreset": "PreemptCommitProbe" },
+        { "name": "FastPathTiming", "configurePreset": "FastPathTiming" },
+        { "name": "FastCurrentReject", "configurePreset": "FastCurrentReject" },
+        { "name": "FastCurrentRejectComputeOnly", "configurePreset": "FastCurrentRejectComputeOnly" },
         { "name": "RcDeferredShadow", "configurePreset": "RcDeferredShadow" },
         { "name": "RcBoundaryLite", "configurePreset": "RcBoundaryLite" },
         { "name": "RcBoundaryAttribution", "configurePreset": "RcBoundaryAttribution" },

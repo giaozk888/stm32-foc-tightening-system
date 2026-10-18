@@ -17,7 +17,20 @@ enum { CL_CALIBRATING, CL_READY, CL_RUNNING, CL_DONE, CL_FAULT };
 enum { CL_BAD_ADC=4U, CL_BAD_ZERO=8U, CL_BAD_OUTPUT=16U, CL_BAD_ENCODER=32U,
        CL_CORE_FAULT=64U, CL_BAD_TIMER=128U, CL_COMPUTE_LATE=256U,
        CL_OUTER_STALE=512U, CL_OVERSPEED=1024U, CL_BAD_ADMISSION=2048U };
-enum { CL_MAX_US=400000U, CL_OUTER_DEADLINE_US=2000U, CL_SPEED_RPM=20U,
+/* The loaded-FSM trial keeps the same 20 rpm admission and all protection
+ * thresholds. Only its one-shot session lease covers the existing 8 s
+ * rundown + 2 s stop settle + 1.7 s current/hold sequence. */
+#if defined(FOC_LOADED_FSM_TRIAL)
+#if !defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+#error Loaded FSM trial requires the protected original-FSM pipeline
+#endif
+#define CL_LEASE_TEXT "12000000"
+enum { CL_MAX_US=12000000U };
+#else
+#define CL_LEASE_TEXT "400000"
+enum { CL_MAX_US=400000U };
+#endif
+enum { CL_OUTER_DEADLINE_US=2000U, CL_SPEED_RPM=20U,
        CL_OVERSPEED_RPM=60U, CL_REPAIR_WINDOW=6U, CL_REPAIR_STREAK=4U };
 /* One admission per boot; STOP consumes a queued request too. No reset/clear
  * function is exposed. Time arithmetic works across a 32-bit clock wrap. */
@@ -48,4 +61,16 @@ static inline int ClSession_Expired(const ClSession *s, uint32_t now)
 { return s->state==CL_RUNNING && (uint32_t)(now-s->start_us)>=CL_MAX_US; }
 void ProtectedLoop_EmergencyOff(uint32_t flags);
 void ProtectedLoop_AdcIrq(void);
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+void ProtectedLoop_PwmEntry(void);
+void ProtectedLoop_PwmInvalidate(void);
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+/* Commit transaction only: 0 denied, 1 gates OFF, 2 admitted RUNNING gates ON.
+ * This predicate never enables or restores an output. */
+unsigned ProtectedLoop_PwmCommitPermit(void);
+#endif
+#endif
+#if defined(FOC_FAST_CURRENT_REJECT)
+void ProtectedLoop_AdcProfileEnd(uint32_t start);
+#endif
 #endif

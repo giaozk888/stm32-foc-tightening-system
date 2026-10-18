@@ -36,6 +36,12 @@ set(CMAKE_C_FLAGS_DEBUG "-O0 -g3")
 set(CMAKE_C_FLAGS_RELEASE "-Os -g0")
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3")
 set(CMAKE_CXX_FLAGS_RELEASE "-Os -g0")
+if(FOC_PROTECTED_CLOSED_LOOP AND NOT FOC_ENABLE_LEGACY_CURRENT_REPAIR)
+    # New realtime candidate: optimized Release, strict floating-point semantics.
+    # Keep Debug and historical measured research presets unchanged.
+    set(CMAKE_C_FLAGS_RELEASE "-O2 -g0")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -g0")
+endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -fno-exceptions -fno-threadsafe-statics")
 

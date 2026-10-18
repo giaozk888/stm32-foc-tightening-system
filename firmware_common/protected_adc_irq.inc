@@ -3,12 +3,16 @@
  * the application, which can erase a new completion during lengthy FOC math.
  * Error/watchdog sources still go through HAL, only after power is locked off.
  * Included after FOC_CurrentLoopStep and the protected binding declarations. */
+#include "foc_current_fault_trace.h"
 FOC_HOT_PATH
 void ProtectedLoop_AdcIrq(void)
 {
+#if defined(FOC_FAST_CURRENT_REJECT)
+    cl_current_path=0U;
+#endif
     uint32_t protected_begin=AS5047P_DmaNowUs();
     uint32_t mask=__get_PRIMASK(); __disable_irq();
-#if defined(FOC_FAST_MATH)
+#if defined(FOC_FAST_MATH) && FOC_DETAIL_STATS
     uint32_t work_cycles=DWT->CYCCNT;
     uint32_t irq_body_start=FocIrqLoad_Read();
 #endif
@@ -45,13 +49,22 @@ void ProtectedLoop_AdcIrq(void)
     FocIrqSource_FrameBegin();
 #endif
     __DMB(); __set_PRIMASK(mask);
+    FocProfile_Mark(FOC_PROF_ADC);
     FocAdcTiming_RecordRaw(u,v);
+    FocProfile_Mark(FOC_PROF_RAW_DIAG);
     ++injected_seq_count;
-    if (ProtectedLoop_Pair(u,v)) {
+    int prof_pair_ready=ProtectedLoop_Pair(u,v);
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    if (!prof_pair_ready && cl_armed &&
+        (cl_current_path==FOC_CURRENT_PATH_SUSPECT ||
+         cl_current_path==FOC_CURRENT_PATH_UNRESOLVED)) ++foc_pending_held;
+#endif
+    FocProfile_Mark(FOC_PROF_VALIDATE);
+    if (prof_pair_ready) {
 #if defined(FOC_RC_DEFERRED_SHADOW)
         ProtectedLoop_DeferredProbe();
 #endif
-#if defined(FOC_FAST_MATH)
+#if defined(FOC_FAST_MATH) && FOC_DETAIL_STATS
         uint32_t math_begin=AS5047P_DmaNowUs();
         uint32_t pair_us=math_begin-protected_begin;
         if (pair_us>cl_pair_max_us) cl_pair_max_us=pair_us;
@@ -65,7 +78,7 @@ void ProtectedLoop_AdcIrq(void)
         /* READY computes real feedback but cannot charge PI for a later START. */
         if (cl_session.state!=CL_RUNNING) FocCurrentPi_Reset(&foc_int_d_V,&foc_int_q_V);
 #endif
-#if defined(FOC_FAST_MATH)
+#if defined(FOC_FAST_MATH) && FOC_DETAIL_STATS
         uint32_t math_us=AS5047P_DmaNowUs()-math_begin;
         if (math_us>cl_math_max_us) cl_math_max_us=math_us;
         /* Take both counters in a short mask: the two snapshots must share
@@ -91,4 +104,14 @@ void ProtectedLoop_AdcIrq(void)
 #if defined(FOC_IRQ_SOURCE_TRACE)
     else FocIrqSource_FrameEnd(0); /* Calibration/fault path is not a FOC frame. */
 #endif
+#if defined(FOC_FAST_CURRENT_REJECT)
+    if ((cl_current_path==FOC_CURRENT_PATH_SUSPECT ||
+         cl_current_path==FOC_CURRENT_PATH_UNRESOLVED) && cl_armed) {
+        /* Freeze CURRENT controller/output, not the rotor's time base. No PI,
+         * Clarke/Park, voltage command or compare/preload write on this path.
+         * One bounded angle step replaces the normal loop's tail step. */
+        ProtectedLoop_AdvanceAngle();
+    }
+#endif
+    FOC_TRACE_CALL(FocCurrentTrace_End());
 }

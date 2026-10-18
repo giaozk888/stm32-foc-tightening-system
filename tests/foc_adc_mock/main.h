@@ -1,8 +1,8 @@
 #ifndef FOC_ADC_MOCK_MAIN_H
 #define FOC_ADC_MOCK_MAIN_H
 #include <stdint.h>
-typedef struct { volatile uint32_t CR1, CCR1, CCR2, CCR3, CCR4, CNT, EGR, ARR, PSC, BDTR, CCMR1, CCMR2, CR2, RCR; } TIM_TypeDef;
-typedef struct { volatile uint32_t ISR, IER; } ADC_TypeDef;
+typedef struct { volatile uint32_t CR1, CCR1, CCR2, CCR3, CCR4, CNT, EGR, ARR, PSC, BDTR, CCMR1, CCMR2, CR2, RCR, CCER; } TIM_TypeDef;
+typedef struct { volatile uint32_t ISR, IER, JSQR; } ADC_TypeDef;
 typedef struct { volatile uint32_t CCR; } ADC_Common_TypeDef;
 typedef struct { volatile uint32_t CR, CFGR, PLLCFGR, ICSCR; } RCC_TypeDef;
 extern RCC_TypeDef mock_rcc;

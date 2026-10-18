@@ -6,6 +6,8 @@
 #include "foc_feedback_guard_stm32.h"
 #include "foc_zero_median.h"
 #include "foc_hot_path.h"
+#include "foc_fast_path_profile.h"
+#include "foc_preempt_probe.h"
 #if defined(FOC_RC_DEFERRED_SHADOW)
 #include "foc_rc_deferred_plan.h"
 static FocRcDeferredPlan cl_deferred_plan;
@@ -23,6 +25,10 @@ static FocZeroCal cl_zero;
 static FocZeroMedian cl_zero_filter;
 static uint32_t cl_seq, cl_last_us, cl_guard_us, cl_psc, cl_irqs;
 static uint32_t cl_work_n, cl_work_max, cl_late, cl_outer_n, cl_off_us;
+#if defined(FOC_FAST_CURRENT_REJECT)
+static FocCurrentCycleStats cl_current_cycles;
+static uint8_t cl_current_path; /* FOC_CURRENT_PATH_*; 0 startup/safety fault. */
+#endif
 #if defined(FOC_FAST_MATH)
 static uint32_t cl_cpu_max_cyc, cl_preempt_max_cyc;
 static uint32_t cl_pair_max_us, cl_math_max_us;
@@ -39,8 +45,51 @@ static uint8_t cl_armed, cl_initialized, cl_fault_valid, cl_request;
 /* Immutable for this boot: metadata changes only through reset/bootloader.
  * Do not CRC Flash metadata from the 25 us guard or a PRIMASK section. */
 static uint8_t cl_boot_confirmed;
+#if defined(FOC_TIMEOUT_DIAGNOSTICS)
+static FocTimeoutEvidence cl_direct_timeout;
+__attribute__((noinline,cold,optimize("Oz")))
+static void FaultDiag_DirectTimeout(FocTimeoutReason reason,uint32_t now,
+                                   uint32_t reference,uint32_t limit)
+{
+    cl_direct_timeout=(FocTimeoutEvidence){reason,now,reference,
+        now-reference,limit,cl_last_us,0U,0U,0U};
+}
+__attribute__((noinline,cold,optimize("Oz")))
+static void FaultDiag_FillProtected(volatile FocFaultSnapshot *s)
+{
+    const FocFilteredProtection *p=&cl_safety.protection;
+    if (p->timeout.reason) {
+        const FocTimeoutLatch *t=&p->timeout;
+        s->timeout=(FocTimeoutEvidence){t->reason,t->now_us,t->reference_us,
+            t->now_us-t->reference_us,t->limit_us,p->last_us,p->pending_us,p->pending,p->misses};
+    } else if (cl_direct_timeout.reason) s->timeout=cl_direct_timeout;
+    if (s->timeout.reason) s->timeout_reason=s->timeout.reason;
+#if defined(FOC_FAST_CURRENT_REJECT)
+    const FocCurrentValidation *v=&cl_safety.validation;
+    s->evidence_present=1U; s->current_validator_state=v->state;
+    _Static_assert(offsetof(FocCurrentValidation,current_unresolved_max_consecutive)-
+        offsetof(FocCurrentValidation,current_suspect_total)==20U,"validator diagnostic layout");
+    __builtin_memcpy((void *)&s->current_suspect_total,&v->current_suspect_total,24U);
+    s->foc_cycles_max=cl_current_cycles.max_cycles;
+    s->foc_normal_cycles_max=cl_current_cycles.normal_max_cycles;
+    s->foc_suspect_cycles_max=cl_current_cycles.suspect_max_cycles;
+    s->foc_unresolved_cycles_max=cl_current_cycles.unresolved_max_cycles;
+    s->foc_deadline_miss_count=cl_current_cycles.deadline_miss_count;
+#endif
+}
+#if defined(FOC_FAST_CURRENT_REJECT)
+static uint32_t FaultDiag_CurrentSamples(void)
+{ return cl_safety.validation.current_samples_total; }
+#endif
+#endif
 static void FOC_ResetController(void);
 static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s);
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+FOC_RAM_PATH static void ProtectedLoop_Stop(void);
+#endif
+#include "foc_pwm_pipeline_binding.inc"
+#endif
 #if defined(FOC_STARTUP_TRACE)
 #include "foc_startup_trace_binding.inc"
 #endif
@@ -55,7 +104,12 @@ FOC_COMPACT_HELPER uint8_t ProtectedLoop_GatesMatch(void)
 }
 FOC_COMPACT_HELPER uint8_t ProtectedLoop_TimerHealthy(void)
 {
-#if defined(AS5047P_DMA_IRQ_PREEMPT_ADC)
+#if defined(AS5047P_DMA_FOC_FIRST)
+    /* This opt-in profile deliberately places encoder events below ADC.
+     * Check the selected configuration; do not accept arbitrary drift. */
+    const uint32_t adc_priority = 2U;
+    const uint32_t encoder_priority = 3U;
+#elif defined(AS5047P_DMA_IRQ_PREEMPT_ADC)
     const uint32_t adc_priority = 2U;
     const uint32_t encoder_priority = 1U;
 #else
@@ -66,8 +120,8 @@ FOC_COMPACT_HELPER uint8_t ProtectedLoop_TimerHealthy(void)
         (TIM2->CR1 & TIM_CR1_CEN) && TIM2->PSC==cl_psc && TIM2->ARR==UINT32_MAX &&
         TIM7->PSC==cl_psc && TIM7->ARR==24U && TIM7->DIER==TIM_DIER_UIE &&
         (TIM7->CR1 & (TIM_CR1_CEN | TIM_CR1_URS | TIM_CR1_OPM))==(TIM_CR1_CEN | TIM_CR1_URS) &&
-        NVIC_GetPriority(TIM7_DAC_IRQn)==0U && NVIC_GetPriority(ADC1_2_IRQn)==adc_priority &&
-#if defined(AS5047P_DMA_IRQ_PREEMPT_ADC)
+        NVIC_GetPriority(TIM7_DAC_IRQn)==FOC_SOFTWARE_GUARD_PRIORITY && NVIC_GetPriority(ADC1_2_IRQn)==adc_priority &&
+#if defined(AS5047P_DMA_FOC_FIRST) || defined(AS5047P_DMA_IRQ_PREEMPT_ADC)
         NVIC_GetPriority(TIM2_IRQn)==encoder_priority &&
         NVIC_GetPriority(DMA1_Channel4_IRQn)==encoder_priority &&
         NVIC_GetPriority(DMA1_Channel5_IRQn)==encoder_priority &&
@@ -80,6 +134,22 @@ FOC_RAM_PATH void ProtectedLoop_EmergencyOff(uint32_t flags)
 {
     uint32_t mask=__get_PRIMASK(); __disable_irq();
     FocFeedbackGuard_OutputOff();
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    FocPwmPending_Invalidate(&cl_pwm_pending);
+#endif
+#if defined(FOC_TIMEOUT_DIAGNOSTICS)
+    if (flags & CL_OUTER_STALE)
+        FaultDiag_DirectTimeout(FOC_TO_OUTER_CONTROL,AS5047P_DmaNowUs(),
+            cl_session.outer_us,CL_OUTER_DEADLINE_US);
+    /* Record the same final reason that the existing Trip below will latch. */
+    if (!foc_fault_snapshot.valid) foc_fault_snapshot.protection_flags=cl_safety.protection.fault_flags|flags;
+    FaultDiag_Capture(FOC_DIAG_PROTECTION,
+        cl_safety.protection.result==FOC_OC_TRIPPED ? cl_safety.protection.reason : FOC_FP_HEALTH,
+        (flags & CL_OUTER_STALE) ? FOC_TO_OUTER_CONTROL :
+        (flags & CL_BAD_ENCODER) ? encoder_timeout_reason :
+        (flags & CL_COMPUTE_LATE) ? FOC_TO_COMPUTE_DEADLINE : FOC_TO_NONE,
+        tightening_test_elapsed_ms,0U);
+#endif
     cl_armed=0U; FocFeedbackGuard_Disarm();
 #if defined(FOC_RC_DEFERRED_SHADOW)
     FocRcDeferredPlan_Clear(&cl_deferred_plan);
@@ -97,6 +167,9 @@ FOC_RAM_PATH void ProtectedLoop_EmergencyOff(uint32_t flags)
     }
     cl_safety.protection.fault_flags|=flags;
     (void)FocFp_Trip(&cl_safety.protection,FOC_FP_HEALTH,0U);
+    /* One cold binding hook replaces generic inline Trip instrumentation.
+     * Outputs are already off; freeze only an open physical-pair trace. */
+    FOC_TRACE_CALL(FocCurrentTrace_Protection(&cl_safety.protection));
 #if defined(FOC_REPAIR_WINDOW_TRACE)
     /* Closure above must precede freezing evidence. No ring copy, printf,
      * sample retry or feedback substitution occurs on this fault path. */
@@ -116,6 +189,9 @@ FOC_RAM_PATH void ProtectedLoop_EmergencyOff(uint32_t flags)
 FOC_RAM_PATH static void ProtectedLoop_Stop(void)
 {
     uint32_t mask=__get_PRIMASK(); __disable_irq();
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    FocPwmPending_Invalidate(&cl_pwm_pending);
+#endif
 #if defined(FOC_RC_DEFERRED_SHADOW)
     FocRcDeferredPlan_Clear(&cl_deferred_plan);
 #endif
@@ -191,6 +267,20 @@ FOC_COMPACT_HELPER uint32_t ProtectedLoop_Health(uint32_t now)
 #endif
 /* Fresh on every physical pair; even calibration cannot conceal a stopped or
  * repeated conversion. Calibration is performed ONLY with output registers OFF. */
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+FOC_RAM_PATH __attribute__((noinline,optimize("Os")))
+static uint32_t ProtectedLoop_PwmHealth(uint32_t now)
+{
+    uint32_t flags=ProtectedLoop_Health(now);
+    if ((uint32_t)(now-cl_last_us)>100U || cl_seq!=injected_seq_count)
+        flags|=CL_BAD_ADC;
+    /* Recheck independent feedback timeout BEFORE publishing the held PWM.
+     * No new current classification, no threshold change or fault clear. */
+    if (!flags && FocFeedbackSafety_Poll(&cl_safety,now,0U,1U)==FOC_OC_TRIPPED)
+        flags|=CL_BAD_ADC;
+    return flags;
+}
+#endif
 FOC_HOT_PATH
 static int ProtectedLoop_Pair(uint16_t u,uint16_t v)
 {
@@ -208,6 +298,10 @@ static int ProtectedLoop_Pair(uint16_t u,uint16_t v)
     if (ClSession_Expired(&cl_session,now)) ProtectedLoop_Stop();
 #endif
     cl_last_u=u; cl_last_v=v;
+#if defined(FOC_TIMEOUT_DIAGNOSTICS)
+    if (!flags && (uint32_t)(now-cl_last_us)>100U)
+        FaultDiag_DirectTimeout(FOC_TO_ADC_GUARD,now,cl_last_us,100U);
+#endif
     if (flags || u>4095U || v>4095U || now==cl_last_us ||
         (uint32_t)(now-cl_last_us)>100U || (uint32_t)(injected_seq_count-cl_seq)!=1U) {
         ProtectedLoop_EmergencyOff(flags ? flags : CL_BAD_ADC);
@@ -231,6 +325,7 @@ static int ProtectedLoop_Pair(uint16_t u,uint16_t v)
         }
         __set_PRIMASK(mask); return 0;
     }
+    FOC_TRACE_CALL(FocCurrentTrace_Pending(cl_pwm_pending.valid));
     FocOcConfirmResult result=FocFeedbackSafety_Push(&cl_safety,cl_seq,now,u,v,
         encoder_theta_e_pred,flags,
 #if defined(FOC_GATE_REUSE)
@@ -242,6 +337,14 @@ static int ProtectedLoop_Pair(uint16_t u,uint16_t v)
         ProtectedLoop_GatesMatch());
 #endif
     int ready=0;
+#if defined(FOC_FAST_CURRENT_REJECT)
+    cl_current_path=cl_safety.validation.last_path;
+#if defined(FOC_TIMEOUT_DIAGNOSTICS)
+    if (result!=FOC_OC_TRIPPED &&
+        (cl_current_path==FOC_CURRENT_PATH_SUSPECT || cl_current_path==FOC_CURRENT_PATH_UNRESOLVED))
+        ++current_hold_total;
+#endif
+#endif
     if (result!=FOC_OC_TRIPPED) {
 #if defined(FOC_GATE_REUSE)
         /* Explicit order: read time before refreshing RUNNING hardware gates.
@@ -264,6 +367,9 @@ static void ProtectedLoop_WorkEnd(uint32_t begin)
     uint32_t mask=__get_PRIMASK(); __disable_irq();
     ++cl_work_n; if (elapsed>cl_work_max) cl_work_max=elapsed;
     if (elapsed>=50U) {
+#if defined(FOC_TIMEOUT_DIAGNOSTICS)
+        FaultDiag_DirectTimeout(FOC_TO_COMPUTE_WALL,begin+elapsed,begin,50U);
+#endif
         ++cl_late; ProtectedLoop_EmergencyOff(CL_COMPUTE_LATE);
 #if defined(FOC_PAIR_FAST_PATH)
         if (!cl_late_cost.valid) {
@@ -278,17 +384,97 @@ static void ProtectedLoop_WorkEnd(uint32_t begin)
     }
     __set_PRIMASK(mask);
 }
+#if defined(FOC_FAST_CURRENT_REJECT)
+/* Advance physical time on both valid and held cycles, never PI memory.
+ * Bounded wrap replaces while-loops only in this new profile. A nonsensical
+ * encoder rate is a fault, not an unbounded wrap or a frozen rotor estimate. */
+FOC_HOT_INLINE void ProtectedLoop_AdvanceAngle(void)
+{
+    float angle=encoder_theta_e_pred+encoder_omega_e_rad_s*FOC_TS_S;
+    if (!FocGuard_Finite(&angle) || angle < -TWO_PI_F || angle >= 2.0f*TWO_PI_F)
+        ProtectedLoop_EmergencyOff(CL_BAD_ENCODER);
+    else {
+        if (angle>=TWO_PI_F) angle-=TWO_PI_F;
+        if (angle<0.0f) angle+=TWO_PI_F;
+        encoder_theta_e_pred=angle;
+    }
+}
+/* Called after IrqExit from the outer ADC vector: includes entry adapter,
+ * pair validation, FOC, old profiling and preemption. Exception stacking,
+ * this recorder's own tail and unstacking are NOT included; retain margin.
+ * A measured miss trips; profiling cannot prevent or prove absence of misses. */
+FOC_HOT_PATH void ProtectedLoop_AdcProfileEnd(uint32_t start)
+{
+    /* Include the optional phase ledger's reducer in the EXISTING outer
+     * deadline measurement; its own per-stage total stops before reduction. */
+    /* Fault snapshot/abort work is not a completed healthy normal FOC frame. */
+    FocProfile_End(cl_current_path==FOC_CURRENT_PATH_NORMAL && !cl_fault_valid);
+#if defined(FOC_PREEMPT_COMMIT_PROBE)
+    uint32_t elapsed=FocPreempt_End(start,cl_current_path);
+#else
+    uint32_t elapsed=DWT->CYCCNT-start;
+#endif
+    uint32_t mask=__get_PRIMASK(); __disable_irq();
+    if (FocCurrentCycles_Record(&cl_current_cycles,elapsed,cl_current_path))
+        ProtectedLoop_EmergencyOff(CL_COMPUTE_LATE);
+    __set_PRIMASK(mask);
+}
+/* Task context only. Short coherent copy, then 64-bit rate/formatting outside
+ * PRIMASK. Counts cover post-calibration pairs and never reset on START. */
+__attribute__((noinline,optimize("Os")))
+static void ProtectedLoop_CurrentMonitor(void)
+{
+#if defined(FOC_PREEMPT_COMMIT_PROBE)
+    FocPreempt_CheckPriorities();
+    FocPreempt_Monitor();
+#else
+    uint32_t mask=__get_PRIMASK(); __disable_irq();
+    FocCurrentValidation s=cl_safety.validation;
+    FocCurrentCycleStats c=cl_current_cycles;
+    __set_PRIMASK(mask);
+    char line[480];
+    UART_SendFormatted(line,sizeof(line),
+        "CURRENT VALIDATION samples=%lu suspect=%lu spike=%lu transition=%lu unresolved=%lu run=%lu max_unresolved_run=%lu fault=%lu recovered=%lu normal_max_cycles=%lu suspect_max_cycles=%lu unresolved_max_cycles=%lu last_cycles=%lu max_cycles=%lu deadline_miss=%lu\r\n",
+        (unsigned long)s.current_samples_total,(unsigned long)s.current_suspect_total,
+        (unsigned long)s.current_confirmed_spike,(unsigned long)s.current_confirmed_transition,
+        (unsigned long)s.current_unresolved_total,(unsigned long)s.current_unresolved_consecutive,
+        (unsigned long)s.current_unresolved_max_consecutive,
+        (unsigned long)s.current_measurement_fault_count,
+        (unsigned long)s.current_recovered_after_unresolved,
+        (unsigned long)c.normal_max_cycles,(unsigned long)c.suspect_max_cycles,
+        (unsigned long)c.unresolved_max_cycles,
+        (unsigned long)c.last_cycles,(unsigned long)c.max_cycles,
+        (unsigned long)c.deadline_miss_count);
+#endif
+}
+#endif
 #if defined(FOC_FAST_MATH)
 #define TIM7_DAC_IRQHandler ProtectedLoop_GuardIrqBody
 #endif
 FOC_HOT_PATH
 void TIM7_DAC_IRQHandler(void)
 {
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    /* Lower-priority health work must NOT conceal itself inside one long
+     * PRIMASK section. ADC may preempt these read-only checks. If it does,
+     * discard that old epoch rather than underflow now-last_sample or act on
+     * a mixed health snapshot. ADC has just run the same live health checks.
+     * Only the existing protection-state poll remains serialized below. */
+    uint32_t sr=TIM7->SR; TIM7->SR=0U;
+    if (!cl_armed) return;
+    ++cl_irqs;
+    uint32_t health_seq=cl_seq;
+    uint32_t flags=ProtectedLoop_Health(AS5047P_DmaNowUs());
+    uint32_t mask=__get_PRIMASK(); __disable_irq();
+    if (!cl_armed || health_seq!=cl_seq) { __set_PRIMASK(mask); return; }
+    uint32_t now=AS5047P_DmaNowUs();
+#else
     uint32_t mask=__get_PRIMASK(); __disable_irq();
     uint32_t sr=TIM7->SR; TIM7->SR=0U;
     if (!cl_armed) { __set_PRIMASK(mask); return; }
     ++cl_irqs; uint32_t now=AS5047P_DmaNowUs();
     uint32_t flags=ProtectedLoop_Health(now);
+#endif
     if (!(sr & TIM_SR_UIF) || now==cl_guard_us) flags|=CL_BAD_TIMER;
     cl_guard_us=now;
 #if defined(FOC_GUARD_FAST_PATH)
@@ -298,7 +484,12 @@ void TIM7_DAC_IRQHandler(void)
     if (ClSession_Expired(&cl_session,now)) ProtectedLoop_Stop();
 #endif
     if (flags) ProtectedLoop_EmergencyOff(flags);
-    else if ((uint32_t)(now-cl_last_us)>100U) ProtectedLoop_EmergencyOff(CL_BAD_ADC);
+    else if ((uint32_t)(now-cl_last_us)>100U) {
+#if defined(FOC_TIMEOUT_DIAGNOSTICS)
+        FaultDiag_DirectTimeout(FOC_TO_ADC_GUARD,now,cl_last_us,100U);
+#endif
+        ProtectedLoop_EmergencyOff(CL_BAD_ADC);
+    }
     else if (cl_session.state!=CL_CALIBRATING &&
         FocFeedbackSafety_Poll(&cl_safety,now,0U,
 #if defined(FOC_GUARD_FAST_PATH)
@@ -316,16 +507,52 @@ void TIM7_DAC_IRQHandler(void)
 #undef TIM7_DAC_IRQHandler
 FOC_RAM_PATH void TIM7_DAC_IRQHandler(void)
 {
-#if defined(FOC_IRQ_SOURCE_TRACE) || defined(FOC_PWM_BOUNDARY_TRACE)
+#if defined(FOC_PREEMPT_COMMIT_PROBE) && FOC_HEAVY_PROFILE_ENABLE
+    FocPreToken token=FocPreempt_IrqBegin(FOC_PRE_GUARD);
+#endif
+#if defined(FOC_FAST_PATH_PROFILE)
+    uint32_t profile_irq_begin=DWT->CYCCNT;
+#endif
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    /* A lower-priority service interval must not be counted as ADC preempt. */
+    ProtectedLoop_GuardIrqBody();
+#elif defined(FOC_IRQ_SOURCE_TRACE) || defined(FOC_PWM_BOUNDARY_TRACE)
     FocIrqSource_Enter(FOC_IRQ_GUARD); ProtectedLoop_GuardIrqBody(); FocIrqSource_Leave(FOC_IRQ_GUARD);
 #else
     FocIrqLoad_Enter(); ProtectedLoop_GuardIrqBody(); FocIrqLoad_Leave();
 #endif
+#if defined(FOC_PREEMPT_COMMIT_PROBE) && FOC_HEAVY_PROFILE_ENABLE
+    FocPreempt_IrqEnd(FOC_PRE_GUARD,token);
+#endif
+#if defined(FOC_FAST_PATH_PROFILE)
+    FocProfile_IrqRecord(0U,profile_irq_begin);
+#endif
+}
+#endif
+#if defined(FOC_ZERO_VALID_ADMISSION)
+/* Foreground only: calibration has stopped before StartupTask calls this.
+ * Command callers see diagnostic snapshots; no formatting in the ADC IRQ. */
+__attribute__((noinline,cold,optimize("Oz")))
+static void ProtectedLoop_ZeroAdmissionFormat(char *out,size_t size)
+{
+    const FocZeroRobust *s=&cl_zero_filter.robust;
+    uint32_t rate=s->total_count ? s->reject_count*1000U/s->total_count : 0U;
+    snprintf(out,size,"OK ZERO CAL valid=%lu reject=%lu total=%lu reject_rate_ppt=%lu max_consecutive_reject=%lu zero_u=%u zero_v=%u result=%u STATE=%u REASON=%u FLAGS=%u",
+        (unsigned long)cl_zero.count,(unsigned long)s->reject_count,
+        (unsigned long)s->total_count,(unsigned long)rate,
+        (unsigned long)s->max_consecutive_reject,cl_zero.zero_u,cl_zero.zero_v,
+        cl_zero.state==FOC_ZERO_READY,cl_zero.state,cl_zero.reason,s->flags);
 }
 #endif
 static int ProtectedLoop_Init(void)
 {
     if (cl_initialized || foc_fault || adc_fault || !encoder_valid) return 0;
+#if defined(FOC_FAST_CURRENT_REJECT)
+    if (SystemCoreClock!=170000000U) return 0; /* 8500-cycle deadline contract. */
+    CoreDebug->DEMCR|=CoreDebug_DEMCR_TRCENA_Msk;
+    DWT->CTRL|=DWT_CTRL_CYCCNTENA_Msk;
+    if (!(DWT->CTRL & DWT_CTRL_CYCCNTENA_Msk)) return 0;
+#endif
     cl_initialized=1U; analog_safe_latched=1U;
     FocFeedbackGuard_OutputOff(); FOC_ResetController(); MotorControl_SetIdle();
     /* Foreground, before sampling/guard are armed. A trial may calibrate and
@@ -342,6 +569,12 @@ static int ProtectedLoop_Init(void)
      * physical output is off; start periodic acquisition in the real task. */
     if (AS5047P_DmaIsPeriodic() ||
         FocAdcTiming_Commit(0.5f,0.5f,0.5f)!=FOC_WINDOW_OK || !FocAdcTiming_CertifyClock()) return 0;
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    FocPwmPending_Init(&cl_pwm_pending,(uint16_t)TIM1->CCR1);
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+    cl_pwm_neutral_commits=0U;
+#endif
+#endif
     uint32_t hz=HAL_RCC_GetPCLK1Freq();
     if (RCC->CFGR & RCC_CFGR_PPRE1) hz*=2U;
     __HAL_RCC_TIM7_CLK_ENABLE();
@@ -353,7 +586,7 @@ static int ProtectedLoop_Init(void)
     FocZeroMedian_Begin(&cl_zero_filter,&cl_zero,nominal);
     if (cl_zero.state==FOC_ZERO_FAILED) return 0;
     uint32_t mask=__get_PRIMASK(); __disable_irq();
-    HAL_NVIC_SetPriority(TIM7_DAC_IRQn,0U,0U);
+    HAL_NVIC_SetPriority(TIM7_DAC_IRQn,FOC_SOFTWARE_GUARD_PRIORITY,0U);
 #if defined(AS5047P_DMA_IRQ_PREEMPT_ADC)
     HAL_NVIC_SetPriority(ADC1_2_IRQn,2U,0U);
 #else
@@ -362,10 +595,27 @@ static int ProtectedLoop_Init(void)
     cl_last_us=cl_guard_us=AS5047P_DmaNowUs(); cl_seq=injected_seq_count;
     cl_armed=1U; TIM1->CR1|=TIM_CR1_CEN; FocFeedbackGuard_Arm();
     __set_PRIMASK(mask);
+#if defined(FOC_PREEMPT_COMMIT_PROBE)
+    FocPreempt_CheckPriorities();
+#endif
     uint32_t deadline=HAL_GetTick()+FOC_ZERO_TIMEOUT_MS;
     while (cl_session.state==CL_CALIBRATING && (int32_t)(HAL_GetTick()-deadline)<0)
         vTaskDelay(pdMS_TO_TICKS(1U));
-    if (cl_session.state!=CL_READY) { ProtectedLoop_EmergencyOff(CL_BAD_ZERO); return 0; }
+#if defined(FOC_ZERO_VALID_ADMISSION)
+    {
+        char report[256];
+        ProtectedLoop_ZeroAdmissionFormat(report,sizeof report);
+        UART_SendLiteral(report); UART_SendLiteral("\r\n");
+    }
+#endif
+    if (cl_session.state!=CL_READY) {
+#if defined(FOC_TIMEOUT_DIAGNOSTICS)
+        if (cl_session.state==CL_CALIBRATING)
+            FaultDiag_Capture(FOC_DIAG_STARTUP,7U,FOC_TO_STARTUP_ZERO,
+                HAL_GetTick()-(deadline-FOC_ZERO_TIMEOUT_MS),FOC_ZERO_TIMEOUT_MS);
+#endif
+        ProtectedLoop_EmergencyOff(CL_BAD_ZERO); return 0;
+    }
 #if defined(FOC_LATEST_ORIGINAL_FSM)
     /* Readiness is not actuation. Explicit ANALOG SAFE/Shutdown cannot re-enter
      * this one-shot initialization. A trial must confirm/reset first. */
@@ -375,13 +625,15 @@ static int ProtectedLoop_Init(void)
 }
 static uint8_t ProtectedLoop_Ready(void)
 {
-#if defined(FOC_ADAPTIVE_FILTER_EXPERIMENT) || defined(FOC_RC_DEFERRED_SHADOW)
+#if defined(FOC_ADAPTIVE_FILTER_EXPERIMENT) || defined(FOC_RC_DEFERRED_SHADOW) || defined(FOC_FAST_REJECT_COMPUTE_ONLY)
     return 0U; /* Observer builds never admit motor actuation. */
 #else
     return cl_session.state==CL_READY && !cl_session.used && cl_armed &&
         !cl_request && !adc_fault && !foc_fault && run_zero_cal_done &&
         !fw_update.active && cl_boot_confirmed && UART_Async_IsReady() &&
-#if defined(FOC_ADC_RC_PROTECTED_CANDIDATE)
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+        ProtectedLoop_PwmNeutralReady() &&
+#elif defined(FOC_ADC_RC_PROTECTED_CANDIDATE)
         FocAdcTiming_RcActuationReady() &&
 #endif
         cl_work_n && cl_outer_n && AS5047P_DmaIsPeriodic() &&
@@ -394,7 +646,18 @@ static uint8_t ProtectedLoop_Ready(void)
 }
 FOC_RAM_PATH static void ProtectedLoop_SetDuty(float du,float dv,float dw)
 {
-#if defined(FOC_RC_DEFERRED_SHADOW)
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    ProtectedLoop_PwmStage(du,dv,dw);
+#elif defined(FOC_PREEMPT_COMMIT_PROBE)
+    /* Legacy profile is hypothetical only after removal of the intrusive
+     * UDIS transaction. Real commits require OneCyclePwmPipeline above. */
+    DRIVER_SD_GPIO_Port->BSRR=(uint32_t)DRIVER_SD_Pin<<16U;
+    TIM1->BDTR &= ~(TIM_BDTR_MOE | TIM_BDTR_AOE);
+    TIM1->CCER=0U;
+    __DSB();
+    FocAdcTiming_ProfileDutyPoint();
+    (void)du; (void)dv; (void)dw;
+#elif defined(FOC_RC_DEFERRED_SHADOW)
     /* Observe an actual FOC-produced plan while output is locked. Never
      * publish this plan to CCR or admit motor control from the observer. */
     if (cl_session.state!=CL_READY || !cl_armed || adc_fault || foc_fault) {
@@ -414,7 +677,7 @@ FOC_RAM_PATH static void ProtectedLoop_SetDuty(float du,float dv,float dw)
         else ++cl_deferred_rejected;
     }
     __set_PRIMASK(mask);
-#elif defined(FOC_ADAPTIVE_FILTER_EXPERIMENT)
+#elif defined(FOC_ADAPTIVE_FILTER_EXPERIMENT) || defined(FOC_FAST_REJECT_COMPUTE_ONLY)
     (void)du; (void)dv; (void)dw;
     /* Shadow FOC must keep its ADC-only TIM1 trigger alive. EmergencyOff /
      * Shutdown still stop CEN; this path never starts/restarts the timer. */
@@ -422,6 +685,9 @@ FOC_RAM_PATH static void ProtectedLoop_SetDuty(float du,float dv,float dw)
     TIM1->BDTR &= ~(TIM_BDTR_MOE | TIM_BDTR_AOE);
     TIM1->CCER=0U;
     __DSB();
+#if defined(FOC_FAST_PATH_PROFILE)
+    FocAdcTiming_ProfileDutyPoint();
+#endif
 #else
     /* This is only an early rejection, never an admission decision. The ADC
      * ISR cannot be admitted by a lower-priority task while it is executing;
@@ -500,7 +766,7 @@ static void ProtectedLoop_TaskService(void)
 #if defined(FOC_STARTUP_TRACE)
     ProtectedLoop_StartupPush();
 #endif
-#if defined(FOC_ADAPTIVE_FILTER_EXPERIMENT) || defined(FOC_RC_DEFERRED_SHADOW)
+#if defined(FOC_ADAPTIVE_FILTER_EXPERIMENT) || defined(FOC_RC_DEFERRED_SHADOW) || defined(FOC_FAST_REJECT_COMPUTE_ONLY)
     /* Compile out the ONLY bridge-enable transaction, even if a stale or
      * corrupted request/session bypasses command admission. */
     if (cl_request || cl_session.state==CL_RUNNING)
@@ -544,6 +810,11 @@ static void ProtectedLoop_TaskService(void)
     __set_PRIMASK(mask);
 #endif
 }
+#if defined(FOC_FAST_CURRENT_REJECT)
+/* Cold task-only formatter. Keep the O2 realtime chain and original Flash
+ * partition; there is no benefit to expanding this command dispatcher. */
+__attribute__((optimize("Os")))
+#endif
 static void ProtectedLoop_Command(const char *cmd,char *out,size_t size)
 {
 #if defined(FOC_REPAIR_WINDOW_TRACE)
@@ -560,6 +831,43 @@ static void ProtectedLoop_Command(const char *cmd,char *out,size_t size)
 #endif
 #if defined(FOC_STARTUP_TRACE)
     if (ProtectedLoop_StartupCommand(cmd,out,size)) return;
+#endif
+#if defined(FOC_FAST_CURRENT_REJECT)
+    if (!strcmp(cmd,"MOTOR TEST PROFILE")) {
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+        snprintf(out,size,"OK MOTOR TEST PROFILE NAME=PROTECTED_PIPELINE_CLOSED_LOOP HARD_OFF=0 FSM=ORIGINAL PIPELINE=1 LOCAL=1 RPM=20 LEASE_US=" CL_LEASE_TEXT
+#if defined(FOC_SPEED_STARTUP_BRAKE)
+#if defined(FOC_SPEED_BUMPLESS)
+#if defined(FOC_SPEED_BRAKE_TRACK)
+            " SPEED_CTRL=SB3"
+#else
+            " SPEED_CTRL=SB2"
+#endif
+#if defined(FOC_VOLTAGE_X2_TRIAL)
+            " VLIMIT_MV=1600 ILIMIT_MV=750"
+#endif
+#else
+            " SPEED_CTRL=SB1"
+#endif
+#endif
+            " QUALIFIED=0"); return;
+#else
+        snprintf(out,size,"OK MOTOR TEST PROFILE NAME=FAST_CURRENT_REJECT HARD_OFF=" FOC_PROFILE_HARD_OFF_TEXT " FSM=ORIGINAL QUALIFIED=0"); return;
+#endif
+    }
+    if (!strcmp(cmd,"MOTOR TEST FILTER")) {
+        snprintf(out,size,"OK MOTOR TEST FILTER FAST_REJECT=1 REPAIR=0 METHOD=TWO_SAMPLE JUMP=%u RETURN=%u CONFIRM=%u UNRESOLVED_LIMIT=%u HOLD=1",
+            FOC_CURRENT_JUMP_THRESHOLD_COUNTS,FOC_CURRENT_RETURN_TOL_COUNTS,
+            FOC_CURRENT_CONFIRM_TOL_COUNTS,FOC_CURRENT_UNRESOLVED_LIMIT); return;
+    }
+    if (!strcmp(cmd,"MOTOR TEST PROTECTION")) {
+        uint32_t mask=__get_PRIMASK(); __disable_irq();
+        FocFilteredProtection p=cl_safety.protection;
+        __set_PRIMASK(mask);
+        snprintf(out,size,"OK MOTOR TEST PROTECTION FILTER=NONE OC=RAW_CONFIRM_4 TRIP_MA=4000 STATE=%u REASON=%u FLAGS=%lu RAW_N=%lu FEEDBACK_N=%lu",
+            p.result,p.reason,(unsigned long)p.fault_flags,
+            (unsigned long)p.raw_pairs,(unsigned long)p.feedback_pairs); return;
+    }
 #endif
 #if defined(FOC_PWM_BOUNDARY_LITE)
     if (!strcmp(cmd,"MOTOR TEST PROFILE")) {
@@ -609,6 +917,7 @@ static void ProtectedLoop_Command(const char *cmd,char *out,size_t size)
     }
 #endif
 #if defined(FOC_ADAPTIVE_FILTER_EXPERIMENT) || defined(FOC_LATEST_ORIGINAL_FSM)
+#if !defined(FOC_FAST_CURRENT_REJECT)
     if (!strcmp(cmd,"MOTOR TEST FILTER")) {
         uint32_t mask=__get_PRIMASK(); __disable_irq();
         FocAdaptiveNoise u=cl_safety.filter.noise[0],v=cl_safety.filter.noise[1];
@@ -617,12 +926,16 @@ static void ProtectedLoop_Command(const char *cmd,char *out,size_t size)
             FocAdaptive_Jump(&u),FocAdaptive_Jump(&v),u.noise_q8,v.noise_q8,
             (unsigned long)u.learned,(unsigned long)v.learned); return;
     }
+#endif
 #if defined(FOC_ZERO_ALL_REJECTED_DIAG)
     if (!strcmp(cmd,"MOTOR TEST ZERO POLICY")) {
         snprintf(out,size,"OK ZERO POLICY DIAGNOSTIC=1 HARD_OFF=1 BURST=ALL_REJECTED BLOCK=5 DELTA=40 PAIR=U_OR_V"); return;
     }
 #endif
     if (!strcmp(cmd,"MOTOR TEST ZERO ROBUST")) {
+#if defined(FOC_ZERO_VALID_ADMISSION)
+        ProtectedLoop_ZeroAdmissionFormat(out,size); return;
+#else
         uint32_t mask=__get_PRIMASK(); __disable_irq();
         uint32_t n=cl_zero_filter.robust.outliers,seg=cl_zero_filter.robust.segments;
         uint32_t seg_outliers=cl_zero_filter.robust.segment_outliers;
@@ -634,6 +947,7 @@ static void ProtectedLoop_Command(const char *cmd,char *out,size_t size)
         snprintf(out,size,"OK MOTOR TEST ZERO ROBUST BLOCK=5 SEGMENT=500 SEGMENTS=%lu OUTLIERS=%lu MAX=20 SEG_MAX=OFF SEG_OUTLIERS=%lu FLAGS=%u HARD_OFF=" FOC_PROFILE_HARD_OFF_TEXT,
 #endif
             (unsigned long)seg,(unsigned long)n,(unsigned long)seg_outliers,flags); return;
+#endif
     }
 #endif
 #if defined(FOC_IRQ_SOURCE_TRACE)
@@ -700,9 +1014,14 @@ static void ProtectedLoop_Command(const char *cmd,char *out,size_t size)
             s.state,s.used,s.queued,armed,(unsigned long)elapsed,z.state,(unsigned long)flags,fault,
             (DRIVER_SD_GPIO_Port->ODR & DRIVER_SD_Pin)!=0U,(TIM1->BDTR & TIM_BDTR_MOE)!=0U,(unsigned long)TIM1->CCER);
     else if (!strcmp(cmd,"MOTOR TEST ZERO"))
+#if defined(FOC_ZERO_VALID_ADMISSION)
+        ProtectedLoop_ZeroAdmissionFormat(out,size);
+#else
         snprintf(out,size,"OK MOTOR TEST ZERO STATE=%u REASON=%u NOM=%u U0=%u V0=%u N=%lu RET=%lu RNG=%u:%u,%u:%u RAW_STATE=%u RAW_REASON=%u",
             z.state,z.reason,z.nominal,z.zero_u,z.zero_v,(unsigned long)z.count,(unsigned long)z.restarts,
             z.min_u,z.max_u,z.min_v,z.max_v,cl_zero_filter.raw.state,cl_zero_filter.raw.reason);
+#endif
+#if !defined(FOC_FAST_CURRENT_REJECT)
     else if (!strcmp(cmd,"MOTOR TEST PROTECTION"))
         snprintf(out,size,"OK MOTOR TEST PROTECTION FILTER=TREND4 OC=2_OF_3 TRIP_MA=4000 STATE=%u REASON=%u FLAGS=%lu REPAIRED=%lu BUDGET=6 STREAK=4 RAW_N=%lu FEEDBACK_N=%lu",
             p.result,p.reason,(unsigned long)p.fault_flags,(unsigned long)p.repaired_pairs,
@@ -716,12 +1035,13 @@ static void ProtectedLoop_Command(const char *cmd,char *out,size_t size)
             FocFp_Popcount(p.repair_window),p.repair_streak,
             p.cfg.repair_hits_per_32,p.cfg.repair_streak,
             (unsigned long)p.repaired_pairs);
+#endif
 #if defined(FOC_IRQ_COMPACT)
     else if (!strcmp(cmd,"MOTOR TEST COMPACT"))
         snprintf(out,size,"OK MOTOR TEST COMPACT ENABLED=1 HARD_OFF=" FOC_PROFILE_HARD_OFF_TEXT " FIXED_OPS=1 GUARD_US=25 DEADLINE_US=50");
 #endif
     else if (!strcmp(cmd,"MOTOR TEST TIMING"))
-        snprintf(out,size,"OK MOTOR TEST TIMING CLOCK_HZ=1000000 WORK=%lu MAX_US=%lu LATE=%lu IRQ=%lu OUTER=%lu LEASE_US=400000 SAMPLE_US=100 OUTER_US=2000",
+        snprintf(out,size,"OK MOTOR TEST TIMING CLOCK_HZ=1000000 WORK=%lu MAX_US=%lu LATE=%lu IRQ=%lu OUTER=%lu LEASE_US=" CL_LEASE_TEXT " SAMPLE_US=100 OUTER_US=2000",
             (unsigned long)work,(unsigned long)max,(unsigned long)late,(unsigned long)irqs,(unsigned long)outer);
 #if defined(FOC_FAST_MATH)
     else if (!strcmp(cmd,"MOTOR TEST COST"))

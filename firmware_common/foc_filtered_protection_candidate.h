@@ -2,6 +2,13 @@
 #define FOC_FILTERED_PROTECTION_CANDIDATE_H
 #include "foc_overcurrent_confirm.h"
 #include "foc_hot_path.h"
+#include "foc_timeout_diag.h"
+#include "foc_current_fault_trace.h"
+
+/* Active raw-current confirmation: count new ADC pairs, not elapsed wall time.
+ * The entry pair starts a window; the next four pairs consume its budget. */
+#define CUR_CONFIRM_CLEAR_GOOD_SAMPLES 2U
+#define CUR_CONFIRM_MAX_CYCLES         4U
 
 /* OFFLINE / HARD-OFF / bounded disconnected-bridge CANDIDATE,
  * NOT a motor-control protection qualification.
@@ -28,24 +35,55 @@ typedef enum {
     FOC_FP_NONE, FOC_FP_CONFIG, FOC_FP_HARDWARE, FOC_FP_HEALTH,
     FOC_FP_RAW_INVALID, FOC_FP_SEQUENCE, FOC_FP_TIMEOUT,
     FOC_FP_FEEDBACK_INVALID, FOC_FP_FEEDBACK_MISSING,
-    FOC_FP_REPAIR_BUDGET, FOC_FP_CONFIRMED_CURRENT
+    FOC_FP_REPAIR_BUDGET, FOC_FP_CONFIRMED_CURRENT, FOC_FP_CURRENT_INVALID
 } FocFilteredProtectionReason;
 typedef struct {
     float soft_A;
-    uint32_t sample_deadline_us, confirm_deadline_us;
+    uint32_t sample_deadline_us, confirm_deadline_us; /* confirm: legacy profiles only. */
     uint8_t repair_hits_per_32, repair_streak;
 } FocFilteredProtectionConfig;
-typedef struct {
+typedef struct FocFilteredProtection {
     FocFilteredProtectionConfig cfg;
     uint32_t begin_us, last_us, last_seq, pending_us, fault_flags;
     uint32_t repair_window, raw_pairs, feedback_pairs, repaired_pairs;
     uint8_t initialized, seq_valid, feedback_valid, warmup_pairs;
-    uint8_t pending, misses, pending_mask, trip_mask, repair_streak;
+    uint8_t pending;
+    union { uint8_t misses; uint8_t good_samples; }; /* Legacy diagnostic name. */
+    uint8_t pending_mask;
+#if defined(FOC_FAST_CURRENT_REJECT)
+    uint8_t confirm_cycles;
+#endif
+    uint8_t trip_mask, repair_streak;
+#if defined(FOC_FAST_CURRENT_REJECT)
+    uint32_t cur_confirm_enter_count, cur_confirm_clear_count, cur_confirm_fault_count;
+    uint32_t cur_confirm_max_cycles, cur_confirm_max_elapsed_us;
+#endif
     FocOcConfirmResult result;
     FocFilteredProtectionReason reason;
+    FocTimeoutLatch timeout; /* First timeout only, not a new stop policy. */
 } FocFilteredProtection;
 
-FOC_HOT_INLINE FocOcConfirmResult FocFp_Trip(
+/* Cold first-fault copy only; do not inline it into every 20 kHz poll site. */
+static __attribute__((noinline,cold,optimize("Os"))) FocOcConfirmResult FocFp_TripTimeout(
+    FocFilteredProtection *s, FocTimeoutReason reason,
+    uint32_t now, uint32_t reference, uint32_t limit, uint8_t mask)
+{
+    if (s->result!=FOC_OC_TRIPPED) {
+        s->timeout=(FocTimeoutLatch){(uint32_t)reason,now,reference,limit};
+        s->result=FOC_OC_TRIPPED; s->reason=FOC_FP_TIMEOUT; s->trip_mask=mask;
+    }
+    return s->result;
+}
+
+#if FOC_CURRENT_FAULT_TRACE_ENABLE
+/* Only diagnostic builds outline this existing cold fault wrapper. It keeps
+ * the same assignments/return, avoiding replicated fault/trace call sites.
+ * Some includers do not use it; unused definitions are removed by gc-sections. */
+static __attribute__((noinline,cold,unused,optimize("Os")))
+#else
+FOC_HOT_INLINE
+#endif
+FocOcConfirmResult FocFp_Trip(
     FocFilteredProtection *s, FocFilteredProtectionReason reason, uint8_t mask)
 {
     if (s->result!=FOC_OC_TRIPPED) {
@@ -60,7 +98,9 @@ static inline FocOcConfirmResult FocFp_Begin(
     *s=(FocFilteredProtection){0}; s->cfg=cfg; s->begin_us=now_us;
     if (!FocOcConfirm_Finite(cfg.soft_A) || !(cfg.soft_A>0.0f) ||
         !cfg.sample_deadline_us || cfg.sample_deadline_us>INT32_MAX ||
+#if !defined(FOC_FAST_CURRENT_REJECT)
         !cfg.confirm_deadline_us || cfg.confirm_deadline_us>INT32_MAX ||
+#endif
         !cfg.repair_hits_per_32 || cfg.repair_hits_per_32>32U ||
         !cfg.repair_streak || cfg.repair_streak>32U)
         return FocFp_Trip(s,FOC_FP_CONFIG,0U);
@@ -76,9 +116,15 @@ FOC_HOT_INLINE FocOcConfirmResult FocFp_Poll(
         return FocFp_Trip(s,FOC_FP_HARDWARE,0U);
     if (flags) return FocFp_Trip(s,FOC_FP_HEALTH,0U); /* unknown bits fail closed */
     uint32_t since=s->seq_valid?s->last_us:s->begin_us;
-    if ((uint32_t)(now_us-since)>s->cfg.sample_deadline_us ||
-        (s->pending && (uint32_t)(now_us-s->pending_us)>s->cfg.confirm_deadline_us))
-        return FocFp_Trip(s,FOC_FP_TIMEOUT,s->pending_mask);
+    if ((uint32_t)(now_us-since)>s->cfg.sample_deadline_us)
+        return FocFp_TripTimeout(s,s->seq_valid ? FOC_TO_CURRENT_SAMPLE :
+            FOC_TO_CURRENT_FIRST_SAMPLE,now_us,since,s->cfg.sample_deadline_us,s->pending_mask);
+#if !defined(FOC_FAST_CURRENT_REJECT)
+    /* Historical filtered-current profiles retain their original policy. */
+    if (s->pending && (uint32_t)(now_us-s->pending_us)>s->cfg.confirm_deadline_us)
+        return FocFp_TripTimeout(s,FOC_TO_CURRENT_CONFIRM,now_us,s->pending_us,
+            s->cfg.confirm_deadline_us,s->pending_mask);
+#endif
     return s->result;
 }
 static inline void FocFp_Increment(uint32_t *value)
@@ -175,6 +221,66 @@ FOC_HOT_INLINE FocOcConfirmResult FocFp_Push(
     if (FocFp_Poll(s,now_us,flags)==FOC_OC_TRIPPED) return s->result;
     return FocFp_PushAfterPoll(s,seq,now_us,raw_u,raw_v,feedback_ready,
         feedback_seq,filtered_u_A,filtered_v_A,repaired_mask,flags);
+}
+#endif
+#if defined(FOC_FAST_CURRENT_REJECT)
+/* Only called on entry or while confirming; keep the normal ADC path small.
+ * No IO, allocation, loops, or clock reads. elapsed_us is diagnostic ONLY.
+ * Poll has already checked hardware flags and the independent ADC watchdog.
+ */
+static __attribute__((noinline,optimize("Oz"))) FocOcConfirmResult FocFp_ConfirmPair(
+    FocFilteredProtection *s, uint32_t now, uint8_t hit)
+{
+    uint32_t *event_count;
+    if (!s->pending) {
+        s->pending=1U; s->confirm_cycles=0U; s->good_samples=0U;
+        s->pending_us=now; s->pending_mask=hit; s->result=FOC_OC_PENDING;
+        event_count=&s->cur_confirm_enter_count;
+    } else {
+        ++s->confirm_cycles;
+        if (s->confirm_cycles>s->cur_confirm_max_cycles)
+            s->cur_confirm_max_cycles=s->confirm_cycles;
+        uint32_t elapsed=(uint32_t)(now-s->pending_us);
+        if (elapsed>s->cur_confirm_max_elapsed_us) s->cur_confirm_max_elapsed_us=elapsed;
+        s->pending_mask|=hit;
+        s->good_samples=hit?0U:(uint8_t)(s->good_samples+1U);
+        /* A second good sample on the last allowed cycle succeeds, not faults. */
+        if (s->good_samples>=CUR_CONFIRM_CLEAR_GOOD_SAMPLES) {
+            s->pending=0U; s->good_samples=0U; s->pending_mask=0U; s->confirm_cycles=0U;
+            event_count=&s->cur_confirm_clear_count;
+            s->result=FOC_OC_CLEAR;
+        } else if (s->confirm_cycles>=CUR_CONFIRM_MAX_CYCLES) {
+            event_count=&s->cur_confirm_fault_count;
+            /* limit_us=0: this is a cycle budget, NOT a microsecond deadline. */
+            FocFp_TripTimeout(s,FOC_TO_CURRENT_CONFIRM,now,s->pending_us,0U,s->pending_mask);
+        } else return s->result;
+    }
+    FocFp_Increment(event_count);
+    return s->result;
+}
+/* Independent RAW 4 A cycle confirmation: runs BEFORE feedback plausibility and
+ * sees every physical pair, even those whose PI update will be skipped.
+ * limit_counts is precomputed once from the existing ADC scaling/soft_A.
+ * No filtering, fake current, float arithmetic, or repair quota in this path.
+ */
+FOC_HOT_INLINE FocOcConfirmResult FocFp_PushRawSafety(
+    FocFilteredProtection *s, uint32_t seq, uint32_t now,
+    uint16_t u, uint16_t v, uint16_t zero_u, uint16_t zero_v,
+    uint16_t limit_counts, uint32_t flags)
+{
+    if (FocFp_Poll(s, now, flags) == FOC_OC_TRIPPED) return s->result;
+    if (u > 4095U || v > 4095U) return FocFp_Trip(s, FOC_FP_RAW_INVALID, 0U);
+    if (s->seq_valid && ((uint32_t)(seq-s->last_seq) != 1U || now == s->last_us))
+        return FocFp_Trip(s, FOC_FP_SEQUENCE, 0U);
+    s->last_seq = seq; s->last_us = now; s->seq_valid = 1U;
+    FocFp_Increment(&s->raw_pairs);
+    int32_t iu = (int32_t)zero_u-u, iv = (int32_t)zero_v-v, iw = -(iu+iv);
+    int32_t bound = limit_counts;
+    uint8_t hit = (uint8_t)((iu > bound || iu < -bound) |
+        ((iv > bound || iv < -bound) << 1U) | ((iw > bound || iw < -bound) << 2U));
+    FOC_TRACE_CALL(FocCurrentTrace_Compare(iu,iv,iw,hit));
+    if (hit || s->pending) return FocFp_ConfirmPair(s,now,hit);
+    return s->result;
 }
 #endif
 #endif

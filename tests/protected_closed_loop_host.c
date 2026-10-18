@@ -6,6 +6,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#if defined(FOC_FAST_CURRENT_REJECT)
+#include <stdarg.h>
+static struct { uint32_t DEMCR; } mock_coredebug;
+#define CoreDebug (&mock_coredebug)
+#define CoreDebug_DEMCR_TRCENA_Msk (1U<<24)
+static uint32_t SystemCoreClock=170000000U;
+static char validation_log[480];
+static void UART_SendFormatted(char *buffer,size_t size,const char *format,...) {
+    va_list args; va_start(args,format); vsnprintf(buffer,size,format,args); va_end(args);
+    snprintf(validation_log,sizeof(validation_log),"%s",buffer);
+}
+#define TWO_PI_F 6.28318530718f
+#define FOC_TS_S 0.00005f
+static float encoder_omega_e_rad_s;
+#endif
 #include "protected_closed_loop.h"
 #include "foc_adc_window.h"
 #if defined(FOC_LATEST_ORIGINAL_FSM)
@@ -15,7 +30,7 @@
     fprintf(stderr,"assertion failed: %s:%d: %s\n",__FILE__,__LINE__,#condition); \
     exit(101); } } while (0)
 #endif
-typedef struct { volatile uint32_t CR1,DIER,SR,PSC,ARR,CNT,EGR,BDTR,CCER; } Timer;
+typedef struct { volatile uint32_t CR1,DIER,SR,PSC,ARR,CNT,EGR,BDTR,CCER,CCR1; } Timer;
 typedef struct { volatile uint32_t ODR,BSRR; } Gpio;
 typedef struct { volatile uint32_t CFGR,APB1ENR1; } Clock;
 static Timer t1,t2,t7;
@@ -158,14 +173,37 @@ static int AS5047P_DmaStartPeriodic(void) { periodic=1U; return 1; }
 static int AS5047P_DmaIsPeriodic(void) { return periodic; }
 static void AS5047P_DmaStopPeriodic(void) { periodic=0U; }
 static int FocAdcTiming_Commit(float a,float b,float c)
-{ assert(a>=0.0f && b>=0.0f && c>=0.0f); return planner_ok ? 0 : 1; }
+{ assert(a>=0.0f && b>=0.0f && c>=0.0f);
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+    t1.CCR1=2125U;
+#else
+    t1.CCR1=2124U;
+#endif
+    return planner_ok ? 0 : 1; }
 static int FocAdcTiming_CertifyClock(void) { return planner_ok; }
-static int FocAdcTiming_FastCanStart(void) { return planner_ok; }
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+static unsigned pipeline_guard_probe,pipeline_adc_preempt;
+static void PipelineMock_AdcProgress(void);
+#endif
+static int FocAdcTiming_FastCanStart(void) {
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    if (pipeline_guard_probe) {
+        assert(!mask); /* Read-only TIM7 health is preemptible by ADC. */
+        if (pipeline_adc_preempt) { pipeline_adc_preempt=0U; PipelineMock_AdcProgress(); }
+    }
+#endif
+    return planner_ok;
+}
 static FocWindowStatus FocAdcTiming_Prepare(float a,float b,float c,FocWindowPlan *out)
 {
     ++prepare_calls;
     assert(!mask && a>=0.0f && b>=0.0f && c>=0.0f);
     *out=(FocWindowPlan){0};
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    out->phase[0]=(uint16_t)(a*4249.0f);
+    out->phase[1]=(uint16_t)(b*4249.0f);
+    out->phase[2]=(uint16_t)(c*4249.0f);
+#endif
     if (prepare_interrupt==1U) ProtectedLoop_EmergencyOff(CL_BAD_ADC);
     if (prepare_interrupt==2U) ProtectedLoop_Stop();
     return planner_ok ? FOC_WINDOW_OK : FOC_WINDOW_BAD_ARGUMENT;
@@ -194,7 +232,74 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt)
     return encoder_ok==2U ? HAL_BUSY : encoder_ok ? HAL_OK : HAL_ERROR;
 }
 static void vTaskDelay(unsigned ms);
+#if defined(FOC_TIMEOUT_DIAGNOSTICS)
+#include "foc_timeout_diag.h"
+static FocTimeoutReason encoder_timeout_reason;
+static uint32_t tightening_test_stage,tightening_test_elapsed_ms;
+static uint32_t tightening_contact_candidate_ms,encoder_error_count,foc_control_count;
+static float encoder_position_deg,position_target_deg,position_error_deg,stall_timer_s;
+#if !defined(FOC_STARTUP_TRACE)
+static float speed_ref_rpm,encoder_rpm_instant,foc_id_A,foc_iq_A;
+#endif
+static char snapshot_log[8192];
+static size_t snapshot_log_size;
+static unsigned snapshot_tx_budget=1000U;
+static uint8_t UART_SendReliableFormatted(char *buffer,size_t size,const char *format,...)
+{
+    assert(!mask); /* Formatting/queueing MUST stay outside writer critical section. */
+    if (!snapshot_tx_budget) return 0U;
+    --snapshot_tx_budget;
+    va_list args; va_start(args,format);
+    int n=vsnprintf(buffer,size,format,args); va_end(args);
+    assert(n>0 && (size_t)n<size && snapshot_log_size+(size_t)n<sizeof(snapshot_log));
+    memcpy(snapshot_log+snapshot_log_size,buffer,(size_t)n+1U);
+    snapshot_log_size+=(size_t)n;
+    return 1U;
+}
+#include "foc_fault_snapshot.inc"
+#endif
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+#define configPRIO_BITS 4U
+#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY 5U
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 0x50U
+#include "foc_preempt_probe.h"
+static uint32_t pending_commits;
+static uint16_t committed_phase[3];
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+#define FOC_ADC_TIMER_ARR 4249U
+static uint8_t pipeline_timing_ready=1U,pipeline_plan_matches=1U;
+static int FocAdcTiming_PipelineActuationReady(void) { return pipeline_timing_ready; }
+static int FocAdcTiming_PipelinePlanMatches(const FocWindowPlan *plan)
+{ (void)plan; return pipeline_plan_matches; }
+#endif
+static int FocAdcTiming_PipelineCommit(const uint16_t phase[3])
+{
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+    unsigned permit=ProtectedLoop_PwmCommitPermit();
+    if (!permit) return 0;
+    assert(permit==2U ? gpio.ODR==DRIVER_SD_Pin && t1.CCER==0x555U &&
+        (t1.BDTR&TIM_BDTR_MOE) : !gpio.ODR && !t1.CCER && !(t1.BDTR&TIM_BDTR_MOE));
+#else
+    assert(phase && !gpio.ODR && !t1.CCER && !(t1.BDTR&TIM_BDTR_MOE));
+#endif
+    memcpy(committed_phase,phase,sizeof committed_phase); ++pending_commits; return 1;
+}
+static void FocAdcTiming_ProfileDutyPoint(void) { }
+FocPreToken FocPreempt_IrqBegin(unsigned source)
+{ (void)source; return (FocPreToken){0}; }
+void FocPreempt_IrqEnd(unsigned source,FocPreToken token) { (void)source; (void)token; }
+uint32_t FocPreempt_End(uint32_t start,uint32_t path)
+{ (void)path; return DWT->CYCCNT-start; }
+void FocPreempt_CheckPriorities(void) { }
+void FocPreempt_Monitor(void) { }
+#endif
 #include "protected_closed_loop.inc"
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+static void PipelineMock_AdcProgress(void)
+{
+    ++cl_seq; injected_seq_count=cl_seq; t2.CNT+=50U; cl_last_us=t2.CNT;
+}
+#endif
 #if defined(FOC_STARTUP_TRACE)
 static void ProtectedLoop_StartupInjectedFault(void)
 { ProtectedLoop_EmergencyOff(CL_OVERSPEED); }
@@ -214,7 +319,11 @@ static void reset(void)
     t1=(Timer){0}; t2=(Timer){.CR1=1U,.PSC=169U,.ARR=UINT32_MAX,.CNT=100U}; t7=(Timer){0};
     gpio=(Gpio){0}; clock_regs=(Clock){.CFGR=4U,.APB1ENR1=1U};
     mask=enabled=adc_priority=guard_priority=0U;
+#if defined(AS5047P_DMA_FOC_FIRST)
+    encoder_priorities[0]=encoder_priorities[1]=encoder_priorities[2]=3U;
+#else
     encoder_priorities[0]=encoder_priorities[1]=encoder_priorities[2]=1U;
+#endif
     adc_fault=foc_fault=foc_enable=analog_safe_latched=run_zero_cal_done=current_filter_enable=0U;
     tightening_start_request=motor_control_mode=trial=periodic=0U;
     meta_valid=1U; metadata_reads=0U; cl_boot_confirmed=0U;
@@ -227,6 +336,12 @@ static void reset(void)
     cl_stop_us=cl_fault_seq=cl_fault_last_us=cl_flags=0U;
     cl_fault_u=cl_fault_v=cl_last_u=cl_last_v=0U;
     cl_armed=cl_initialized=cl_fault_valid=cl_request=0U;
+#if defined(FOC_TIMEOUT_DIAGNOSTICS)
+    FaultDiag_Clear(); current_hold_total=0U;
+    current_hold_window=(FocHoldWindow){0}; cl_direct_timeout=(FocTimeoutEvidence){0};
+    encoder_timeout_reason=FOC_TO_NONE;
+    snapshot_log_size=0U; snapshot_log[0]=0; snapshot_tx_budget=1000U;
+#endif
 }
 static void ready(void)
 {

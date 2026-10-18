@@ -1,8 +1,17 @@
 /* Adapter only: no recipe rewrite and no duplicate tightening state machine.
  * Local START remains the producer, original TighteningTask the consumer.
- * The existing one-shot 20 rpm / 400 ms qualification envelope is retained. */
+ * The selected profile supplies the one-shot lease; 20 rpm admission stays. */
 static uint8_t LatestOriginal_RecipeReady(void)
 {
+#if defined(FOC_LOADED_FSM_TRIAL)
+    /* Refuse a recipe that cannot finish within this profile's lease.
+     * Existing FSM stop-settle timeout is 2000 ms; reserve 300 ms for its
+     * 100 Hz transitions. Never shorten or rewrite a loaded recipe here. */
+    uint32_t post_ms=recipe_state.params.seating_ms+recipe_state.params.t1_ms+
+        recipe_state.params.t2_ms+recipe_state.params.t3_ms+recipe_state.params.hold_ms;
+    if (recipe_state.params.rundown_timeout_ms>8000U || post_ms>1700U)
+        return 0U;
+#endif
     return recipe_state.params.rundown_rpm > 0U &&
         recipe_state.params.rundown_rpm <= CL_SPEED_RPM;
 }
@@ -13,7 +22,7 @@ static uint8_t LatestOriginal_Ready(void)
 }
 static uint8_t LatestOriginal_Admit(void)
 {
-#if defined(FOC_RC_DEFERRED_SHADOW)
+#if defined(FOC_RC_DEFERRED_SHADOW) || defined(FOC_FAST_REJECT_COMPUTE_ONLY)
     /* This observer must have no compiled bridge-enable transaction. */
     return 0U;
 #else
@@ -28,7 +37,14 @@ static uint8_t LatestOriginal_Admit(void)
         __set_PRIMASK(mask);
         return 0U;
     }
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+    /* READY has committed ONLY neutral for >=1000 ADC entries. Those active
+     * compares are already latched. Do not make a task-context CCR/UDIS write
+     * or expose an old READY shadow command during this enable transaction. */
+    ProtectedLoop_PwmInvalidate();
+#else
     FocAdcTiming_CommitPrepared(&plan);
+#endif
     /* Drop shadow-integrator memory before the sole power-enable transaction.
      * The original FSM sets its speed/Iq immediately after this admission. */
     FocCurrentPi_Reset(&foc_int_d_V,&foc_int_q_V);

@@ -29,10 +29,14 @@ class IntegrationTest(unittest.TestCase):
 
     def test_atomic_preload_and_no_running_ug(self):
         source = (ROOT / "firmware_common/foc_adc_timing_stm32.c").read_text(encoding="utf-8")
-        begin = source.index("TIM1->CR1 |= TIM_CR1_UDIS")
-        end = source.index("TIM1->CR1 &= ~TIM_CR1_UDIS")
+        # Audit the production four-register commit, not the separately
+        # guarded hard-off diagnostic's earlier three-register write group.
+        commit = source[source.index("void FocAdcTiming_CommitPrepared"):
+                        source.index("int FocAdcTiming_RcActuationReady")]
+        begin = commit.index("TIM1->CR1 |= TIM_CR1_UDIS")
+        end = commit.index("TIM1->CR1 &= ~TIM_CR1_UDIS")
         for ch in range(1, 5):
-            self.assertTrue(begin < source.index(f"TIM1->CCR{ch} =") < end)
+            self.assertTrue(begin < commit.index(f"TIM1->CCR{ch} =") < end)
         self.assertIn("(TIM1->CR1 & TIM_CR1_CEN) == 0U && udis == 0U", source)
         for slot in "ab":
             hal = (ROOT / f"foc2_app_{slot}/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.c").read_text(encoding="utf-8")

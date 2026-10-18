@@ -18,9 +18,21 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "foc_fast_path_profile.h"
+#if defined(FOC_SPEED_STARTUP_BRAKE)
+#include "speed_startup_brake.h"
+#endif
+#if defined(FOC_SPEED_BUMPLESS)
+#include "speed_bumpless.h"
+#if defined(FOC_SPEED_BRAKE_TRACK)
+#include "speed_brake_track.h"
+static SpeedBrakeTrack speed_brake_track;
+#endif
+#endif
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#define FOC_TIMEOUT_DIAGNOSTICS 1
 /* UART_LAYER_1B: TX DMA ring + RX DMA circular + ProtocolTask */
 #include <stdio.h>
 #include <string.h>
@@ -602,6 +614,13 @@ _Static_assert(PWM_ARR == FOC_ADC_TIMER_ARR, "Review ADC timing after PWM clock/
 #define FOC_DC_BUS_V                12.0f
 #define FOC_VOLTAGE_LIMIT_V         0.80f
 #define FOC_INTEGRATOR_LIMIT_V      0.75f
+#if defined(FOC_VOLTAGE_X2_TRIAL)
+#if !defined(FOC_SPEED_BUMPLESS) || !defined(FOC_LOADED_FSM_TRIAL) || !defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+#error Voltage X2 requires the complete protected SB2 one-shot trial
+#endif
+#undef FOC_VOLTAGE_LIMIT_V
+#define FOC_VOLTAGE_LIMIT_V         1.60f
+#endif
 /* User-requested fault threshold; 4 A has NOT passed powered validation. */
 #define FOC_CURRENT_TRIP_A          4.0f
 
@@ -1426,6 +1445,12 @@ static volatile float foc_duty_u = 0.5f;
 static volatile float foc_duty_v = 0.5f;
 static volatile float foc_duty_w = 0.5f;
 
+#include "foc_timeout_diag.h"
+#include "foc_encoder_timeout_diag.h"
+static FocTimeoutReason encoder_timeout_reason;
+static void FaultDiag_Monitor(void);
+static void FaultDiag_Clear(void);
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -1462,17 +1487,25 @@ static void PowerStage_Enable(void);
 /* IRQ priority 3: fixed writes only, no UART/HAL waits/FreeRTOS calls. */
 static void EncoderDma_FaultFromISR(void)
 {
+    if (encoder_timeout_reason==FOC_TO_NONE) {
+        uint32_t status=AS5047P_DmaFaultStatus();
+        if (status==AS_DMA_TIMEOUT) encoder_timeout_reason=FOC_TO_ENCODER_TRANSACTION;
+        else if (status==AS_DMA_CONTROL_STALE) encoder_timeout_reason=FOC_TO_ENCODER_CONTROL;
+        else if (status==AS_DMA_SCHEDULE) encoder_timeout_reason=FOC_TO_ENCODER_SCHEDULE;
+    }
 #if defined(FOC_PROTECTED_CLOSED_LOOP)
     ProtectedLoop_EmergencyOff(CL_BAD_ENCODER);
 #endif
 #if defined(FOC_FEEDBACK_SAFETY_BINDING)
     FocFeedbackBinding_EmergencyOff(FOC_FB_ENCODER_INVALID);
 #endif
+    TIM1->BDTR &= ~TIM_BDTR_MOE;
+    DRIVER_SD_GPIO_Port->BSRR = (uint32_t)DRIVER_SD_Pin << 16U;
+    FaultDiag_Capture(FOC_DIAG_MOTOR,2U,encoder_timeout_reason,
+        tightening_test_elapsed_ms,0U);
     foc_enable = 0U;
     encoder_valid = 0U;
     foc_iq_ref_A = 0.0f;
-    TIM1->BDTR &= ~TIM_BDTR_MOE;
-    DRIVER_SD_GPIO_Port->BSRR = (uint32_t)DRIVER_SD_Pin << 16U;
     if (foc_fault == 0U) foc_fault_reason = 2U;
     foc_fault = 1U;
     __DSB();
@@ -2087,8 +2120,13 @@ size_t PW_Rpc_ReadOnlySnapshot(uint32_t kind, uint8_t *out, size_t capacity)
  * - The original 20 kHz current-loop FOC code is not moved yet.
  * - This task only proves stable 1 kHz periodic scheduling.
  */
+#include "foc_fault_snapshot.inc"
+
 static void MotorControl_SetIdle(void)
 {
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    if (motor_control_mode!=MOTOR_MODE_IDLE) ProtectedLoop_PwmInvalidate();
+#endif
     motor_position_command_deg = encoder_position_deg;
     motor_speed_command_rpm = 0.0f;
     motor_iq_command_A = 0.0f;
@@ -2105,6 +2143,9 @@ static void MotorControl_SetIdle(void)
 
 static void MotorControl_SetSpeed(float rpm)
 {
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    if (motor_control_mode!=MOTOR_MODE_SPEED) ProtectedLoop_PwmInvalidate();
+#endif
     rpm = ClampFloat(rpm,
                      -MOTOR_SPEED_API_LIMIT_RPM,
                       MOTOR_SPEED_API_LIMIT_RPM);
@@ -2118,6 +2159,9 @@ static void MotorControl_SetSpeed(float rpm)
 
 static void MotorControl_SetPosition(float position_deg, uint8_t active_hold)
 {
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    if (motor_control_mode!=MOTOR_MODE_POSITION) ProtectedLoop_PwmInvalidate();
+#endif
     motor_position_command_deg = position_deg;
     motor_speed_command_rpm = 0.0f;
     motor_iq_command_A = 0.0f;
@@ -2128,6 +2172,9 @@ static void MotorControl_SetPosition(float position_deg, uint8_t active_hold)
 
 static void MotorControl_SetIq(float iq_A)
 {
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    if (motor_control_mode!=MOTOR_MODE_IQ) ProtectedLoop_PwmInvalidate();
+#endif
     iq_A = ClampFloat(iq_A,
                       -MOTOR_DIRECT_IQ_LIMIT_A,
                        MOTOR_DIRECT_IQ_LIMIT_A);
@@ -2265,6 +2312,9 @@ static void MotorControlTask(void *argument)
                 foc_fault_reason = FOC_FAULT_ADC_CHAIN_STALE;
                 foc_fault = 1U;
                 PowerStage_Disable();
+                FaultDiag_Capture(FOC_DIAG_MOTOR,FOC_FAULT_ADC_CHAIN_STALE,
+                    FOC_TO_ADC_CHAIN,(uint32_t)((now-preflight_adc_progress_tick)*portTICK_PERIOD_MS),
+                    PREFLIGHT_CHAIN_MAX_STALE_MS);
             }
             else if ((now - preflight_foc_progress_tick) >
                      pdMS_TO_TICKS(PREFLIGHT_CHAIN_MAX_STALE_MS))
@@ -2272,6 +2322,9 @@ static void MotorControlTask(void *argument)
                 foc_fault_reason = FOC_FAULT_CONTROL_CHAIN_STALE;
                 foc_fault = 1U;
                 PowerStage_Disable();
+                FaultDiag_Capture(FOC_DIAG_MOTOR,FOC_FAULT_CONTROL_CHAIN_STALE,
+                    FOC_TO_CONTROL_CHAIN,(uint32_t)((now-preflight_foc_progress_tick)*portTICK_PERIOD_MS),
+                    PREFLIGHT_CHAIN_MAX_STALE_MS);
             }
         }
         if ((adc_fault == 0U) && (foc_fault == 0U))
@@ -4683,6 +4736,11 @@ static uint8_t TightenParams_SetOne(
 
 #if defined(TIGHTEN_SYNTHETIC_BENCH)
 #include "tighten_synthetic_port.inc"
+#endif
+#if defined(FOC_PREEMPT_COMMIT_PROBE)
+/* Cold task-only command dispatch: size codegen ONLY for this diagnostic,
+ * no command/protocol behavior changes and no control-kernel option changes. */
+__attribute__((optimize("Os")))
 #endif
 static void Protocol_HandleLine(char *line)
 {
@@ -7448,6 +7506,10 @@ static void TighteningTask(void *argument)
                          (travel >=
                           (float)recipe_state.params.max_travel_deg))
                 {
+                    PowerStage_Disable();
+                    FaultDiag_Capture(FOC_DIAG_PROCESS,TIGHTEN_OUTCOME_RUNDOWN_TIMEOUT,
+                        elapsed_ms>=recipe_state.params.rundown_timeout_ms ? FOC_TO_RUNDOWN : FOC_TO_NONE,
+                        elapsed_ms,recipe_state.params.rundown_timeout_ms);
                     MotorControl_SetIdle();
 
                     tightening_test_stage =
@@ -7518,6 +7580,9 @@ static void TighteningTask(void *argument)
                 else if (elapsed_ms >=
                          TIGHTEN_STOP_TIMEOUT_MS)
                 {
+                    PowerStage_Disable();
+                    FaultDiag_Capture(FOC_DIAG_PROCESS,TIGHTEN_OUTCOME_STOP_TIMEOUT,
+                        FOC_TO_STOP_SETTLE,elapsed_ms,TIGHTEN_STOP_TIMEOUT_MS);
                     MotorControl_SetIdle();
 
                     tightening_test_stage =
@@ -8064,11 +8129,18 @@ static void BootHealthTask(void *argument)
 }
 
 
+#if defined(FOC_FAST_CURRENT_REJECT)
+/* Task-only formatting: reserve Flash for the O2 realtime chain. */
+__attribute__((optimize("Os")))
+#endif
 static void MonitorTask(void *argument)
 {
     TickType_t last_sample_tick;
     TickType_t analog_wake_tick;
     TickType_t last_stack_tick;
+#if defined(FOC_FAST_CURRENT_REJECT)
+    TickType_t last_current_stats_tick=0U;
+#endif
     uint32_t last_adc_count;
     uint32_t last_foc_count;
 
@@ -8160,6 +8232,8 @@ static void MonitorTask(void *argument)
 
         vTaskDelayUntil(&analog_wake_tick,
                         pdMS_TO_TICKS(ANALOG_LIVE_PERIOD_MS));
+
+        FaultDiag_Monitor(); /* Task-only, immutable first-fault evidence. */
 
 #if defined(CAN_STATUS_TELEMETRY)
         CAN_StatusTx_Service(HAL_GetTick());
@@ -8279,6 +8353,12 @@ static void MonitorTask(void *argument)
                        (uint64_t)sample_elapsed_ms);
 
         last_sample_tick = now_tick;
+#if defined(FOC_FAST_CURRENT_REJECT)
+        if ((TickType_t)(now_tick-last_current_stats_tick)>=pdMS_TO_TICKS(5000U)) {
+            last_current_stats_tick=now_tick;
+            ProtectedLoop_CurrentMonitor();
+        }
+#endif
         last_adc_count = adc_now;
         last_foc_count = foc_now;
 
@@ -8901,6 +8981,7 @@ static void PWM_SetDuty(float du, float dv, float dw)
         DRIVER_SD_GPIO_Port->BSRR = (uint32_t)DRIVER_SD_Pin << 16U;
         TIM1->BDTR &= ~TIM_BDTR_MOE;
         __DSB();
+        FaultDiag_Motor(FOC_FAULT_ADC_WINDOW);
     }
     return;
 #else
@@ -8936,6 +9017,12 @@ static float ClampFloat(float x, float lo, float hi)
 
 static void FOC_ResetController(void)
 {
+#if defined(FOC_SPEED_BRAKE_TRACK)
+    SpeedBrakeTrack_Reset(&speed_brake_track);
+#endif
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+    ProtectedLoop_PwmInvalidate();
+#endif
     foc_id_ref_A = FOC_ID_REF_A;
     foc_iq_ref_A = 0.0f;
 
@@ -9134,6 +9221,7 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
         HAL_GPIO_WritePin(DRIVER_SD_GPIO_Port,
                           DRIVER_SD_Pin,
                           GPIO_PIN_RESET);
+        FaultDiag_Motor(1U);
         PWM_SetDuty(0.5f, 0.5f, 0.5f);
 
 #if defined(FOC_CURRENT_TREND4)
@@ -9202,6 +9290,7 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
 #endif
 #endif
 #endif /* FOC_FEEDBACK_SAFETY_BINDING: legacy policy remains unchanged otherwise */
+    FocProfile_Mark(FOC_PROF_OTHER);
     i_alpha = iu_A;
     i_beta = (iu_A + 2.0f * iv_A) * 0.57735026919f;
 
@@ -9227,6 +9316,7 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
 
     id_A =  i_alpha * c + i_beta * s;
     iq_A = -i_alpha * s + i_beta * c;
+    FocProfile_Mark(FOC_PROF_TRANSFORM);
 
     err_d = foc_id_ref_A - id_A;
     err_q = foc_iq_ref_A - iq_A;
@@ -9238,6 +9328,9 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
      * for roughly 300 Hz initial current-loop bandwidth using the present
      * R ~= 0.10 ohm and L ~= 42.3 uH motor estimates.
      */
+#if FOC_CURRENT_FAULT_TRACE_ENABLE
+    FocCurrentTrace_Pi(); /* Diagnostic only: actual PI-update reachability. */
+#endif
     foc_int_d_V += FOC_CURRENT_KI_V_PER_AS * err_d * FOC_TS_S;
     foc_int_q_V += FOC_CURRENT_KI_V_PER_AS * err_q * FOC_TS_S;
 
@@ -9280,9 +9373,11 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
                                   FOC_INTEGRATOR_LIMIT_V);
     }
 
+    FocProfile_Mark(FOC_PROF_PI);
     /* Inverse Park. */
-#if defined(FOC_CURRENT_TREND4)
-    /* The new voltage command is NOT delayed with the current measurement. */
+#if defined(FOC_CURRENT_TREND4) && !defined(FOC_FAST_CURRENT_REJECT)
+    /* Historical delayed feedback needs a second angle. Fast reject uses
+     * this physical pair and the SAME angle, so reuse its checked sin/cos. */
 #if defined(FOC_PROTECTED_CLOSED_LOOP)
 #if defined(FOC_FAST_MATH)
     if (!FocFast_SinCos(cl_frame.actuation_angle,&s,&c)) {
@@ -9301,6 +9396,7 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
 #endif
     v_alpha = vd * c - vq * s;
     v_beta  = vd * s + vq * c;
+    FocProfile_Mark(FOC_PROF_INVERSE);
 
     /*
      * alpha-beta -> three phase, then centered zero-sequence injection.
@@ -9328,7 +9424,9 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
     dv = 0.5f + vv / FOC_DC_BUS_V;
     dw = 0.5f + vw / FOC_DC_BUS_V;
 
+    FocProfile_Mark(FOC_PROF_SVPWM);
     PWM_SetDuty(du, dv, dw);
+    FocProfile_Mark(FOC_PROF_DUTY);
 
     foc_id_A = id_A;
     foc_iq_A = iq_A;
@@ -9340,9 +9438,13 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
     foc_duty_w = dw;
 
     /* Predict electrical angle at the 20 kHz current-loop rate. */
+#if defined(FOC_FAST_CURRENT_REJECT)
+    ProtectedLoop_AdvanceAngle();
+#else
     encoder_theta_e_pred += encoder_omega_e_rad_s * FOC_TS_S;
     while (encoder_theta_e_pred >= TWO_PI_F) encoder_theta_e_pred -= TWO_PI_F;
     while (encoder_theta_e_pred < 0.0f) encoder_theta_e_pred += TWO_PI_F;
+#endif
 
     foc_control_count++;
 }
@@ -9363,12 +9465,13 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
     AsDmaSample sample;
     uint32_t dt_us;
     if (!AS5047P_DmaGetSample(&sample)) return HAL_BUSY;
-    int consumed = AsDma_Consume(&encoder_dma_cursor, &sample,
-                                 AS5047P_DmaNowUs(), &dt_us);
+    uint32_t consume_now=AS5047P_DmaNowUs();
+    int consumed = AsDma_Consume(&encoder_dma_cursor, &sample,consume_now,&dt_us);
     if (consumed == 0) return HAL_BUSY;
     if (consumed < 0)
     {
         encoder_error_count++;
+        encoder_timeout_reason=FocEncoder_TimeoutReason(&encoder_dma_cursor,&sample,consume_now);
         EncoderDma_FaultFromISR();
         return HAL_ERROR;
     }
@@ -9388,6 +9491,8 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
         encoder_valid = 0U;
         foc_fault_reason = 2U;
         foc_fault = 1U;
+        PowerStage_Disable();
+        FaultDiag_Motor(2U);
         return HAL_ERROR;
     }
 #endif
@@ -9433,6 +9538,9 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
          */
         if (fabsf(rpm_inst) > SPEED_INSTANT_PLAUSIBLE_RPM)
         {
+#if defined(FOC_SPEED_BRAKE_TRACK)
+            SpeedBrakeTrack_Reset(&speed_brake_track);
+#endif
             encoder_speed_glitch_count++;
             encoder_speed_glitch_streak++;
 
@@ -9441,6 +9549,8 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
                 foc_fault_reason = 2U;
                 foc_fault = 1U;
                 encoder_valid = 0U;
+                PowerStage_Disable();
+                FaultDiag_Motor(2U);
                 return HAL_ERROR;
             }
 
@@ -9514,6 +9624,7 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
             foc_fault = 1U;
             foc_enable = 0U;
             PowerStage_Disable();
+            FaultDiag_Motor(3U);
             PWM_SetDuty(0.5f, 0.5f, 0.5f);
             return HAL_ERROR;
         }
@@ -9525,6 +9636,9 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
          */
         if (mode != previous_mode)
         {
+#if defined(FOC_SPEED_BRAKE_TRACK)
+            SpeedBrakeTrack_Reset(&speed_brake_track);
+#endif
             speed_target_rpm = 0.0f;
             speed_ref_rpm = 0.0f;
             speed_integrator_A = 0.0f;
@@ -9549,6 +9663,9 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
          * controller is SPEED or IQ mode.
          */
         position_target_deg = motor_position_command_deg;
+#if defined(FOC_SPEED_BRAKE_TRACK)
+        if (mode != MOTOR_MODE_SPEED) SpeedBrakeTrack_Reset(&speed_brake_track);
+#endif
         position_error_deg =
             position_target_deg - encoder_position_deg;
 
@@ -9839,6 +9956,11 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
              * IBLD only belongs to position settling.  OBLD is useful in both
              * POSITION and SPEED modes.
              */
+#if defined(FOC_SPEED_BUMPLESS)
+            /* Capture AFTER mode-change reset, BEFORE the legacy bleed can
+             * mutate speed_integrator_A. SB2 must not subtract both bleeds. */
+            float sb2_previous_A=speed_integrator_A;
+#endif
             if ((mode == MOTOR_MODE_POSITION) &&
                 (position_deadband_active != 0U) &&
                 (fabsf(speed_ref_rpm) <=
@@ -9897,6 +10019,26 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
                     dt_meas;
             }
 
+#if defined(FOC_SPEED_STARTUP_BRAKE)
+            if (mode == MOTOR_MODE_SPEED)
+            {
+#if defined(FOC_SPEED_BUMPLESS)
+                SpeedStartupBrakeResult guarded=SpeedBumpless_Apply(
+                    sb2_previous_A,i_candidate,speed_ref_rpm,encoder_speed_rpm,
+                    dt_meas,SPEED_OVERSPEED_BLEED_ERR_RPM,SPEED_OVERSPEED_BLEED_MIN_SPD_RPM);
+                i_candidate=guarded.integral_A;
+                if (guarded.flags & SPEED_BUMPLESS_UNLOAD)
+                    speed_overspeed_bleed_active=1U;
+#else
+                SpeedStartupBrakeResult guarded=SpeedStartupBrake_Apply(
+                    speed_integrator_A,i_candidate,speed_ref_rpm,encoder_speed_rpm,
+                    dt_meas,SPEED_OVERSPEED_BLEED_ERR_RPM,SPEED_OVERSPEED_BLEED_MIN_SPD_RPM);
+                i_candidate=guarded.integral_A;
+                if (guarded.flags & SPEED_STARTUP_I_BRAKE_RESET)
+                    speed_overspeed_bleed_active=1U;
+#endif
+            }
+#endif
             i_candidate =
                 ClampFloat(i_candidate,
                            -SPEED_INT_LIMIT_A,
@@ -9923,6 +10065,21 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
                 speed_integrator_A = i_candidate;
             }
 
+#if defined(FOC_SPEED_BRAKE_TRACK)
+            if (mode == MOTOR_MODE_SPEED) {
+                SpeedBrakeTrackResult brake=SpeedBrakeTrack_Apply(&speed_brake_track,
+                    speed_ref_rpm,encoder_speed_rpm,rpm_inst,p_term,speed_integrator_A,
+                    iq_cmd,SPEED_KP_A_PER_RPM,SPEED_OVERSPEED_BLEED_ERR_RPM,
+                    SPEED_OVERSPEED_BLEED_MIN_SPD_RPM,speed_iq_limit_A,SPEED_INT_LIMIT_A);
+                if (brake.limited) {
+                    speed_integrator_A=brake.integral_A;
+                    speed_overspeed_bleed_active=1U;
+                }
+                iq_cmd=brake.current_A;
+            }
+#endif
+            /* Publish once, after the SPEED-only ceiling, so an ADC IRQ
+             * cannot consume the pre-limiter driving command in between. */
             foc_iq_ref_A = iq_cmd;
 
             /*
@@ -9975,6 +10132,10 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
 
                 if (stall_timer_s >= stall_timeout_s)
                 {
+                    PowerStage_Disable(); /* Closure before diagnostic copies. */
+                    FaultDiag_Capture(FOC_DIAG_MOTOR,4U,
+                        mode==MOTOR_MODE_SPEED ? FOC_TO_STALL_SPEED : FOC_TO_STALL_POSITION,
+                        tightening_test_elapsed_ms,0U);
                     stall_trip_position_deg =
                         encoder_position_deg;
                     stall_trip_target_deg =
@@ -10667,6 +10828,8 @@ static HAL_StatusTypeDef ADC_RunZeroCalibrate(void)
 
         if ((HAL_GetTick() - start_tick) > RUN_ZERO_TIMEOUT_MS)
         {
+            FaultDiag_Capture(FOC_DIAG_STARTUP,FOC_FAULT_STARTUP_ZERO_CAL,
+                FOC_TO_STARTUP_ZERO,HAL_GetTick()-start_tick,RUN_ZERO_TIMEOUT_MS);
             run_zero_cal_active = 0U;
             UART_SendLiteral("TWO ADC RUN ZERO CAL TIMEOUT\r\n");
             return HAL_TIMEOUT;
@@ -10807,6 +10970,7 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
             foc_fault_reason = FOC_FAULT_ADC_WINDOW;
             DRIVER_SD_GPIO_Port->BSRR = (uint32_t)DRIVER_SD_Pin << 16U;
             TIM1->BDTR &= ~TIM_BDTR_MOE;
+            FaultDiag_Motor(FOC_FAULT_ADC_WINDOW);
             __HAL_ADC_CLEAR_FLAG(&hadc2, ADC_FLAG_JEOC | ADC_FLAG_JEOS);
             /* A late ADC2 completion must not masquerade as next cycle's
              * result. Latch off the completion chain until a fresh boot. */
@@ -11071,6 +11235,7 @@ void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc)
         HAL_GPIO_WritePin(DRIVER_SD_GPIO_Port,
                           DRIVER_SD_Pin,
                           GPIO_PIN_RESET);
+        FaultDiag_Motor(FOC_FAULT_ADC_CHAIN_STALE);
     }
 }
 /* USER CODE END 0 */
@@ -11085,6 +11250,8 @@ static void StartupZeroCalFaultCommsLoop(void)
     foc_enable = 0U;
     foc_fault = 1U;
     foc_fault_reason = FOC_FAULT_STARTUP_ZERO_CAL;
+    FaultDiag_Capture(FOC_DIAG_STARTUP,FOC_FAULT_STARTUP_ZERO_CAL,FOC_TO_NONE,
+        tightening_test_elapsed_ms,0U);
     adc_fault = 1U;
     motor_control_mode = MOTOR_MODE_IDLE;
 
@@ -11092,6 +11259,7 @@ static void StartupZeroCalFaultCommsLoop(void)
     for (;;)
     {
         PowerStage_Disable();
+        FaultDiag_Monitor(); /* No MonitorTask is created on this failure path. */
         CAN_StatusTx_Service(HAL_GetTick());
         CAN_StatusTx_Publish(MOTOR_MODE_IDLE,
                              CAN_STATUS_FLAG_FAULT_LATCHED,
@@ -11155,6 +11323,7 @@ static void StartupTask(void *argument)
     foc_enable = 0U;
     foc_fault = 0U;
     foc_fault_reason = 0U;
+    FaultDiag_Clear();
     adc_fault = 0U;
 
     if (g_safe_comm_boot != 0U)
@@ -11445,6 +11614,7 @@ static void StartupTask(void *argument)
 
     foc_fault = 0U;
     foc_fault_reason = 0U;
+    FaultDiag_Clear();
     adc_fault = 0U;
 
     foc_id_ref_A = 0.0f;

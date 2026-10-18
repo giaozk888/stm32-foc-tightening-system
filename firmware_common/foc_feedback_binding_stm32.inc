@@ -25,6 +25,19 @@ typedef struct {
 static FocFeedbackFault foc_feedback_fault;
 #define FOC_FAULT_FEEDBACK_PROTECTION 9U
 
+#if defined(FOC_TIMEOUT_DIAGNOSTICS)
+static void FaultDiag_FillProtected(volatile FocFaultSnapshot *s)
+{
+    const FocFilteredProtection *p=&foc_feedback_safety.protection;
+    const FocTimeoutLatch *t=&p->timeout;
+    if (t->reason) {
+        s->timeout=(FocTimeoutEvidence){t->reason,t->now_us,t->reference_us,
+            t->now_us-t->reference_us,t->limit_us,p->last_us,p->pending_us,p->pending,p->misses};
+        s->timeout_reason=t->reason;
+    }
+}
+#endif
+
 static void FocFeedbackBinding_Disarm(void)
 {
     foc_feedback_armed = 0U;
@@ -36,6 +49,19 @@ void FocFeedbackBinding_EmergencyOff(uint32_t flags)
     uint32_t mask = __get_PRIMASK(); __disable_irq();
     /* Close the actual register gates FIRST; evidence recording comes after. */
     FocFeedbackGuard_OutputOff();
+#if defined(FOC_TIMEOUT_DIAGNOSTICS)
+    if (!foc_fault_snapshot.valid) foc_fault_snapshot.protection_flags=foc_feedback_safety.protection.fault_flags|flags;
+    FaultDiag_Capture(FOC_DIAG_PROTECTION,
+        foc_feedback_safety.protection.result==FOC_OC_TRIPPED ? foc_feedback_safety.protection.reason :
+        (flags & (FOC_FP_HW_TRIP | FOC_FP_DRIVER_FAULT)) ? FOC_FP_HARDWARE : FOC_FP_HEALTH,
+        (flags & FOC_FB_COMPUTE_LATE) ? FOC_TO_COMPUTE_DEADLINE :
+#if defined(FOC_CONTROL_CHAIN_RECONNECT)
+        (flags & FOC_FB_CONTROL_LEASE_EXPIRED) ? FOC_TO_CONTROL_LEASE :
+#endif
+        (flags & FOC_FB_ENCODER_INVALID) ? encoder_timeout_reason :
+        (FocTimeoutReason)foc_feedback_safety.protection.timeout.reason,
+        tightening_test_elapsed_ms,0U);
+#endif
     FocFeedbackBinding_Disarm();
     foc_feedback_safety.protection.fault_flags |= flags;
     (void)FocFp_Trip(&foc_feedback_safety.protection,
@@ -162,7 +188,10 @@ static int FocFeedbackBinding_PhysicalSeen(uint16_t u, uint16_t v)
     else if ((uint32_t)(injected_seq_count - foc_feedback_last_seq) != 1U ||
              now == foc_feedback_last_us) reason = FOC_FP_SEQUENCE;
     if (reason != FOC_FP_NONE) {
-        (void)FocFp_Trip(&foc_feedback_safety.protection, reason, 0U);
+        if (reason==FOC_FP_TIMEOUT)
+            (void)FocFp_TripTimeout(&foc_feedback_safety.protection,FOC_TO_ADC_GUARD,
+                now,foc_feedback_last_us,100U,0U);
+        else (void)FocFp_Trip(&foc_feedback_safety.protection, reason, 0U);
         FocFeedbackBinding_EmergencyOff(flags);
         __set_PRIMASK(mask); return 0;
     }
@@ -239,7 +268,8 @@ void TIM7_DAC_IRQHandler(void)
     foc_feedback_guard_last_us = now;
     if (flags) FocFeedbackBinding_EmergencyOff(flags);
     else if ((uint32_t)(now - foc_feedback_last_us) > 100U) {
-        (void)FocFp_Trip(&foc_feedback_safety.protection, FOC_FP_TIMEOUT, 0U);
+        (void)FocFp_TripTimeout(&foc_feedback_safety.protection,FOC_TO_ADC_GUARD,
+            now,foc_feedback_last_us,100U,0U);
         FocFeedbackBinding_EmergencyOff(0U);
     } else if (foc_feedback_zero_ready &&
         FocFeedbackSafety_Poll(&foc_feedback_safety, now, 0U, 1U) == FOC_OC_TRIPPED)

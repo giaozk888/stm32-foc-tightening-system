@@ -83,6 +83,23 @@ int FocAdcTiming_CertifyClock(void);
 int FocAdcTiming_FastCanStart(void);
 int FocAdcTiming_PairReady(void);
 void FocAdcTiming_RecordRaw(uint16_t u, uint16_t v);
+#if defined(FOC_FAST_PATH_PROFILE) || defined(FOC_PREEMPT_COMMIT_PROBE)
+/* Hypothetical duty-dispatch location in hard-off compute: NEVER a CCR write
+ * and never counted as an actual update. SRAM ledgers keep these separate. */
+void FocAdcTiming_ProfileDutyPoint(void);
+#endif
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+/* Real functional pending commit, not a debug timer-configuration probe.
+ * Called at ADC vector entry, requires hard-off gates and a certified clock.
+ * Writes CCR1/2/3 only; instrumentation never writes CR1/UDIS/SR/EGR/CCR4. */
+int FocAdcTiming_PipelineCommit(const uint16_t phase[3]);
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+/* Entry-commit timing admission, not the obsolete hypothetical FOC tail.
+ * Keeps clock/geometry, paired ADC, real-late and 50us deadline guards. */
+int FocAdcTiming_PipelineActuationReady(void);
+int FocAdcTiming_PipelinePlanMatches(const FocWindowPlan *plan);
+#endif
+#endif
 /* Foreground single-owner consumer; never runs statistics from an ISR.
  * Requires interrupts enabled. Returns one processed block or zero when
  * empty/busy/in interrupt context/interrupts masked. */

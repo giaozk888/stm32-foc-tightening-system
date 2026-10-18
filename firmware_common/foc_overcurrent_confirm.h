@@ -2,6 +2,7 @@
 #define FOC_OVERCURRENT_CONFIRM_H
 #include <float.h>
 #include <stdint.h>
+#include "foc_timeout_diag.h"
 #if defined(__FAST_MATH__) || (defined(__FINITE_MATH_ONLY__) && __FINITE_MATH_ONLY__)
 #error Overcurrent candidate requires finite-value checks; do not use fast-math
 #endif
@@ -33,6 +34,7 @@ typedef struct {
     uint8_t ready, seq_valid, pending, misses, pending_mask, trip_mask;
     FocOcConfirmResult result;
     FocOcConfirmReason reason;
+    FocTimeoutLatch timeout;
 } FocOcConfirm;
 
 static inline uint8_t FocOcConfirm_Finite(float v)
@@ -75,8 +77,10 @@ static inline FocOcConfirmResult FocOcConfirm_CheckDeadline(
 {
     if (s->result==FOC_OC_TRIPPED) return s->result;
     if (!s->ready) return FocOcConfirm_Trip(s,FOC_OC_BAD_CONFIG,0U);
-    if (s->pending && (uint32_t)(now_us-s->pending_us)>FOC_OC_CONFIRM_MAX_US)
+    if (s->pending && (uint32_t)(now_us-s->pending_us)>FOC_OC_CONFIRM_MAX_US) {
+        s->timeout=(FocTimeoutLatch){FOC_TO_CURRENT_CONFIRM,now_us,s->pending_us,FOC_OC_CONFIRM_MAX_US};
         return FocOcConfirm_Trip(s,FOC_OC_DEADLINE,s->pending_mask);
+    }
     return s->result;
 }
 static inline FocOcConfirmResult FocOcConfirm_Push(

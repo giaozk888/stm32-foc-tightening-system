@@ -28,7 +28,9 @@ void FocZeroMedian_Push(FocZeroMedian *m, FocZeroCal *filtered, uint16_t u, uint
             dv < -FOC_ZERO_MAX_NOMINAL_DELTA || dv > FOC_ZERO_MAX_NOMINAL_DELTA)
             ++m->outside_nominal;
     }
-    FocZero_Push(&m->raw, u, v); /* First failure remains latched and inspectable. */
+#if !defined(FOC_ZERO_VALID_ADMISSION)
+    FocZero_Push(&m->raw, u, v); /* Historical raw-only contrast, not a gate. */
+#endif
 #if (defined(FOC_ADAPTIVE_FILTER_EXPERIMENT) || defined(FOC_LATEST_ORIGINAL_FSM))
     FocZeroRobust_Push(&m->robust,filtered,u,v);
     m->changed=m->robust.outliers;

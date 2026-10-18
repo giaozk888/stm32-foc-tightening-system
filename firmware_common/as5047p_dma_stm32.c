@@ -1,6 +1,8 @@
 #include "as5047p_dma_stm32.h"
 #include "main.h"
 #include "foc_hot_path.h"
+#include "foc_fast_path_profile.h"
+#include "foc_preempt_probe.h"
 #include <string.h>
 #if defined(FOC_FAST_MATH)
 #include "foc_irq_load.h"
@@ -9,17 +11,30 @@
 /* Dedicated resources, opt-in profile only:
  * DMA1 ch4 RX / ch5 TX; DMAMUX channels 3/4; TIM2 internal 1 MHz counter.
  * TIM2 CC1 deadline, CC2 CS/BSY guards, CC3 period, CC4 control watchdog.
- * Default IRQ priority 3; priority-fix profile uses 1 with ADC at 2 and
- * independent TIM7 guardian at 0. No FreeRTOS API from these IRQs.
+ * Historic acquisition is priority 1 vs ADC 2 in the pipeline profile.
+ * FOC-first: event IRQs 3, software-pended protocol service 4, ADC still 2;
+ * TIM7 remains 3. No FreeRTOS API from any of these encoder IRQs.
  * No HAL_SPI DMA callback: its BSY tail may spin against HAL tick in an ISR. */
 static AsDmaEngine engine;
 static AsDmaFaultHook fault_hook;
 static volatile uint8_t initialized, periodic;
 static uint32_t next_period_us, control_due_us, saved_cr1, saved_cr2;
 static uint32_t timeouts, dma_errors, schedule_misses, control_stale;
+static volatile uint32_t diagnostic_fault_status;
+uint32_t AS5047P_DmaFaultStatus(void) { return diagnostic_fault_status; }
 static AsDmaFaultSnapshot first_fault;
-#if defined(AS5047P_DMA_IRQ_PREEMPT_ADC)
-/* TIM7 watchdog remains priority 0; encoder deadline/guard preempts ADC (2). */
+#if defined(AS5047P_DMA_FOC_FIRST)
+#include "as5047p_dma_publication.h"
+static AsDmaPublication publication;
+/* Error-only flags preserved before the event top half acknowledges DMA. */
+static uint32_t defer_fault_dma_isr,defer_fault_spi_sr;
+static volatile uint32_t defer_fault_flags_valid;
+static uint32_t defer_fault_serviced;
+#define AS_DMA_IRQ_PRIORITY 3U
+#elif defined(AS5047P_DMA_IRQ_PREEMPT_ADC)
+/* Encoder deadline/guard preempts ADC(2). TIM7 is 3 in the pipeline and
+ * 0 in the legacy profile. This IRQ also owns transaction/control deadlines;
+ * do not demote it based solely on a partial timing snapshot. */
 #define AS_DMA_IRQ_PRIORITY 1U
 static uint32_t tim_entry_us, tim_entry_sr, tim_entry_dier, tim_entry_ccr2;
 static uint32_t tim_entry_late_us, guard_max_late_us;
@@ -101,6 +116,10 @@ FOC_RAM_PATH static void Finish(void *context, AsDmaStatus status)
     (void)context;
     TIM2->DIER &= ~TIM_DIER_CC2IE;
     TIM2->SR = ~TIM_SR_CC2IF;
+#if defined(AS5047P_DMA_FOC_FIRST)
+    AsDma_Publish(&publication,&engine.sample);
+    if (status!=AS_DMA_OK && status!=AS_DMA_CANCELLED) defer_fault_serviced=1U;
+#endif
     if (status == AS_DMA_OK) return;
     /* Fixed register sequence, no HAL abort or BSY wait. Restore SPI config
      * after reset so neither a partial word nor stale FIFO crosses epochs. */
@@ -123,7 +142,8 @@ FOC_RAM_PATH static void FaultSnapshot(void *context, const AsDmaEngine *e,
                           AsDmaStatus status, uint32_t now)
 {
     (void)context;
-    /* The pre-clear snapshot adds register reads to the fault path. Close the
+    diagnostic_fault_status=(uint32_t)status;
+    /* The fault snapshot adds register reads to the fault path. Close the
      * physical output through the existing ISR-safe hook FIRST; Finish()
      * sees periodic=0 and does not invoke it a second time. */
     if (periodic != 0U) {
@@ -143,6 +163,12 @@ FOC_RAM_PATH static void FaultSnapshot(void *context, const AsDmaEngine *e,
     first_fault.spi_cr1 = SPI1->CR1;
     first_fault.spi_cr2 = SPI1->CR2;
     first_fault.dma_isr = DMA1->ISR;
+#if defined(AS5047P_DMA_FOC_FIRST)
+    if (defer_fault_flags_valid) {
+        first_fault.spi_sr=defer_fault_spi_sr;
+        first_fault.dma_isr=defer_fault_dma_isr;
+    }
+#endif
     first_fault.rx_ndtr = DMA1_Channel4->CNDTR;
     first_fault.tx_ndtr = DMA1_Channel5->CNDTR;
     first_fault.rx_ccr = DMA1_Channel4->CCR;
@@ -150,7 +176,7 @@ FOC_RAM_PATH static void FaultSnapshot(void *context, const AsDmaEngine *e,
     first_fault.tim_sr = TIM2->SR;
     first_fault.tim_dier = TIM2->DIER;
     first_fault.ipsr = __get_IPSR();
-#if defined(AS5047P_DMA_IRQ_PREEMPT_ADC)
+#if defined(AS5047P_DMA_IRQ_PREEMPT_ADC) && !defined(AS5047P_DMA_FOC_FIRST)
     if (first_fault.ipsr == (uint32_t)TIM2_IRQn + 16U) {
         first_fault.tim_entry_valid = 1U;
         first_fault.tim_entry_us = tim_entry_us;
@@ -185,6 +211,10 @@ static const AsDmaOps ops = {
 #define AS_DMA_BIND(name, e) AS_DMA_BIND_##name
 #define AS_DMA_HAS_FAULT_SNAPSHOT(e) 1
 #include "as5047p_dma_engine.c"
+#endif
+
+#if defined(AS5047P_DMA_FOC_FIRST)
+#include "as5047p_dma_deferred.inc"
 #endif
 
 int AS5047P_DmaInit(AsDmaFaultHook hook)
@@ -224,7 +254,16 @@ int AS5047P_DmaInit(AsDmaFaultHook hook)
     AsDma_Init(&engine, &ops, 0);
 #endif
     memset(&first_fault, 0, sizeof(first_fault));
-#if defined(AS5047P_DMA_IRQ_PREEMPT_ADC)
+#if defined(AS5047P_DMA_FOC_FIRST)
+    memset(&publication,0,sizeof(publication));
+    publication.bank[0].status=AS_DMA_PENDING;
+    publication.bank[1].status=AS_DMA_PENDING;
+    DeferReset();
+    /* No timer/DAC clock or hardware source is enabled for this vector. */
+    if (NVIC_GetEnableIRQ(TIM6_DAC_IRQn)) return 0;
+    HAL_NVIC_SetPriority(TIM6_DAC_IRQn,4U,0U);
+    HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
+#elif defined(AS5047P_DMA_IRQ_PREEMPT_ADC)
     tim_entry_us = tim_entry_sr = tim_entry_dier = tim_entry_ccr2 = 0U;
     tim_entry_late_us = guard_max_late_us = 0U;
 #endif
@@ -247,6 +286,10 @@ int AS5047P_DmaStartPeriodic(void)
     int ok = initialized && !periodic && engine.state == AS_DMA_IDLE;
     if (ok) {
         engine.sample.status = AS_DMA_PENDING;
+#if defined(AS5047P_DMA_FOC_FIRST)
+        DeferReset();
+        AsDma_Publish(&publication,&engine.sample);
+#endif
         periodic = 1U;
         next_period_us = now + AS_DMA_PERIOD_US;
         control_due_us = now + AS_DMA_CONTROL_WATCHDOG_US;
@@ -261,6 +304,9 @@ void AS5047P_DmaStopPeriodic(void)
 {
     uint32_t mask = Lock();
     periodic = 0U; /* cancellation in SAFE is not a newly raised fault */
+#if defined(AS5047P_DMA_FOC_FIRST)
+    DeferReset();
+#endif
     TIM2->DIER &= ~(TIM_DIER_CC3IE | TIM_DIER_CC4IE);
     if (engine.state != AS_DMA_IDLE) AsDma_Fail(&engine, AS_DMA_CANCELLED, TIM2->CNT);
     Unlock(mask);
@@ -268,22 +314,33 @@ void AS5047P_DmaStopPeriodic(void)
 int AS5047P_DmaIsPeriodic(void) { return periodic != 0U; }
 int AS5047P_DmaGetSample(AsDmaSample *sample)
 {
+#if defined(AS5047P_DMA_FOC_FIRST)
+    if (!initialized || sample==NULL || !AsDma_ReadPublished(&publication,sample)) return 0;
+    return sample->status!=AS_DMA_PENDING;
+#else
     uint32_t mask = Lock();
     if (initialized) AsDma_CheckDeadline(&engine, TIM2->CNT);
     *sample = engine.sample;
     int available = initialized && sample->status != AS_DMA_PENDING;
     Unlock(mask);
     return available;
+#endif
 }
 int AS5047P_DmaSnapshot(AsDmaSample *sample, uint32_t *now_us)
 {
     if (sample == NULL || now_us == NULL) return 0;
+#if defined(AS5047P_DMA_FOC_FIRST)
+    if (!initialized || !AsDma_ReadPublished(&publication,sample)) return 0;
+    *now_us=TIM2->CNT;
+    return sample->sequence!=0U && sample->status!=AS_DMA_PENDING;
+#else
     uint32_t mask = Lock();
     *sample = engine.sample;
     *now_us = TIM2->CNT;
     int available = initialized && sample->sequence != 0U && sample->status != AS_DMA_PENDING;
     Unlock(mask);
     return available;
+#endif
 }
 void AS5047P_DmaAcknowledgeControl(void)
 {
@@ -313,7 +370,7 @@ void AS5047P_DmaGetFaultSnapshot(AsDmaFaultSnapshot *snapshot)
     if (snapshot == NULL) return;
     uint32_t mask = Lock();
     *snapshot = first_fault;
-#if defined(AS5047P_DMA_IRQ_PREEMPT_ADC)
+#if defined(AS5047P_DMA_IRQ_PREEMPT_ADC) && !defined(AS5047P_DMA_FOC_FIRST)
     snapshot->guard_max_late_us = guard_max_late_us;
 #endif
     Unlock(mask);
@@ -322,6 +379,9 @@ void AS5047P_DmaGetFaultSnapshot(AsDmaFaultSnapshot *snapshot)
 AsDmaStatus AS5047P_DmaReadOne(uint16_t reg, uint16_t *response)
 {
     uint32_t mask = Lock(), sequence = engine.sample.sequence;
+#if defined(AS5047P_DMA_FOC_FIRST)
+    if (!periodic) DeferReset();
+#endif
     int started = initialized && !periodic && AsDma_Begin(&engine, reg, TIM2->CNT);
     Unlock(mask);
     if (!started) return AS_DMA_IO;
@@ -355,6 +415,9 @@ AsDmaStatus AS5047P_DmaReadOne(uint16_t reg, uint16_t *response)
 #endif
 FOC_RAM_PATH void DMA1_Channel4_IRQHandler(void)
 {
+#if defined(AS5047P_DMA_FOC_FIRST)
+    DeferRxTop();
+#else
     uint32_t flags = DMA1->ISR;
     if (flags & DMA_ISR_TEIF4) {
         if (engine.state == AS_DMA_WORD) AsDma_Fail(&engine, AS_DMA_IO, TIM2->CNT);
@@ -368,17 +431,25 @@ FOC_RAM_PATH void DMA1_Channel4_IRQHandler(void)
             AsDma_Fail(&engine, AS_DMA_IO, TIM2->CNT);
         else AsDma_RxComplete(&engine, TIM2->CNT);
     }
+#endif
 }
 FOC_RAM_PATH void DMA1_Channel5_IRQHandler(void)
 {
+#if defined(AS5047P_DMA_FOC_FIRST)
+    DeferTxTop();
+#else
     uint32_t flags = DMA1->ISR;
     if (flags & DMA_ISR_TEIF5) {
         if (engine.state == AS_DMA_WORD) AsDma_Fail(&engine, AS_DMA_IO, TIM2->CNT);
         else DMA1->IFCR = DMA_IFCR_CGIF5;
     }
+#endif
 }
 FOC_RAM_PATH void TIM2_IRQHandler(void)
 {
+#if defined(AS5047P_DMA_FOC_FIRST)
+    DeferTimerTop();
+#else
     uint32_t now = TIM2->CNT;
 #if defined(AS5047P_DMA_IRQ_PREEMPT_ADC)
     /* Preserve the evidence that the earlier trace lost by clearing CC2 at
@@ -412,6 +483,7 @@ FOC_RAM_PATH void TIM2_IRQHandler(void)
         Compare(&TIM2->CCR3, TIM_DIER_CC3IE, next_period_us);
         (void)AsDma_Begin(&engine, 0x3FFFU, now);
     }
+#endif
 }
 #if defined(FOC_FAST_MATH)
 #undef DMA1_Channel4_IRQHandler
@@ -419,26 +491,68 @@ FOC_RAM_PATH void TIM2_IRQHandler(void)
 #undef TIM2_IRQHandler
 FOC_RAM_PATH void DMA1_Channel4_IRQHandler(void)
 {
+#if defined(FOC_PREEMPT_COMMIT_PROBE) && FOC_HEAVY_PROFILE_ENABLE
+    FocPreToken token=FocPreempt_IrqBegin(FOC_PRE_RX);
+#endif
+#if defined(FOC_FAST_PATH_PROFILE)
+    uint32_t profile_irq_begin=DWT->CYCCNT;
+#endif
 #if defined(FOC_IRQ_SOURCE_TRACE) || defined(FOC_PWM_BOUNDARY_TRACE)
     FocIrqSource_Enter(FOC_IRQ_RX); EncoderDma_RxIrqBody(); FocIrqSource_Leave(FOC_IRQ_RX);
+#elif !FOC_DETAIL_STATS || defined(AS5047P_DMA_FOC_FIRST)
+    EncoderDma_RxIrqBody();
 #else
     FocIrqLoad_Enter(); EncoderDma_RxIrqBody(); FocIrqLoad_Leave();
+#endif
+#if defined(FOC_PREEMPT_COMMIT_PROBE) && FOC_HEAVY_PROFILE_ENABLE
+    FocPreempt_IrqEnd(FOC_PRE_RX,token);
+#endif
+#if defined(FOC_FAST_PATH_PROFILE)
+    FocProfile_IrqRecord(2U,profile_irq_begin);
 #endif
 }
 FOC_RAM_PATH void DMA1_Channel5_IRQHandler(void)
 {
+#if defined(FOC_PREEMPT_COMMIT_PROBE) && FOC_HEAVY_PROFILE_ENABLE
+    FocPreToken token=FocPreempt_IrqBegin(FOC_PRE_TX);
+#endif
+#if defined(FOC_FAST_PATH_PROFILE)
+    uint32_t profile_irq_begin=DWT->CYCCNT;
+#endif
 #if defined(FOC_IRQ_SOURCE_TRACE) || defined(FOC_PWM_BOUNDARY_TRACE)
     FocIrqSource_Enter(FOC_IRQ_TX); EncoderDma_TxIrqBody(); FocIrqSource_Leave(FOC_IRQ_TX);
+#elif !FOC_DETAIL_STATS || defined(AS5047P_DMA_FOC_FIRST)
+    EncoderDma_TxIrqBody();
 #else
     FocIrqLoad_Enter(); EncoderDma_TxIrqBody(); FocIrqLoad_Leave();
+#endif
+#if defined(FOC_PREEMPT_COMMIT_PROBE) && FOC_HEAVY_PROFILE_ENABLE
+    FocPreempt_IrqEnd(FOC_PRE_TX,token);
+#endif
+#if defined(FOC_FAST_PATH_PROFILE)
+    FocProfile_IrqRecord(3U,profile_irq_begin);
 #endif
 }
 FOC_RAM_PATH void TIM2_IRQHandler(void)
 {
+#if defined(FOC_PREEMPT_COMMIT_PROBE) && FOC_HEAVY_PROFILE_ENABLE
+    FocPreToken token=FocPreempt_IrqBegin(FOC_PRE_TIMER);
+#endif
+#if defined(FOC_FAST_PATH_PROFILE)
+    uint32_t profile_irq_begin=DWT->CYCCNT;
+#endif
 #if defined(FOC_IRQ_SOURCE_TRACE) || defined(FOC_PWM_BOUNDARY_TRACE)
     FocIrqSource_Enter(FOC_IRQ_TIMER); EncoderDma_TimerIrqBody(); FocIrqSource_Leave(FOC_IRQ_TIMER);
+#elif !FOC_DETAIL_STATS || defined(AS5047P_DMA_FOC_FIRST)
+    EncoderDma_TimerIrqBody();
 #else
     FocIrqLoad_Enter(); EncoderDma_TimerIrqBody(); FocIrqLoad_Leave();
+#endif
+#if defined(FOC_PREEMPT_COMMIT_PROBE) && FOC_HEAVY_PROFILE_ENABLE
+    FocPreempt_IrqEnd(FOC_PRE_TIMER,token);
+#endif
+#if defined(FOC_FAST_PATH_PROFILE)
+    FocProfile_IrqRecord(1U,profile_irq_begin);
 #endif
 }
 #endif

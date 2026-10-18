@@ -109,6 +109,8 @@ static inline FocOcConfirmResult FocProtection_Poll(
         return FocProtection_Classify(s);
     uint32_t since=s->core.seq_valid ? s->core.last_us : s->begin_us;
     if ((uint32_t)(now_us-since)>FOC_OC_CONFIRM_MAX_US) {
+        s->core.timeout=(FocTimeoutLatch){s->core.seq_valid ? FOC_TO_CURRENT_SAMPLE :
+            FOC_TO_CURRENT_FIRST_SAMPLE,now_us,since,FOC_OC_CONFIRM_MAX_US};
         s->fault_flags |= FOC_PROTECT_ADC_TIMEOUT;
         FocOcConfirm_Trip(&s->core,FOC_OC_BAD_SAMPLE,0U);
         return FocProtection_Classify(s);

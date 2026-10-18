@@ -12,8 +12,10 @@ typedef struct {
     uint32_t last_elapsed_us, last_status, periodic;
 } AsDmaStats;
 
-/* First non-cancellation fault, captured before DMA flags/SPI are cleared.
- * Read-only evidence; neither reading nor publishing this changes protection. */
+/* First non-cancellation fault. Legacy captures before DMA/SPI reset. In the
+ * FOC-first error top half, DMA ISR / SPI SR flags are preserved before ACK;
+ * other registers are captured by deferred service (e.g. CCR may be disabled).
+ * Read-only evidence; reading/publishing it never changes protection. */
 typedef struct {
     uint32_t valid, status, phase, frame;
     uint32_t started_us, now_us, deadline_us, guard_us;
@@ -32,11 +34,14 @@ void AS5047P_DmaStopPeriodic(void);
 int AS5047P_DmaIsPeriodic(void);
 int AS5047P_DmaGetSample(AsDmaSample *sample);
 /* Non-mutating telemetry snapshot: no deadline check, SPI start or control ACK.
- * Sample and timer are captured in one short interrupt-masked section. */
+ * Legacy uses a short masked section. FOC-first reads the last complete bank
+ * without masking; the subsequent timer read is a conservative age bound. */
 int AS5047P_DmaSnapshot(AsDmaSample *sample, uint32_t *now_us);
 void AS5047P_DmaAcknowledgeControl(void);
 void AS5047P_DmaGetStats(AsDmaStats *stats);
 void AS5047P_DmaGetFaultSnapshot(AsDmaFaultSnapshot *snapshot);
+/* Diagnostic status published BEFORE invoking the existing output-off hook. */
+uint32_t AS5047P_DmaFaultStatus(void);
 /* Startup / SAFE diagnostics only: CPU-bounded polling adapter, not the
  * periodic control path. Returns AS_DMA_* and never falls back to HAL SPI. */
 AsDmaStatus AS5047P_DmaReadOne(uint16_t reg, uint16_t *response);

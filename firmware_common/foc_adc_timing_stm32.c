@@ -3,6 +3,22 @@
 #include "foc_adc_raw_buffer.h"
 #include "foc_adc_clock_stm32.h"
 #include "foc_hot_path.h"
+#if defined(FOC_FAST_PATH_PROFILE) || defined(FOC_PREEMPT_COMMIT_PROBE)
+#include "foc_pwm_write_probe.h"
+FocPwmWriteProbe foc_pwm_write_profile, foc_pwm_duty_profile;
+#if FOC_DETAIL_STATS
+static FocPwmPoint pwm_profile_entry;
+#endif
+#endif
+#if defined(FOC_PREEMPT_COMMIT_PROBE)
+#include "foc_preempt_probe.h"
+uint32_t foc_ccr_probe_blocked,foc_ccr_probe_hard_late;
+int32_t foc_ccr_probe_latch_margin_min;
+uint32_t foc_ccr_probe_latch_late, foc_ccr_probe_post_unsafe;
+#endif
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+uint32_t foc_pending_commit_max_cycles;
+#endif
 #if defined(FOC_PWM_BOUNDARY_TRACE)
 #include "foc_pwm_boundary.h"
 #include "foc_irq_load.h"
@@ -36,6 +52,155 @@ static uint8_t irq_commit_active;
 #endif
 static uint8_t have_plan;
 static uint8_t clock_certified;
+#if defined(FOC_FAST_PATH_PROFILE) || defined(FOC_PREEMPT_COMMIT_PROBE)
+/* Legacy phase profiler masks software preemption, not timer motion. The new
+ * attribution probe deliberately does NOT mask: interrupted/unstable snapshots
+ * are invalid evidence rather than a reason to perturb high-priority IRQs.
+ * DWT brackets CNT: entry uses the EARLY timestamp (conservative target), end
+ * uses the LATE timestamp. Direction changes or an excessive span invalidate
+ * the observation. No SR clear / UG / RCR / timing reconfiguration here. */
+FOC_RAM_PATH static FocPwmPoint PwmPoint(uint8_t end)
+{
+#if !defined(FOC_PREEMPT_COMMIT_PROBE)
+    uint32_t mask=__get_PRIMASK(); __disable_irq();
+#endif
+    uint32_t before=DWT->CYCCNT;
+    uint32_t dir=TIM1->CR1;
+    uint32_t cnt=TIM1->CNT;
+    uint32_t after_dir=TIM1->CR1;
+    uint32_t after=DWT->CYCCNT;
+    FocPwmPoint p={.dwt=end ? after : before,.count=cnt,.span=after-before,
+        .down=(uint8_t)((dir & TIM_CR1_DIR)!=0U),
+        .valid=(uint8_t)(clock_certified &&
+            (DWT->CTRL & DWT_CTRL_CYCCNTENA_Msk) &&
+            (dir & TIM_CR1_CEN) && !((dir^after_dir)&TIM_CR1_DIR) &&
+            (dir & (TIM_CR1_CMS | TIM_CR1_CKD | TIM_CR1_UDIS))==TIM_COUNTERMODE_CENTERALIGNED1 &&
+            cnt<=FOC_ADC_TIMER_ARR && after-before<FOC_ADC_COMMIT_GUARD_TICKS &&
+            TIM1->ARR==FOC_ADC_TIMER_ARR && TIM1->PSC==0U && TIM1->RCR==0U)};
+#if !defined(FOC_PREEMPT_COMMIT_PROBE)
+    __set_PRIMASK(mask);
+#endif
+    return p;
+}
+FOC_RAM_PATH void FocAdcTiming_ProfileDutyPoint(void)
+{
+#if FOC_DETAIL_STATS
+    FocPwmPoint point=PwmPoint(1U);
+    FocPwm_Observe(&foc_pwm_duty_profile,FOC_ADC_TIMER_ARR,pwm_profile_entry,
+        point,0U,point,FOC_ADC_COMMIT_GUARD_TICKS);
+#endif
+}
+#endif
+#if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
+FOC_RAM_PATH static int ProbeGatesOff(void)
+{
+    return !(DRIVER_SD_GPIO_Port->ODR & DRIVER_SD_Pin) &&
+        !(TIM1->BDTR & (TIM_BDTR_MOE | TIM_BDTR_AOE)) && TIM1->CCER==0U;
+}
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+extern unsigned ProtectedLoop_PwmCommitPermit(void);
+FOC_RAM_PATH static int PipelineGatesMatch(unsigned permit)
+{
+    if (permit==1U) return ProbeGatesOff();
+    return permit==2U && (DRIVER_SD_GPIO_Port->ODR & DRIVER_SD_Pin) &&
+        (TIM1->BDTR & (TIM_BDTR_MOE|TIM_BDTR_AOE))==TIM_BDTR_MOE &&
+        TIM1->CCER==0x555U;
+}
+int FocAdcTiming_PipelineActuationReady(void)
+{
+    return have_plan && stats.pairs>=1000U && stats.dwt_on && stats.max_cycles &&
+        !stats.pair_misses && !stats.plan_failures && !stats.commit_failures &&
+        !foc_preempt_timing.deadline_miss && !foc_ccr_probe_blocked &&
+        !foc_ccr_probe_hard_late && !foc_ccr_probe_latch_late &&
+        !foc_ccr_probe_post_unsafe && foc_pwm_write_profile.points>=1000U &&
+        foc_pwm_write_profile.pwm_update_margin_ticks_min>(int32_t)FOC_ADC_COMMIT_GUARD_TICKS &&
+        TIM1->CCR1==(FOC_ADC_TIMER_ARR+1U)/2U &&
+        TIM1->CCR2==(FOC_ADC_TIMER_ARR+1U)/2U &&
+        TIM1->CCR3==(FOC_ADC_TIMER_ARR+1U)/2U;
+}
+int FocAdcTiming_PipelinePlanMatches(const FocWindowPlan *plan)
+{
+    return plan && plan->trigger==TIM1->CCR4;
+}
+#endif
+FOC_RAM_PATH __attribute__((optimize("Os")))
+int FocAdcTiming_PipelineCommit(const uint16_t phase[3])
+{
+#if FOC_DETAIL_STATS
+    uint32_t start=DWT->CYCCNT;
+#endif
+    uint32_t mask=__get_PRIMASK(); __disable_irq();
+    FocPwmPoint begin=PwmPoint(0U); /* Anchor before admission-check cost. */
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+    unsigned permit=ProtectedLoop_PwmCommitPermit();
+#define PIPELINE_GATES_OK() PipelineGatesMatch(permit)
+#else
+#define PIPELINE_GATES_OK() ProbeGatesOff()
+#endif
+    /* A bounded CPU critical section protects the 3-store group, not timer
+     * update behavior. Hardware break remains asynchronous to PRIMASK.
+     * Historical preparation requires hard-off. The separate closed-loop
+     * candidate requires live session permission; neither path enables gates. */
+    if (!phase || __get_IPSR()==0U ||
+        !foc_probe_priorities_ok || !PIPELINE_GATES_OK() ||
+        !FocAdcTiming_FastCanStart() ||
+        !(TIM1->CR1 & TIM_CR1_CEN) || (TIM1->CR1 & TIM_CR1_UDIS) ||
+        (TIM1->CCMR1 & (TIM_CCMR1_OC1PE|TIM_CCMR1_OC2PE)) !=
+            (TIM_CCMR1_OC1PE|TIM_CCMR1_OC2PE) ||
+        (TIM1->CCMR2 & TIM_CCMR2_OC3PE)==0U ||
+        phase[0]>TIM1->ARR || phase[1]>TIM1->ARR || phase[2]>TIM1->ARR) {
+        ++foc_ccr_probe_blocked; __set_PRIMASK(mask); return 0;
+    }
+    /* The upcoming bottom belongs to THIS IRQ, never a modulo-future bottom.
+     * Retain the existing guard, reject before writing if already too late. */
+    if (!begin.valid || !begin.down || begin.count<=FOC_ADC_COMMIT_GUARD_TICKS ||
+        DWT->CYCCNT-begin.dwt>=begin.count-FOC_ADC_COMMIT_GUARD_TICKS) {
+        ++foc_ccr_probe_blocked; __set_PRIMASK(mask); return 0;
+    }
+    TIM1->CCR1=phase[0];
+    TIM1->CCR2=phase[1];
+    TIM1->CCR3=phase[2];
+    __DMB();
+    FocPwmPoint end=PwmPoint(1U);
+    if (!PIPELINE_GATES_OK() || !(TIM1->CR1 & TIM_CR1_CEN)) {
+        ++foc_ccr_probe_post_unsafe; end.valid=0U;
+    }
+    __set_PRIMASK(mask);
+#if FOC_DETAIL_STATS
+    uint32_t points=foc_pwm_write_profile.points;
+    FocPwm_Observe(&foc_pwm_write_profile,FOC_ADC_TIMER_ARR,
+        begin,end,1U,begin,FOC_ADC_COMMIT_GUARD_TICKS);
+    int safe=0;
+    if (foc_pwm_write_profile.points!=points) {
+        int32_t target=(int32_t)FocPwm_Bottom(FOC_ADC_TIMER_ARR,begin)-
+            (int32_t)(end.dwt-begin.dwt);
+        if (target<=0) ++foc_ccr_probe_hard_late;
+        /* No UDIS/UG/SR writes: crossing remains a MIXED LATCH RISK, not a
+         * suppressed event. Any crossing fails the hard-off observation. */
+        int32_t latch=(int32_t)FocPwm_NextUev(FOC_ADC_TIMER_ARR,begin)-
+            (int32_t)(end.dwt-begin.dwt);
+        if (!points || latch<foc_ccr_probe_latch_margin_min)
+            foc_ccr_probe_latch_margin_min=latch;
+        if (latch<=0) ++foc_ccr_probe_latch_late;
+        safe=target>(int32_t)FOC_ADC_COMMIT_GUARD_TICKS && latch>0;
+    }
+    uint32_t elapsed=DWT->CYCCNT-start;
+    if (elapsed>foc_pending_commit_max_cycles) foc_pending_commit_max_cycles=elapsed;
+    return safe;
+#else
+    /* Same read-only geometry and admission, same three stores, same safety
+     * return. Only the post-write diagnostic reducer is compiled out. */
+    if (!end.valid) return 0;
+    int32_t target=(int32_t)begin.count-(int32_t)(end.dwt-begin.dwt);
+    if (!foc_pwm_write_profile.points || target<foc_pwm_write_profile.pwm_update_margin_ticks_min)
+        foc_pwm_write_profile.pwm_update_margin_ticks_min=target;
+    ++foc_pwm_write_profile.points;
+    if (target<=0) ++foc_ccr_probe_hard_late;
+    return target>(int32_t)FOC_ADC_COMMIT_GUARD_TICKS;
+#endif
+#undef PIPELINE_GATES_OK
+}
+#endif
 typedef struct { uint32_t cr, cfgr, pll, trim; } ClockProof;
 static ClockProof clock_proof;
 FOC_RAM_PATH static ClockProof ClockRead(void)
@@ -81,6 +246,9 @@ FOC_RAM_PATH void FocAdcTiming_CommitPrepared(const FocWindowPlan *prepared)
      * Preserve an existing UDIS and the caller's interrupt mask. */
     uint32_t mask = __get_PRIMASK();
     __disable_irq();
+#if defined(FOC_FAST_PATH_PROFILE)
+    FocPwmPoint write_begin=PwmPoint(0U);
+#endif
     uint32_t udis = TIM1->CR1 & TIM_CR1_UDIS;
     TIM1->CR1 |= TIM_CR1_UDIS;
     TIM1->CCR1 = plan.phase[0];
@@ -89,6 +257,12 @@ FOC_RAM_PATH void FocAdcTiming_CommitPrepared(const FocWindowPlan *prepared)
     TIM1->CCR4 = plan.trigger;
     __DMB();
     if (udis == 0U) TIM1->CR1 &= ~TIM_CR1_UDIS;
+#if defined(FOC_FAST_PATH_PROFILE)
+    FocPwmPoint write_end=PwmPoint(1U);
+    if (irq_commit_active && (TIM1->CR1 & TIM_CR1_CEN))
+        FocPwm_Observe(&foc_pwm_write_profile,FOC_ADC_TIMER_ARR,pwm_profile_entry,
+            write_end,1U,write_begin,FOC_ADC_COMMIT_GUARD_TICKS);
+#endif
     /* At standstill load the shadow registers before CH4/CEN is started.
      * OC4REF remains low at CNT=0 for PWM2 with CCR4>0. */
     if ((TIM1->CR1 & TIM_CR1_CEN) == 0U && udis == 0U) {
@@ -104,7 +278,12 @@ FOC_RAM_PATH void FocAdcTiming_CommitPrepared(const FocWindowPlan *prepared)
 }
 FOC_RAM_PATH int FocAdcTiming_RcActuationReady(void)
 {
-#if defined(FOC_PWM_BOUNDARY_TRACE) || defined(FOC_PWM_BOUNDARY_LITE)
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+    /* The latch target moved from the FOC tail to the ADC entry. Retain the
+     * coarse tail counter as diagnosis, but qualify the REAL commit and wall
+     * deadline instead. No history is reset or hidden. */
+    return FocAdcTiming_PipelineActuationReady();
+#elif defined(FOC_PWM_BOUNDARY_TRACE) || defined(FOC_PWM_BOUNDARY_LITE)
     /* Even the lightweight observer changes execution time. Never admit
      * motor motion from either evidence-only build. */
     return 0;
@@ -280,6 +459,27 @@ FOC_RAM_PATH uint32_t FocAdcTiming_IrqEnter(void)
     /* Start before timer reads: elapsed includes the counter snapshot cost. */
     irq_begin_cycles = DWT->CYCCNT;
     irq_commit_active = 1U;
+#if defined(FOC_FAST_PATH_PROFILE) || defined(FOC_PREEMPT_COMMIT_PROBE)
+#if FOC_DETAIL_STATS
+    pwm_profile_entry=PwmPoint(0U);
+    if (!foc_pwm_write_profile.geometry[2]) {
+#if defined(FOC_PREEMPT_COMMIT_PROBE)
+        foc_pwm_write_profile.geometry[0]=TIM1->CR1;
+        foc_pwm_write_profile.geometry[1]=TIM1->CR2;
+        foc_pwm_write_profile.geometry[2]=TIM1->ARR;
+        foc_pwm_write_profile.geometry[3]=TIM1->PSC;
+        foc_pwm_write_profile.geometry[4]=TIM1->RCR;
+        foc_pwm_write_profile.geometry[5]=TIM1->CCMR1;
+        foc_pwm_write_profile.geometry[6]=TIM1->CCMR2;
+        foc_pwm_write_profile.geometry[7]=ADC1->JSQR;
+#else
+        const uint32_t geometry[8]={TIM1->CR1,TIM1->CR2,TIM1->ARR,TIM1->PSC,
+            TIM1->RCR,TIM1->CCMR1,TIM1->CCMR2,ADC1->JSQR};
+        __builtin_memcpy(foc_pwm_write_profile.geometry,geometry,sizeof(geometry));
+#endif
+    }
+#endif
+#endif
 #endif
     ++stats.irq_entries;
     stats.dwt_on = (uint8_t)((DWT->CTRL & DWT_CTRL_CYCCNTENA_Msk) != 0U);

@@ -1,6 +1,11 @@
 #ifndef FOC_HOT_PATH_H
 #define FOC_HOT_PATH_H
 #include <stdint.h>
+#if defined(FOC_PREEMPT_COMMIT_PROBE) && defined(FOC_HEAVY_PROFILE_ENABLE) && !FOC_HEAVY_PROFILE_ENABLE
+#define FOC_DETAIL_STATS 0
+#else
+#define FOC_DETAIL_STATS 1
+#endif
 #include "latest_original_profile.h"
 /* Separate evidence candidate: keep the latest/original filter and all its
  * admission gates. Unlike FOC_IRQ_SOURCE_TRACE (inner FOC-work frame), the
@@ -37,7 +42,9 @@
     (!defined(FOC_ADAPTIVE_FILTER_EXPERIMENT) && !defined(FOC_COMPACT_CLOSED_LOOP) && !defined(FOC_LATEST_ORIGINAL_FSM)))
 #error RAM timing requires the hard-off adaptive profile or separate protected compact trial
 #endif
-#if defined(FOC_COMPACT_CLOSED_LOOP) || defined(FOC_LATEST_ORIGINAL_FSM)
+#if defined(FOC_FAST_REJECT_COMPUTE_ONLY)
+#define FOC_PROFILE_HARD_OFF_TEXT "1"
+#elif defined(FOC_COMPACT_CLOSED_LOOP) || defined(FOC_LATEST_ORIGINAL_FSM)
 #define FOC_PROFILE_HARD_OFF_TEXT "0"
 #else
 #define FOC_PROFILE_HARD_OFF_TEXT "1"
