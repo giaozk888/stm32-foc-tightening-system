@@ -19,6 +19,10 @@ static uint32_t cl_deferred_plan_fail;
 #include "foc_guard_integer.h"
 #endif
 static ClSession cl_session;
+#if defined(FOC_TORQUE_CHAIN_DIAG)
+static FocTorqueChainDiag torque_diag;
+static int TorqueChain_Command(const char *cmd,char *out,size_t size);
+#endif
 static FocFeedbackSafety cl_safety;
 static FocFeedbackFrame cl_frame;
 static FocZeroCal cl_zero;
@@ -817,6 +821,9 @@ __attribute__((optimize("Os")))
 #endif
 static void ProtectedLoop_Command(const char *cmd,char *out,size_t size)
 {
+#if defined(FOC_TORQUE_CHAIN_DIAG)
+    if (TorqueChain_Command(cmd,out,size)) return;
+#endif
 #if defined(FOC_REPAIR_WINDOW_TRACE)
     /* Freeze publication happens in the serialized output-off path. Once
      * frozen no ISR/command can mutate the ring until next boot/Begin. Only

@@ -23,7 +23,7 @@ class TighteningSimulationTests(unittest.TestCase):
     def test_reads_project_defaults_and_current_limits(self):
         self.assertEqual(len(self.profile.recipe), 18)
         self.assertEqual(self.profile.recipe["hold_iq_mA"], 150)
-        self.assertEqual(self.profile.constants["MOTOR_DIRECT_IQ_LIMIT_A"], 0.15)
+        self.assertEqual(self.profile.constants["MOTOR_DIRECT_IQ_LIMIT_A"], 0.20)
         self.assertEqual(self.profile.constants["MOTOR_SPEED_IQ_LIMIT_A"], 0.40)
         self.assertEqual(self.profile.constants["FOC_CURRENT_TRIP_A"], 4.0)
         self.assertEqual(self.profile.constants["FOC_VOLTAGE_LIMIT_V"], 0.80)
@@ -102,12 +102,25 @@ class TighteningSimulationTests(unittest.TestCase):
                 self.assertEqual(run.outcome, outcome)
                 self.assertEqual(run.terminal_command_a, 0)
 
-    def test_double_speed_model_reports_overshoot_instead_of_success(self):
+    def test_legacy_150ma_double_speed_model_reports_overshoot_instead_of_success(self):
         doubled = load_firmware_profile(speed_profile="x2-offline")
+        # Keep this historical overshoot fixture at its identified 150mA
+        # model limit, not the newly requested firmware 200mA limit.
+        doubled = replace(doubled, constants={**doubled.constants, "MOTOR_DIRECT_IQ_LIMIT_A": 0.15})
         run = simulate(doubled, controller="feedback")
         self.assertEqual(run.outcome, "OVERTORQUE")
         self.assertFalse(run.truth_within_demo_band)
         self.assertFalse(run.quality_claim_allowed)
+        self.assertEqual(run.terminal_command_a, 0)
+
+    def test_requested_200ma_model_is_not_a_hardware_quality_certificate(self):
+        doubled = load_firmware_profile(speed_profile="x2-offline")
+        self.assertEqual(doubled.constants["MOTOR_DIRECT_IQ_LIMIT_A"], 0.20)
+        run = simulate(doubled, controller="feedback")
+        self.assertFalse(run.quality_claim_allowed)
+        # Complete-model rundown still uses the unchanged 0.40A speed limit;
+        # direct-IQ post stages use the separate 0.20A clamp.
+        self.assertLessEqual(run.max_command_a, doubled.constants["MOTOR_SPEED_IQ_LIMIT_A"] + 1e-9)
         self.assertEqual(run.terminal_command_a, 0)
 
     def test_contact_requires_speed_and_iq_continuously(self):

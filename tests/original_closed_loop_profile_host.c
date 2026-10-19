@@ -13,11 +13,11 @@ int main(void)
         (uint32_t)(FOC_VOLTAGE_LIMIT_V * 1000.0f + 0.5f));
     assert(length > 0 && (size_t)length < sizeof(text));
     assert(strstr(text, "TRIP_MA=4000 ZERO_DELTA=100 LOOP_US=50") != NULL);
-    assert(strstr(text, "SPEED_IQ_MA=400 DIRECT_IQ_MA=150 VOLTAGE_MV=800") != NULL);
+    assert(strstr(text, "SPEED_IQ_MA=400 DIRECT_IQ_MA=200 VOLTAGE_MV=800") != NULL);
     assert(strstr(text, "FILTER=LEGACY_STEP_MEDIAN START=ORIGINAL QUALIFIED=0") != NULL);
     puts(text);
     char small[8];
-    int required = OriginalClosedLoop_FormatProfile(small, sizeof(small), 4000, 100, 50, 400, 150, 800);
+    int required = OriginalClosedLoop_FormatProfile(small, sizeof(small), 4000, 100, 50, 400, 200, 800);
     assert(required == length && small[sizeof(small) - 1] == '\0');
     return 0;
 }

@@ -20,7 +20,15 @@ enum { CL_BAD_ADC=4U, CL_BAD_ZERO=8U, CL_BAD_OUTPUT=16U, CL_BAD_ENCODER=32U,
 /* The loaded-FSM trial keeps the same 20 rpm admission and all protection
  * thresholds. Only its one-shot session lease covers the existing 8 s
  * rundown + 2 s stop settle + 1.7 s current/hold sequence. */
-#if defined(FOC_LOADED_FSM_TRIAL)
+#if defined(FOC_TORQUE_CHAIN_DIAG)
+#include "foc_torque_chain_diag.h"
+#if defined(FOC_BREAKAWAY_FIVE_SECOND) || defined(FOC_SPEED_DYNAMIC_DIAG)
+#define CL_LEASE_TEXT "5000000"
+#else
+#define CL_LEASE_TEXT "200000"
+#endif
+enum { CL_MAX_US=FOC_TORQUE_CHAIN_MAX_US };
+#elif defined(FOC_LOADED_FSM_TRIAL)
 #if !defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
 #error Loaded FSM trial requires the protected original-FSM pipeline
 #endif

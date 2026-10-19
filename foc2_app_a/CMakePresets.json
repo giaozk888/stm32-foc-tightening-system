@@ -2,6 +2,54 @@
     "version": 3,
     "configurePresets": [
         {
+            "name": "Speed500mADynamicDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_SPEED_DYNAMIC_DIAG": "ON", "FOC_BREAKAWAY_CURRENT_TEST": "OFF", "FOC_BREAKAWAY_FIVE_SECOND": "OFF" }
+        },
+        {
+            "name": "BreakawayFiveSecondDiagnostic",
+            "inherits": "BreakawayCurrentDiagnostic",
+            "cacheVariables": { "FOC_BREAKAWAY_FIVE_SECOND": "ON" }
+        },
+        {
+            "name": "BreakawayCurrentDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_BREAKAWAY_CURRENT_TEST": "ON" }
+        },
+        {
+            "name": "Rundown200mADirectLimitTrial",
+            "inherits": "RundownDiagnosticTrial",
+            "cacheVariables": { "FOC_TORQUE_CHAIN_DIAG": "OFF" }
+        },
+        {
+            "name": "TorqueChain200mADirectLimitDiagnostic",
+            "inherits": "TorqueChain200mADiagnostic"
+        },
+        {
+            "name": "TorqueChain200mADiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_TORQUE_CHAIN_IQ_MA": "200" }
+        },
+        {
+            "name": "TorqueChain100mADiagnostic",
+            "inherits": "TorqueChainDiagnostic",
+            "cacheVariables": { "FOC_TORQUE_CHAIN_IQ_MA": "100" }
+        },
+        {
+            "name": "TorqueChainDiagnostic",
+            "inherits": "RundownDiagnosticTrial",
+            "cacheVariables": { "FOC_TORQUE_CHAIN_DIAG": "ON", "FOC_TORQUE_CHAIN_IQ_MA": "50" }
+        },
+        {
+            "name": "RundownDiagnosticTrial",
+            "inherits": "RundownGuardTrial",
+            "cacheVariables": { "FOC_RUNDOWN_DIAGNOSTIC": "ON" }
+        },
+        {
+            "name": "RundownGuardTrial",
+            "inherits": "SpeedBrakeTrackTrial"
+        },
+        {
             "name": "SpeedBrakeTrackTrial",
             "inherits": "VoltageX2Trial",
             "cacheVariables": { "FOC_SPEED_BRAKE_TRACK": "ON" }
@@ -403,6 +451,16 @@
         }
     ],
     "buildPresets": [
+        { "name": "Speed500mADynamicDiagnostic", "configurePreset": "Speed500mADynamicDiagnostic" },
+        { "name": "BreakawayFiveSecondDiagnostic", "configurePreset": "BreakawayFiveSecondDiagnostic" },
+        { "name": "BreakawayCurrentDiagnostic", "configurePreset": "BreakawayCurrentDiagnostic" },
+        { "name": "Rundown200mADirectLimitTrial", "configurePreset": "Rundown200mADirectLimitTrial" },
+        { "name": "TorqueChain200mADirectLimitDiagnostic", "configurePreset": "TorqueChain200mADirectLimitDiagnostic" },
+        { "name": "TorqueChain200mADiagnostic", "configurePreset": "TorqueChain200mADiagnostic" },
+        { "name": "TorqueChain100mADiagnostic", "configurePreset": "TorqueChain100mADiagnostic" },
+        { "name": "TorqueChainDiagnostic", "configurePreset": "TorqueChainDiagnostic" },
+        { "name": "RundownGuardTrial", "configurePreset": "RundownGuardTrial" },
+        { "name": "RundownDiagnosticTrial", "configurePreset": "RundownDiagnosticTrial" },
         { "name": "SpeedBrakeTrackTrial", "configurePreset": "SpeedBrakeTrackTrial" },
         { "name": "VoltageX2Trial", "configurePreset": "VoltageX2Trial" },
         { "name": "CurrentPolarityComputeOnly", "configurePreset": "CurrentPolarityComputeOnly" },

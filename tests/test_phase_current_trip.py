@@ -47,11 +47,11 @@ class PhaseCurrentTripTests(unittest.TestCase):
                               "GPIO_PIN_RESET);", "PWM_SetDuty(0.5f, 0.5f, 0.5f);"):
                 self.assertIn(statement, gate)
 
-    def test_command_and_voltage_limits_not_increased(self):
+    def test_explicit_200ma_direct_limit_other_limits_unchanged(self):
         for source in self.sources:
             for name, value in (("MOTOR_SPEED_IQ_LIMIT_A", "0.40"),
                                 ("SPEED_IQ_LIMIT_A", "0.40"),
-                                ("MOTOR_DIRECT_IQ_LIMIT_A", "0.15"),
+                                ("MOTOR_DIRECT_IQ_LIMIT_A", "0.20"),
                                 ("FOC_VOLTAGE_LIMIT_V", "0.80")):
                 self.assertRegex(source, rf"#define\s+{name}\s+{re.escape(value)}f\b")
 

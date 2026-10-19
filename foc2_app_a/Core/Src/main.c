@@ -177,7 +177,8 @@ typedef enum
     TIGHTEN_OUTCOME_RUNDOWN_TIMEOUT,
     TIGHTEN_OUTCOME_STOP_TIMEOUT,
     TIGHTEN_OUTCOME_ABORT,
-    TIGHTEN_OUTCOME_FAULT
+    TIGHTEN_OUTCOME_FAULT,
+    TIGHTEN_OUTCOME_NO_ROTATION
 } TighteningOutcome_t;
 
 /*
@@ -521,12 +522,16 @@ _Static_assert(PWM_ARR == FOC_ADC_TIMER_ARR, "Review ADC timing after PWM clock/
  */
 #define MOTOR_SPEED_API_LIMIT_RPM      250.0f
 #define MOTOR_SPEED_TEST_RPM           100.0f
+#if defined(FOC_SPEED_DYNAMIC_DIAG)
+#define MOTOR_SPEED_IQ_LIMIT_A           0.50f
+#else
 #define MOTOR_SPEED_IQ_LIMIT_A           0.40f
+#endif
 #define MOTOR_SPEED_STALL_IQ_MIN_A       0.38f
 #define MOTOR_SPEED_STALL_REF_MIN_RPM    20.0f
 #define MOTOR_SPEED_STALL_TIMEOUT_S      2.0f
 
-#define MOTOR_DIRECT_IQ_LIMIT_A          0.15f
+#define MOTOR_DIRECT_IQ_LIMIT_A          0.20f
 
 #define TIGHTEN_TEST_IDLE_1_MS             2000U
 
@@ -549,6 +554,8 @@ _Static_assert(PWM_ARR == FOC_ADC_TIMER_ARR, "Review ADC timing after PWM clock/
 #define TIGHTEN_CONTACT_DET_MAX_RPM           10.0f
 #define TIGHTEN_CONTACT_IQREF_MIN_A            0.30f
 #define TIGHTEN_CONTACT_CONFIRM_MS            250U
+#include "tightening_rundown_guard.h"
+static TightenRundownGuard tightening_rundown;
 
 /*
  * Independent aborts for the manual-contact validation.
@@ -774,6 +781,10 @@ static FocTrend4Angle current_trend4_angle;
 
 /* Encoder / position / speed-estimator state. */
 static volatile uint16_t encoder_raw = 0U;
+#if defined(FOC_RUNDOWN_DIAGNOSTIC)
+static int32_t rundown_encoder_delta;
+static uint32_t rundown_encoder_dt_us;
+#endif
 static volatile float encoder_theta_e = 0.0f;       /* latest measured electrical angle */
 static volatile float encoder_theta_e_pred = 0.0f;  /* 20 kHz predicted electrical angle */
 static volatile float encoder_speed_rpm = 0.0f;     /* mechanical speed; +RAW = positive */
@@ -2592,6 +2603,7 @@ static float TighteningResult_AvgIq(
 
 static void TighteningRepeat_ResetCurrentCycle(void)
 {
+    TightenRundown_Begin(&tightening_rundown);
     tightening_contact_candidate_ms = 0U;
     tightening_contact_condition = 0U;
     tightening_contact_confirmed = 0U;
@@ -2847,6 +2859,8 @@ static const char *TighteningOutcome_Name(TighteningOutcome_t outcome)
             return "ABORT";
         case TIGHTEN_OUTCOME_FAULT:
             return "FAULT";
+        case TIGHTEN_OUTCOME_NO_ROTATION:
+            return "NO_ROTATION";
         case TIGHTEN_OUTCOME_NONE:
         default:
             return "NONE";
@@ -7062,6 +7076,9 @@ static void ProtocolTask(void *argument)
 }
 
 
+#include "tightening_rundown_binding.inc"
+/* Size-optimize only the 100Hz application FSM, not any FOC/PI/IRQ function. */
+__attribute__((optimize("Os")))
 static void TighteningTask(void *argument)
 {
     TickType_t last_wake_time;
@@ -7127,6 +7144,16 @@ static void TighteningTask(void *argument)
     for (;;)
     {
         TickType_t now = xTaskGetTickCount();
+#if defined(FOC_TORQUE_CHAIN_DIAG)
+        TorqueChain_Service();
+#endif
+#if defined(FOC_SPEED_DYNAMIC_DIAG)
+        /* Separate SPEED-only experiment. Never enter fixed-Iq tightening
+         * stages or consume normal START into the original FSM here. */
+        ProtectedLoop_RundownEnd();
+        vTaskDelay(pdMS_TO_TICKS(10U));
+        continue;
+#endif
 #if defined(FOC_CONTROL_CHAIN_RECONNECT)
         ControlChain_TaskService();
 #endif
@@ -7439,6 +7466,13 @@ static void TighteningTask(void *argument)
             case TIGHTEN_STATE_RUNDOWN:
             {
                 uint8_t contact_now = 0U;
+                if (TightenRundown_Update(&tightening_rundown,elapsed_ms,
+                    TIGHTEN_DIRECTION*(float)recipe_state.params.rundown_rpm,
+                    encoder_speed_rpm,det_rpm,encoder_position_deg,
+                    foc_iq_ref_A,encoder_valid)) {
+                    Tightening_NoRotation(elapsed_ms);
+                    break;
+                }
 
                 /*
                  * A contact candidate must satisfy BOTH:
@@ -7447,7 +7481,8 @@ static void TighteningTask(void *argument)
                  *
                  * and remain true continuously for 250 ms.
                  */
-                if ((fabsf(det_rpm) <=
+                if (TightenRundown_CanContact(&tightening_rundown) &&
+                    (fabsf(det_rpm) <=
                      (float)recipe_state.params.contact_rpm) &&
                     (drive_iqref >=
                      ((float)recipe_state.params.contact_iq_mA / 1000.0f)))
@@ -7470,7 +7505,8 @@ static void TighteningTask(void *argument)
                     tightening_contact_candidate_ms = 0U;
                 }
 
-                if (tightening_contact_candidate_ms >=
+                if (TightenRundown_CanContact(&tightening_rundown) &&
+                    tightening_contact_candidate_ms >=
                     recipe_state.params.contact_ms)
                 {
                     /*
@@ -7840,6 +7876,11 @@ static void TighteningTask(void *argument)
                 else if (elapsed_ms >=
                          recipe_state.params.hold_ms)
                 {
+                    if (!TightenRundown_CanOk(&tightening_rundown,
+                                             tightening_contact_confirmed)) {
+                        Tightening_NoRotation(elapsed_ms);
+                        break;
+                    }
                     MotorControl_SetIdle();
 
                     stage_start = now;
@@ -7892,6 +7933,11 @@ static void TighteningTask(void *argument)
         }
 
 #if defined(FOC_LATEST_ORIGINAL_FSM)
+        /* Record the terminal RUNDOWN frame before session STOP can freeze
+         * the startup trace. No ISR instrumentation added. */
+#if defined(FOC_RUNDOWN_DIAGNOSTIC)
+        ProtectedLoop_RundownEnd();
+#endif
         LatestOriginal_FsmService();
 #endif
         vTaskDelayUntil(&last_wake_time, pdMS_TO_TICKS(10U));
@@ -8784,8 +8830,13 @@ static void EncoderDiag_InitCycleCounter(void)
 
 static float Encoder_ElectricalAngleRad(uint16_t raw)
 {
+#if defined(FOC_TORQUE_CHAIN_DIAG) && !defined(FOC_SPEED_DYNAMIC_DIAG)
+    return FocTorqueChain_Angle(AS5047P_ElectricalAngleRad(raw,
+        ELECTRICAL_ZERO_RAW,POLE_PAIRS,ENCODER_DIRECTION),torque_diag.offset_deg);
+#else
     return AS5047P_ElectricalAngleRad(raw, ELECTRICAL_ZERO_RAW,
                                      POLE_PAIRS, ENCODER_DIRECTION);
+#endif
 }
 
 static HAL_StatusTypeDef AS5047P_StartupCheck(void)
@@ -10167,6 +10218,10 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
     /*
      * Publish only an ACCEPTED encoder sample.
      */
+#if defined(FOC_RUNDOWN_DIAGNOSTIC)
+    rundown_encoder_delta=encoder_prev_valid ? AS5047P_Delta14(raw,encoder_prev_raw) : 0;
+    rundown_encoder_dt_us=(uint32_t)(encoder_speed_dt_accum_s*1000000.0f);
+#endif
     encoder_prev_raw = raw;
     encoder_prev_valid = 1U;
     encoder_speed_dt_accum_s = 0.0f;
@@ -11279,6 +11334,10 @@ static void StartupZeroCalFaultCommsLoop(void)
 #include "safety_locked_boot.inc"
 #endif
 
+#if defined(FOC_BREAKAWAY_FIVE_SECOND)
+/* Diagnostic Flash budget only; never change FOC/PI/IRQ code generation. */
+__attribute__((optimize("Os")))
+#endif
 static void StartupTask(void *argument)
 {
     uint32_t seq_start;
