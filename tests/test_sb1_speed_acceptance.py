@@ -88,6 +88,51 @@ class SpeedAcceptanceTests(unittest.TestCase):
         self.assertNotIn('START',board.commands)
         self.assertIn('ANALOG SAFE',board.commands)
 
+    def test_transient_windows_share_failure_retries_only_rename(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'receipt.json'
+            row=dict(receipt_path=str(path),start_attempts=0)
+            real_replace=runner.os.replace
+            errors=[]
+            for code in (5,32,33):
+                error=PermissionError('simulated Windows sharing denial')
+                error.winerror=code; errors.append(error)
+            calls=[]
+            def replace(source,dest):
+                calls.append((source,dest))
+                if len(calls)<=len(errors): raise errors[len(calls)-1]
+                return real_replace(source,dest)
+            with patch.object(runner.os,'replace',side_effect=replace), \
+                 patch.object(runner.time,'sleep') as sleep:
+                runner.checkpoint(row,'prepared_no_start')
+            self.assertEqual(len(calls),4)
+            self.assertTrue(all(c==calls[0] for c in calls))
+            self.assertEqual([c.args[0] for c in sleep.call_args_list],[.01,.02,.03])
+            self.assertEqual(json.loads(path.read_text())['start_attempts'],0)
+
+    def test_persistent_windows_denial_preserves_last_receipt_and_fails_closed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'receipt.json'; row=dict(receipt_path=str(path),start_attempts=0)
+            runner.checkpoint(row,'prepared_no_start'); original=path.read_bytes()
+            error=PermissionError('simulated persistent denial'); error.winerror=5
+            row['start_attempts']=1
+            with patch.object(runner.os,'replace',side_effect=error) as replace, \
+                 patch.object(runner.time,'sleep') as sleep:
+                with self.assertRaises(PermissionError): runner.checkpoint(row,'START_ATTEMPT')
+            self.assertEqual(replace.call_count,6)
+            self.assertEqual(sleep.call_count,5)
+            self.assertLessEqual(sum(c.args[0] for c in sleep.call_args_list),.151)
+            self.assertEqual(path.read_bytes(),original)
+            self.assertEqual(json.loads(path.with_suffix('.json.partial').read_text())['phase'],'START_ATTEMPT')
+
+    def test_non_sharing_permission_failure_not_hidden_or_retried(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'receipt.json'; row=dict(receipt_path=str(path))
+            with patch.object(runner.os,'replace',side_effect=PermissionError('denied')) as replace, \
+                 patch.object(runner.time,'sleep') as sleep:
+                with self.assertRaises(PermissionError): runner.checkpoint(row,'prepared')
+            self.assertEqual(replace.call_count,1); sleep.assert_not_called()
+
     def run_fake(self,board,record):
         clock=iter(i*.001 for i in range(20000))
         with patch.object(runner,'require_idle_ready'),\

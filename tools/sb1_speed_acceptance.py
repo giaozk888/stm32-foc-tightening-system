@@ -47,7 +47,18 @@ def checkpoint(row,phase):
     path=Path(path); temporary=path.with_suffix('.json.partial')
     with temporary.open('w',encoding='utf-8') as file:
         json.dump(row,file,indent=2); file.write('\n'); file.flush(); os.fsync(file.fileno())
-    os.replace(temporary,path)
+    # Windows readers/scanners can briefly hold the destination without
+    # FILE_SHARE_DELETE. Retry ONLY this already-fsynced file rename, never
+    # UART commands, resets, activation or motor START. A real/persistent
+    # access failure still propagates before the caller can proceed.
+    for attempt in range(6):
+        try:
+            os.replace(temporary,path)
+            break
+        except PermissionError as error:
+            if getattr(error,'winerror',None) not in (5,32,33) or attempt==5:
+                raise
+            time.sleep(.01*(attempt+1))  # Total bounded wait <=150 ms.
 
 
 class JournalConsole(Console):

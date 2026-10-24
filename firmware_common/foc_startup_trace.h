@@ -8,7 +8,15 @@
 /* Single bounded session. Caller serializes writers with PRIMASK. No heap,
  * serial I/O or floating-point conversions in the capture/fault path. Rows
  * are completed outer-loop snapshots, not simultaneous ADC/encoder samples. */
+#if defined(FOC_CURRENT_STEP_AB_DIAG)
+/* Exclusive step image keeps startup/fault hooks and a shorter OUTER trace;
+ * the saved RAM holds per-ADC step metrics/events instead. Normal A/B stay 32. */
+enum { FOC_STARTUP_ROWS=8U };
+#define FOC_STARTUP_ROWS_TEXT "8"
+#else
 enum { FOC_STARTUP_ROWS=32U };
+#define FOC_STARTUP_ROWS_TEXT "32"
+#endif
 #if defined(FOC_TORQUE_CHAIN_DIAG)
 #define FOC_STARTUP_PERIOD_US FOC_TORQUE_CHAIN_PERIOD_US
 #else
@@ -86,7 +94,13 @@ static inline int FocStartup_Get(const FocStartupTrace *s,uint32_t index,FocStar
     *row=s->rows[(s->total-count+index)%FOC_STARTUP_ROWS]; return 1;
 }
 /* Foreground formatting only; invalid values are explicit, never UB on cast. */
+#if defined(FOC_PWM_COMMON_MODE_ENABLE)
+/* Shared foreground-only conversion instead of ten inlined copies. The
+ * binary ISR trace and every field/rounding/sentinel remain unchanged. */
+static __attribute__((noinline,optimize("Oz"))) long FocStartup_Scaled(float x,float scale)
+#else
 static inline long FocStartup_Scaled(float x,float scale)
+#endif
 {
     if (!isfinite(x) || fabsf(x)>1000000.0f) return INT32_MIN;
     return (long)(x*scale);

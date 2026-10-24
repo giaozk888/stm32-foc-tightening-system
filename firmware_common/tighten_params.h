@@ -3,13 +3,19 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "foc_rundown240_candidate.h"
 
 /* Normal V1 field order, integer units, limits and defaults are persistent ABI.
  * Do not reorder or widen fields: existing Flash/KVS records contain these
  * exact 18 uint32_t values. Changes require a versioned storage migration.
  * X(field, wire_name, minimum, maximum, default_value)
  */
-#if defined(TIGHTEN_SPEED_X2_OFFLINE)
+#if defined(FOC_RUNDOWN240_CANDIDATE)
+/* RAM-only A experiment. StorageSave is disabled, including legacy migration;
+ * the shared V1 record layout and the fallback's limits remain unchanged. */
+#define TIGHTEN_RUNDOWN_DEFAULT_RPM FOC_RUNDOWN240_TARGET_RPM
+#define TIGHTEN_RUNDOWN_MAX_RPM FOC_RUNDOWN240_TARGET_RPM
+#elif defined(TIGHTEN_SPEED_X2_OFFLINE)
 /* Output-locked, opt-in experiment only. StorageSave is disabled for this
  * profile so its extended range cannot invalidate a normal fallback recipe.
  * Existing KVS values are loaded unchanged; they are NOT multiplied on boot.
@@ -21,13 +27,21 @@
 #define TIGHTEN_RUNDOWN_MAX_RPM 120U
 #endif
 
+#if defined(FOC_RUNDOWN240_TRAVEL20000)
+#define TIGHTEN_MAX_TRAVEL_LIMIT_DEG FOC_RUNDOWN240_MAX_TRAVEL_DEG
+#define TIGHTEN_MAX_TRAVEL_DEFAULT_DEG FOC_RUNDOWN240_MAX_TRAVEL_DEG
+#else
+#define TIGHTEN_MAX_TRAVEL_LIMIT_DEG 10000U
+#define TIGHTEN_MAX_TRAVEL_DEFAULT_DEG 3000U
+#endif
+
 #define TIGHTEN_PARAM_FIELDS(X) \
     X(rundown_rpm, "RUNDOWN_RPM", 20U, TIGHTEN_RUNDOWN_MAX_RPM, TIGHTEN_RUNDOWN_DEFAULT_RPM) \
     X(contact_rpm, "CONTACT_RPM", 1U, 20U, 10U) \
     X(contact_iq_mA, "CONTACT_IQ_MA", 100U, 400U, 300U) \
     X(contact_ms, "CONTACT_MS", 50U, 1000U, 250U) \
     X(rundown_timeout_ms, "RUNDOWN_TIMEOUT_MS", 1000U, 20000U, 8000U) \
-    X(max_travel_deg, "MAX_TRAVEL_DEG", 100U, 10000U, 3000U) \
+    X(max_travel_deg, "MAX_TRAVEL_DEG", 100U, TIGHTEN_MAX_TRAVEL_LIMIT_DEG, TIGHTEN_MAX_TRAVEL_DEFAULT_DEG) \
     X(seating_iq_mA, "SEATING_IQ_MA", 20U, 150U, 80U) \
     X(t1_iq_mA, "T1_IQ_MA", 20U, 150U, 100U) \
     X(t2_iq_mA, "T2_IQ_MA", 20U, 150U, 120U) \

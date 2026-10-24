@@ -21,6 +21,9 @@ static uint32_t cl_deferred_plan_fail;
 static ClSession cl_session;
 #if defined(FOC_TORQUE_CHAIN_DIAG)
 static FocTorqueChainDiag torque_diag;
+#if defined(FOC_ANGLE_CHAIN_DIAG)
+static FocAngleHand angle_hand;
+#endif
 static int TorqueChain_Command(const char *cmd,char *out,size_t size);
 #endif
 static FocFeedbackSafety cl_safety;
@@ -98,13 +101,20 @@ FOC_RAM_PATH static void ProtectedLoop_Stop(void);
 #include "foc_startup_trace_binding.inc"
 #endif
 
+#if defined(FOC_OUTPUT_GATE_EVIDENCE)
+#include "foc_output_gate_evidence_binding.inc"
+#endif
 FOC_COMPACT_HELPER uint8_t ProtectedLoop_GatesMatch(void)
 {
+#if defined(FOC_OUTPUT_GATE_EVIDENCE)
+    return ProtectedLoop_GatesObserved();
+#else
     uint32_t sd=(DRIVER_SD_GPIO_Port->ODR & DRIVER_SD_Pin)!=0U;
     uint32_t moe=TIM1->BDTR & TIM_BDTR_MOE;
     if (!(TIM1->CR1 & TIM_CR1_CEN) || (TIM1->BDTR & TIM_BDTR_AOE)) return 0U;
     return cl_session.state==CL_RUNNING ?
         (sd && moe && TIM1->CCER==0x555U) : (!sd && !moe && !TIM1->CCER);
+#endif
 }
 FOC_COMPACT_HELPER uint8_t ProtectedLoop_TimerHealthy(void)
 {
@@ -627,11 +637,67 @@ static int ProtectedLoop_Init(void)
 #endif
     return 1;
 }
+#if defined(FOC_READY_TIMESTAMP_SNAPSHOT)
+#include "protected_readiness.h"
+static ProtectedReadiness cl_ready_check;
+static ProtectedReadinessReject cl_ready_reject;
+static uint32_t cl_ready_attempts;
+#define CL_READY_REQUIRE(condition,reason) ProtectedReady_Require(&cl_ready_check,(condition),(reason))
+static uint8_t ProtectedLoop_AdcReady(void)
+{
+    /* ADC can preempt a FreeRTOS critical section. Load its published reference
+     * FIRST, then read time: never subtract a newer ISR timestamp from old now.
+     * Volatile load + barrier also preserve this order in optimized firmware.
+     * A delayed task may conservatively reject; there is no retry/age bypass. */
+    uint32_t reference=*(volatile uint32_t *)&cl_last_us;
+    __DMB();
+    uint32_t now=AS5047P_DmaNowUs();
+    cl_ready_check.adc_us=reference;cl_ready_check.now_us=now;
+    cl_ready_check.age_us=now-reference;cl_ready_check.clock_valid=1U;
+    return (uint8_t)(cl_ready_check.age_us<=100U);
+}
+#define CL_READY_ADC_FRESH() ProtectedLoop_AdcReady()
+#endif
 static uint8_t ProtectedLoop_Ready(void)
 {
+#if defined(FOC_READY_TIMESTAMP_SNAPSHOT)
+    cl_ready_check=(ProtectedReadiness){0};
+#endif
 #if defined(FOC_ADAPTIVE_FILTER_EXPERIMENT) || defined(FOC_RC_DEFERRED_SHADOW) || defined(FOC_FAST_REJECT_COMPUTE_ONLY)
     return 0U; /* Observer builds never admit motor actuation. */
 #else
+#if defined(FOC_READY_TIMESTAMP_SNAPSHOT)
+    return CL_READY_REQUIRE(cl_session.state==CL_READY,CL_READY_STATE) &&
+        CL_READY_REQUIRE(!cl_session.used,CL_READY_USED) && CL_READY_REQUIRE(cl_armed,CL_READY_ARMED) &&
+        CL_READY_REQUIRE(!cl_request,CL_READY_REQUEST) && CL_READY_REQUIRE(!adc_fault,CL_READY_ADC_FAULT) &&
+        CL_READY_REQUIRE(!foc_fault,CL_READY_FOC_FAULT) && CL_READY_REQUIRE(run_zero_cal_done,CL_READY_ZERO) &&
+        CL_READY_REQUIRE(!fw_update.active,CL_READY_UPDATE) && CL_READY_REQUIRE(cl_boot_confirmed,CL_READY_BOOT) &&
+        CL_READY_REQUIRE(UART_Async_IsReady(),CL_READY_UART) &&
+#if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
+        CL_READY_REQUIRE(ProtectedLoop_PwmNeutralReady(),CL_READY_PWM) &&
+#elif defined(FOC_ADC_RC_PROTECTED_CANDIDATE)
+        CL_READY_REQUIRE(FocAdcTiming_RcActuationReady(),CL_READY_PWM) &&
+#endif
+        CL_READY_REQUIRE(cl_work_n,CL_READY_WORK) && CL_READY_REQUIRE(cl_outer_n,CL_READY_OUTER) &&
+        CL_READY_REQUIRE(AS5047P_DmaIsPeriodic(),CL_READY_PERIODIC) &&
+        CL_READY_REQUIRE(cl_safety.protection.result==FOC_OC_CLEAR,CL_READY_CURRENT) &&
+        CL_READY_REQUIRE(ProtectedLoop_TimerHealthy(),CL_READY_TIMER) &&
+        CL_READY_REQUIRE(ProtectedLoop_GatesMatch(),CL_READY_GATES) &&
+        CL_READY_REQUIRE(CL_READY_ADC_FRESH(),CL_READY_ADC_AGE) &&
+        CL_READY_REQUIRE(encoder_valid,CL_READY_ENCODER) &&
+        CL_READY_REQUIRE(isfinite(encoder_speed_rpm) && fabsf(encoder_speed_rpm)<=2.0f,CL_READY_SPEED) &&
+        CL_READY_REQUIRE(motor_control_mode==MOTOR_MODE_IDLE,CL_READY_MODE) &&
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+        /* PRECHECK is logically busy to UART/recipe writers, but has not
+         * admitted or commanded motion. All other existing readiness gates
+         * above remain mandatory; no RUNNING/TIGHTEN state can use this. */
+        CL_READY_REQUIRE((!Tightening_IsBusy() || TighteningIntent_PrecheckOnly()),CL_READY_BUSY) &&
+#else
+        CL_READY_REQUIRE(!Tightening_IsBusy(),CL_READY_BUSY) &&
+#endif
+        CL_READY_REQUIRE(!tightening_start_request,CL_READY_START);
+#else
+    /* Existing profiles, including B, keep their exact historical expression. */
     return cl_session.state==CL_READY && !cl_session.used && cl_armed &&
         !cl_request && !adc_fault && !foc_fault && run_zero_cal_done &&
         !fw_update.active && cl_boot_confirmed && UART_Async_IsReady() &&
@@ -645,9 +711,22 @@ static uint8_t ProtectedLoop_Ready(void)
         ProtectedLoop_TimerHealthy() && ProtectedLoop_GatesMatch() &&
         (uint32_t)(AS5047P_DmaNowUs()-cl_last_us)<=100U &&
         encoder_valid && isfinite(encoder_speed_rpm) && fabsf(encoder_speed_rpm)<=2.0f &&
-        motor_control_mode==MOTOR_MODE_IDLE && !Tightening_IsBusy() && !tightening_start_request;
+        motor_control_mode==MOTOR_MODE_IDLE &&
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+        (!Tightening_IsBusy() || TighteningIntent_PrecheckOnly()) &&
+#else
+        !Tightening_IsBusy() &&
+#endif
+        !tightening_start_request;
+#endif
 #endif
 }
+#if defined(FOC_MECHANICAL_DOB_SHADOW)
+#include "mechanical_dob_binding.inc"
+#if defined(FOC_ID_STEADY_STATS)
+#include "id_steady_binding.inc"
+#endif
+#endif
 FOC_RAM_PATH static void ProtectedLoop_SetDuty(float du,float dv,float dw)
 {
 #if defined(FOC_ONE_CYCLE_PWM_PIPELINE)
@@ -740,6 +819,33 @@ FOC_RAM_PATH static void ProtectedLoop_DeferredProbe(void)
 /* Actual 1 kHz task owns original speed PI and command consumption. */
 static void ProtectedLoop_TaskService(void)
 {
+#if defined(FOC_DOB_NORMAL_CONTROL)
+    DobNormal_Lifecycle(&mechanical_dob_monitor,&dob_feedback,
+        (uint8_t)(cl_armed&&cl_session.state==CL_RUNNING&&motor_control_mode==MOTOR_MODE_SPEED),
+        (uint8_t)(adc_fault||foc_fault));
+#else
+#if defined(FOC_DOB_FEEDBACK_CANDIDATE)
+    if(!cl_armed||cl_session.state!=CL_RUNNING||adc_fault||foc_fault||motor_control_mode!=MOTOR_MODE_SPEED)
+        DobFeedback_Clear(&dob_feedback);
+#endif
+#if defined(FOC_MECHANICAL_DOB_SHADOW)
+    /* Evidence lifecycle only; never refreshes a watchdog or changes control. */
+#if defined(FOC_DOB_ID_TRACE)
+    DobIdTrace_Bind(mechanical_capture.points,sizeof mechanical_capture.points);
+    mechanical_capture.flags=0x80000000U; /* Trace bytes, NEVER mechanical fit bins. */
+    DobIdTrace_Lifecycle((uint8_t)(cl_armed&&cl_session.state==CL_RUNNING),(uint8_t)(adc_fault||foc_fault));
+#endif
+    MechanicalDobMonitor_Lifecycle(&mechanical_dob_monitor,
+        (uint8_t)(cl_armed && cl_session.state==CL_RUNNING),(uint8_t)(adc_fault || foc_fault));
+#if defined(FOC_ID_STEADY_STATS)
+    IdSteady_Lifecycle(&id_steady_stats,(uint8_t)(cl_armed && cl_session.state==CL_RUNNING),
+        (uint8_t)(adc_fault || foc_fault));
+#endif
+#endif
+#endif /* Normal DOB lifecycle / single-use diagnostic lifecycle. */
+#if defined(FOC_OUTER_OBSERVE_AFTER_ACK)
+    OuterTrace_Enter(&outer_completion_trace,AS5047P_DmaNowUs(),(uint8_t)(adc_fault || foc_fault));
+#endif
     if (!cl_armed) {
         MotorControl_SetIdle(); foc_iq_ref_A=0.0f;
         if (AS5047P_DmaIsPeriodic()) AS5047P_DmaStopPeriodic();
@@ -759,6 +865,15 @@ static void ProtectedLoop_TaskService(void)
     if (!cl_armed) return;
 #endif
     if (update==HAL_OK) { cl_session.outer_us=AS5047P_DmaNowUs(); ++cl_outer_n; }
+#if defined(FOC_OUTER_OBSERVE_AFTER_ACK)
+    outer_completion_trace.current.status=(uint32_t)update;
+    if (update==HAL_OK && cl_armed && !adc_fault && !foc_fault) {
+        OuterTrace_Commit(&outer_completion_trace,cl_session.outer_us);
+        OuterTrace_ObserveBegin(&outer_completion_trace,AS5047P_DmaNowUs());
+        OuterObservation_Flush();
+        OuterTrace_ObserveEnd(&outer_completion_trace,AS5047P_DmaNowUs());
+    } else outer_observation.pending=0U;
+#endif
     if (adc_fault || foc_fault || (update!=HAL_OK && update!=HAL_BUSY)) {
         ProtectedLoop_EmergencyOff(CL_BAD_ENCODER); return;
     }
@@ -821,6 +936,27 @@ __attribute__((optimize("Os")))
 #endif
 static void ProtectedLoop_Command(const char *cmd,char *out,size_t size)
 {
+#if defined(FOC_DOB_NORMAL_CONTROL)
+    if (MechanicalDob_Command(cmd,out,size)) return;
+#endif
+#if defined(FOC_PSI_IDENT_DIAG)
+    if (PsiIdent_Command(cmd,out,size)) return;
+#endif
+#if defined(FOC_CURRENT_STEP_AB_DIAG)
+    if(CurrentStep_Command(cmd,out,size))return;
+#endif
+#if defined(FOC_MOTOR_IDENTIFICATION_DIAG)
+    if (MotorIdent_Command(cmd,out,size)) return;
+#endif
+#if defined(FOC_FRICTION_CALIBRATION_DIAG)
+    if (FrictionCalibration_Command(cmd,out,size)) return;
+#endif
+#if defined(FOC_SPEED_FRICTION_CANDIDATE)
+    if (SpeedFriction_Command(cmd,out,size)) return;
+#endif
+#if defined(FOC_ACCEL_FEEDFORWARD_CANDIDATE)
+    if (SpeedAccelFf_Command(cmd,out,size)) return;
+#endif
 #if defined(FOC_TORQUE_CHAIN_DIAG)
     if (TorqueChain_Command(cmd,out,size)) return;
 #endif
@@ -842,11 +978,38 @@ static void ProtectedLoop_Command(const char *cmd,char *out,size_t size)
 #if defined(FOC_FAST_CURRENT_REJECT)
     if (!strcmp(cmd,"MOTOR TEST PROFILE")) {
 #if defined(FOC_PWM_PIPELINE_CLOSED_LOOP)
-        snprintf(out,size,"OK MOTOR TEST PROFILE NAME=PROTECTED_PIPELINE_CLOSED_LOOP HARD_OFF=0 FSM=ORIGINAL PIPELINE=1 LOCAL=1 RPM=20 LEASE_US=" CL_LEASE_TEXT
+        snprintf(out,size,"OK MOTOR TEST PROFILE NAME=PROTECTED_PIPELINE_CLOSED_LOOP HARD_OFF=0 FSM=ORIGINAL PIPELINE=1 LOCAL=1 RPM=" CL_SPEED_TEXT " LEASE_US=" CL_LEASE_TEXT
+#if defined(FOC_PWM_COMMON_MODE_ENABLE)
+            " CM=85" /* Common-mode enabled, additional reserve in TIM1 ticks. */
+#endif
 #if defined(FOC_SPEED_STARTUP_BRAKE)
 #if defined(FOC_SPEED_BUMPLESS)
 #if defined(FOC_SPEED_BRAKE_TRACK)
+#if defined(FOC_SPEED_PI_ANTI_WINDUP)
+#if defined(FOC_SPEED_SB3_DISABLE_CANDIDATE)
+#if defined(FOC_SPEED_SCURVE_CANDIDATE)
+#if defined(FOC_ACCEL_FEEDFORWARD_CANDIDATE)
+#if defined(FOC_SPEED_FRICTION_CANDIDATE)
+            " SPEED_CTRL=FR1" /* FF/FRIC runtime switches reported separately. */
+#else
+            " SPEED_CTRL=AF1" /* FF default/config checked by MOTOR TEST FF STATUS. */
+#endif
+#else
+            " SPEED_CTRL=SC1" /* AW on, SB3 off, SPEED-only S-curve reference. */
+#endif
+#else
+            " SPEED_CTRL=AW0" /* AW1 integral admission, SB3 ceiling omitted. */
+#endif
+#else
+            " SPEED_CTRL=AW1" /* SB3 retained; same-length protocol marker. */
+#endif
+#else
+#if defined(FOC_SPEED_LEGACY_AW_COMPARE)
+            " SPEED_CTRL=L00" /* Historical conditional integration, no SB3. */
+#else
             " SPEED_CTRL=SB3"
+#endif
+#endif
 #else
             " SPEED_CTRL=SB2"
 #endif

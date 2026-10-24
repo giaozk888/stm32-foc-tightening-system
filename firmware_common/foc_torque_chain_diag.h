@@ -2,7 +2,10 @@
 #define FOC_TORQUE_CHAIN_DIAG_H
 #include <stdint.h>
 #include <string.h>
-#if defined(FOC_BREAKAWAY_CURRENT_TEST)
+#if defined(FOC_ANGLE_CHAIN_DIAG)
+#include "foc_angle_chain_diag.h"
+#endif
+#if defined(FOC_BREAKAWAY_CURRENT_TEST) || defined(FOC_TORQUE350_FIVE_SECOND) || defined(FOC_TORQUE450_FIVE_SECOND) || (defined(FOC_ANGLE_CHAIN_DIAG) && !defined(FOC_ANGLE_HAND_ONLY))
 #include "foc_breakaway_current_test.h"
 #endif
 /* Manual-only, one accepted request per boot. No arbitrary current/offset setter. */
@@ -20,10 +23,19 @@
 /* Explicit manual positive-only comparison; not a production current limit. */
 #define FOC_TORQUE_CHAIN_IQ_A 0.20f
 #define FOC_TORQUE_CHAIN_IQ_TEXT "200"
+#elif FOC_TORQUE_CHAIN_IQ_MA == 350 && (defined(FOC_TORQUE350_FIVE_SECOND) || defined(FOC_ANGLE_CHAIN_DIAG))
+#define FOC_TORQUE_CHAIN_IQ_A 0.35f
+#define FOC_TORQUE_CHAIN_IQ_TEXT "350"
+#elif FOC_TORQUE_CHAIN_IQ_MA == 450 && defined(FOC_TORQUE450_FIVE_SECOND)
+#define FOC_TORQUE_CHAIN_IQ_A 0.45f
+#define FOC_TORQUE_CHAIN_IQ_TEXT "450"
 #else
 #error Torque diagnostic supports only explicit 50mA, 100mA or positive 200mA profiles
 #endif
-#if defined(FOC_SPEED_DYNAMIC_DIAG)
+#if defined(FOC_ANGLE_CHAIN_DIAG)
+#define FOC_TORQUE_CHAIN_MAX_US ANGLE_OFFSET_LEASE_US
+#define FOC_TORQUE_CHAIN_PERIOD_US ANGLE_OFFSET_PERIOD_US
+#elif defined(FOC_SPEED_DYNAMIC_DIAG) || defined(FOC_TORQUE350_FIVE_SECOND) || defined(FOC_TORQUE450_FIVE_SECOND)
 #if defined(FOC_BREAKAWAY_CURRENT_TEST)
 #error Dynamic speed diagnostic cannot run fixed-current breakaway tests
 #endif
@@ -49,7 +61,17 @@ typedef struct {
 _Static_assert(sizeof(FocTorqueChainDiag)==20U,"Torque metadata decoder ABI");
 static inline int FocTorqueChain_Parse(const char *cmd,int32_t *sign,int32_t *offset)
 {
-#if defined(FOC_SPEED_DYNAMIC_DIAG)
+#if defined(FOC_ANGLE_HAND_ONLY)
+    (void)cmd; (void)sign; (void)offset; return 0;
+#elif defined(FOC_ANGLE_CHAIN_DIAG)
+    return FocAngleOffset_Parse(cmd,sign,offset);
+#elif defined(FOC_TORQUE350_FIVE_SECOND)
+    if (strcmp(cmd,"MOTOR TEST TORQUE350 CONFIRM")) return 0;
+    *sign=1; *offset=0; return 1;
+#elif defined(FOC_TORQUE450_FIVE_SECOND)
+    if (strcmp(cmd,"MOTOR TEST TORQUE450 CONFIRM")) return 0;
+    *sign=1; *offset=0; return 1;
+#elif defined(FOC_SPEED_DYNAMIC_DIAG)
     if (strcmp(cmd,"MOTOR TEST SPEED500 CONFIRM")) return 0;
     *sign=1; *offset=0; return 1;
 #elif defined(FOC_BREAKAWAY_CURRENT_TEST)

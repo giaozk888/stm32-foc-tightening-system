@@ -1,0 +1,105 @@
+{
+  "criterion": "Tune seeds1..60 only; all estimator/limit/guard gates, then minimize worst-hypothesis ratio of mean physical-speed load MAE. No claim of Pareto dominance.",
+  "candidates": [
+    {
+      "gain": 0.15,
+      "cap_a": 0.00625,
+      "eligible": true,
+      "primary_worst_ratio": 0.9664441942197977,
+      "hypothesis_ratios": {
+        "measurement": 0.8813572497829255,
+        "torque": 0.9664441942197977
+      }
+    },
+    {
+      "gain": 0.15,
+      "cap_a": 0.0125,
+      "eligible": true,
+      "primary_worst_ratio": 0.9634040384606886,
+      "hypothesis_ratios": {
+        "measurement": 0.8775002117961364,
+        "torque": 0.9634040384606886
+      }
+    },
+    {
+      "gain": 0.15,
+      "cap_a": 0.025,
+      "eligible": true,
+      "primary_worst_ratio": 0.9633111548224723,
+      "hypothesis_ratios": {
+        "measurement": 0.8796670871785518,
+        "torque": 0.9633111548224723
+      }
+    },
+    {
+      "gain": 0.25,
+      "cap_a": 0.00625,
+      "eligible": true,
+      "primary_worst_ratio": 0.9584358996585254,
+      "hypothesis_ratios": {
+        "measurement": 0.8529431891681368,
+        "torque": 0.9584358996585254
+      }
+    },
+    {
+      "gain": 0.25,
+      "cap_a": 0.0125,
+      "eligible": true,
+      "primary_worst_ratio": 0.9388544291143851,
+      "hypothesis_ratios": {
+        "measurement": 0.801392747879518,
+        "torque": 0.9388544291143851
+      }
+    },
+    {
+      "gain": 0.25,
+      "cap_a": 0.025,
+      "eligible": true,
+      "primary_worst_ratio": 0.9376705579237465,
+      "hypothesis_ratios": {
+        "measurement": 0.8094977659652528,
+        "torque": 0.9376705579237465
+      }
+    },
+    {
+      "gain": 0.5,
+      "cap_a": 0.00625,
+      "eligible": true,
+      "primary_worst_ratio": 0.9568739888060795,
+      "hypothesis_ratios": {
+        "measurement": 0.8351712499750327,
+        "torque": 0.9568739888060795
+      }
+    },
+    {
+      "gain": 0.5,
+      "cap_a": 0.0125,
+      "eligible": true,
+      "primary_worst_ratio": 0.9184592219431569,
+      "hypothesis_ratios": {
+        "measurement": 0.7164174490680463,
+        "torque": 0.9184592219431569
+      }
+    },
+    {
+      "gain": 0.5,
+      "cap_a": 0.025,
+      "eligible": true,
+      "primary_worst_ratio": 0.8789342676240495,
+      "hypothesis_ratios": {
+        "measurement": 0.6654838263571853,
+        "torque": 0.8789342676240495
+      }
+    }
+  ],
+  "selected": {
+    "gain": 0.5,
+    "cap_a": 0.025,
+    "eligible": true,
+    "primary_worst_ratio": 0.8789342676240495,
+    "hypothesis_ratios": {
+      "measurement": 0.6654838263571853,
+      "torque": 0.8789342676240495
+    }
+  }
+}

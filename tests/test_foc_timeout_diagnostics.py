@@ -38,7 +38,7 @@ class TimeoutDiagnostics(unittest.TestCase):
                            ('TIGHTEN_RUNDOWN_TIMEOUT_MS','8000U'),('TIGHTEN_STOP_TIMEOUT_MS','2000U'),
                            ('STALL_TIMEOUT_S','1.5f'),('MOTOR_SPEED_STALL_TIMEOUT_S','2.0f')):
             self.assertRegex(main,r'#define\s+'+name+r'\s+'+re.escape(value))
-        enc=(fast.COMMON/'as5047p_dma_engine.h').read_text('utf-8')
+        enc=(fast.COMMON/'as5047p_timing_policy.h').read_text('utf-8')
         for name,value in (('AS_DMA_TRANSACTION_US',200),('AS_DMA_SAMPLE_MAX_AGE_US',1500),
                            ('AS_DMA_CONTROL_WATCHDOG_US',2500),('AS_DMA_PERIOD_US',1000)):
             self.assertRegex(enc,r'#define\s+'+name+r'\s+'+str(value)+'U')

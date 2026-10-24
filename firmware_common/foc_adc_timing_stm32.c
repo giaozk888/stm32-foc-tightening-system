@@ -3,6 +3,13 @@
 #include "foc_adc_raw_buffer.h"
 #include "foc_adc_clock_stm32.h"
 #include "foc_hot_path.h"
+#if defined(FOC_PWM_COMMON_MODE_ENABLE)
+#include "foc_pwm_common_mode.h"
+#if !defined(FOC_PWM_PIPELINE_CLOSED_LOOP) || !defined(FOC_ADC_RC_PROTECTED_CANDIDATE)
+#error Common-mode planner requires the protected fixed-trigger pipeline candidate
+#endif
+FocPwmCommonModeDiag foc_pwm_common_mode_diag;
+#endif
 #if defined(FOC_FAST_PATH_PROFILE) || defined(FOC_PREEMPT_COMMIT_PROBE)
 #include "foc_pwm_write_probe.h"
 FocPwmWriteProbe foc_pwm_write_profile, foc_pwm_duty_profile;
@@ -215,7 +222,27 @@ FOC_RAM_PATH static int ClockEqual(ClockProof a, ClockProof b)
 
 FOC_RAM_PATH FocWindowStatus FocAdcTiming_Prepare(float u, float v, float w, FocWindowPlan *plan)
 {
+#if defined(FOC_PWM_COMMON_MODE_ENABLE)
+    int16_t offset=0;
+    FocWindowStatus status=FocPwmCommonMode_Plan(&config,u,v,w,
+        (uint16_t)(config.arr-1U-config.latency_ticks-config.aperture_ticks),
+        FOC_PWM_COMMON_MODE_RESERVE_TICKS,plan,&offset);
+    ++foc_pwm_common_mode_diag.plans;
+    foc_pwm_common_mode_diag.last_offset=offset;
+    if (status!=FOC_WINDOW_OK) ++foc_pwm_common_mode_diag.rejected;
+    else {
+        if (offset) ++foc_pwm_common_mode_diag.adjusted;
+        uint32_t magnitude=(uint32_t)(-offset);
+        if (magnitude>foc_pwm_common_mode_diag.max_abs_offset)
+            foc_pwm_common_mode_diag.max_abs_offset=magnitude;
+        if (!foc_pwm_common_mode_diag.min_slack_ticks ||
+            plan->slack_ticks<foc_pwm_common_mode_diag.min_slack_ticks)
+            foc_pwm_common_mode_diag.min_slack_ticks=plan->slack_ticks;
+    }
+    return status;
+#else
     return FocAdcWindow_Duty(&config, u, v, w, plan);
+#endif
 }
 void FocAdcTiming_PlanFailed(FocWindowStatus status)
 {
@@ -576,6 +603,9 @@ void FocAdcTiming_Snapshot(FocAdcTimingSnapshot *out)
 
 /* Foreground only. Keep formatting/snapshot stack out of the 20kHz ISR. */
 __attribute__((noinline))
+#if defined(FOC_PWM_COMMON_MODE_ENABLE)
+__attribute__((optimize("Oz"))) /* Foreground diagnostics only, never the ADC fast path. */
+#endif
 int FocAdcTiming_Format(const char *command, char *out, uint32_t size)
 {
 #if defined(FOC_PWM_BOUNDARY_LITE)

@@ -90,7 +90,7 @@ class EncoderFocFirstTests(unittest.TestCase):
             main=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
             self.assertIn('sample_age_us > AS_DMA_SAMPLE_MAX_AGE_US',main)
             self.assertIn('theta_e + encoder_omega_e_rad_s * (float)sample_age_us',main)
-        header=(COMMON/'as5047p_dma_engine.h').read_text('utf-8')
+        header=(COMMON/'as5047p_timing_policy.h').read_text('utf-8')
         for name,value in (('TRANSACTION',200),('GUARD',2),('PERIOD',1000),
                            ('SAMPLE_MAX_AGE',1500),('CONTROL_WATCHDOG',2500)):
             self.assertRegex(header,rf'AS_DMA_{name}_US\s+{value}U')

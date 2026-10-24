@@ -6,7 +6,14 @@
 extern "C" {
 #endif
 
+/* Legacy A/B default stays byte-for-byte compatible. Space-optimized A may
+ * reserve fewer records, without shortening a text/tokenized wire record. */
+#ifndef PW_LOG_STORE_CAPACITY
 #define PW_LOG_STORE_CAPACITY 64U
+#endif
+#if PW_LOG_STORE_CAPACITY < 48 || PW_LOG_STORE_CAPACITY > 64
+#error "Log pool must retain 48..64 records (pending/history/async owners)"
+#endif
 #define PW_LOG_TEXT_BYTES 192U
 typedef uint32_t PwLogRef; /* generation + slot; zero is invalid */
 typedef struct {

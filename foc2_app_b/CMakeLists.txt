@@ -28,6 +28,7 @@ option(CAN_STATUS_TELEMETRY "Publish read-only 0x180 CAN status from normal APP"
 option(CAN_SHADOW_DIAG "Enable non-actuating CAN request/reply diagnostics" OFF)
 option(CAN_CONTROL_REJECT_ONLY "Reply REJECT_DISABLED to all valid control frames" OFF)
 option(CAN_LOG_STREAM "Mirror Pigweed logs over bounded read-only CAN transport" OFF)
+option(PW_LOG_TOKENIZED_DEFAULT "Tokenize ordinary PW_LOG diagnostics; keep UART command/reply text unchanged" OFF)
 option(SAFETY_LOCKED_BOOT "Boot into non-actuating raw-sampling/interlock diagnostics" OFF)
 option(ZERO_RETEST_BOOT "Output-locked service/zero-only diagnostics; never motor-ready" OFF)
 option(FOC_OC_LAYERED_SELFTEST "Fixed synthetic protection selftest; standalone power-locked service ONLY" OFF)
@@ -142,10 +143,45 @@ option(FOC_SPEED_BUMPLESS "SB2 bounded SPEED integral unload/rebuild; no immedia
 option(FOC_VOLTAGE_X2_TRIAL "Separate protected SB2 1.6V vector-limit comparison; integrator unchanged" OFF)
 option(FOC_SPEED_BRAKE_TRACK "SB3 two-accepted-sample fast braking ceiling with integral tracking" OFF)
 option(FOC_RUNDOWN_DIAGNOSTIC "Startup-only extended binary evidence; no control changes" OFF)
+option(FOC_INTENT_FSM_CANDIDATE "Decoupled process FSM candidate; manual UART START only" OFF)
+option(FOC_PWM_COMMON_MODE_ENABLE "Candidate equal-CCR offset for fixed ADC-window headroom" OFF)
+if(FOC_PWM_COMMON_MODE_ENABLE AND (NOT FOC_INTENT_FSM_CANDIDATE OR
+   NOT FOC_PWM_PIPELINE_CLOSED_LOOP OR NOT FOC_ADC_RC_PROTECTED_CANDIDATE))
+    message(FATAL_ERROR "Common-mode allocation requires the intent FSM protected fixed-trigger candidate")
+endif()
+if(FOC_INTENT_FSM_CANDIDATE AND (NOT FOC_LATEST_ORIGINAL_FSM OR NOT FOC_LOADED_FSM_TRIAL OR
+   NOT FOC_SPEED_BRAKE_TRACK OR NOT FOC_ZERO_VALID_ADMISSION OR
+   FOC_TORQUE_CHAIN_DIAG OR FOC_TORQUE450_150RPM OR FOC_TORQUE450_FIVE_SECOND OR
+   FOC_SPEED_DYNAMIC_DIAG OR FOC_BREAKAWAY_CURRENT_TEST OR FOC_ANGLE_CHAIN_DIAG))
+    message(FATAL_ERROR "Intent FSM requires the original protected SB3/zero backend, not a torque/limit experiment")
+endif()
 option(FOC_TORQUE_CHAIN_DIAG "Manual one-shot 200ms torque diagnostic; explicit fixed-current profiles only" OFF)
 option(FOC_BREAKAWAY_CURRENT_TEST "Manual one-grade signed breakaway current diagnostic; never automatic" OFF)
 option(FOC_BREAKAWAY_FIVE_SECOND "Five-second breakaway session, supervised host batch capable" OFF)
 option(FOC_SPEED_DYNAMIC_DIAG "Manual 20rpm SPEED-only 5s trial; dynamic Iq limited to 500mA" OFF)
+option(FOC_TORQUE350_FIVE_SECOND "Manual positive 350mA IQ-only diagnostic, five-second lease" OFF)
+option(FOC_TORQUE450_FIVE_SECOND "Manual positive 450mA IQ-only diagnostic, five-second lease" OFF)
+option(FOC_TORQUE450_150RPM "450mA manual comparison ONLY: 150rpm overspeed trip" OFF)
+if(FOC_TORQUE450_150RPM AND NOT FOC_TORQUE450_FIVE_SECOND)
+    message(FATAL_ERROR "150rpm comparison requires exclusive 450mA manual profile")
+endif()
+if(FOC_TORQUE450_FIVE_SECOND AND (NOT FOC_TORQUE_CHAIN_DIAG OR FOC_TORQUE350_FIVE_SECOND OR FOC_ANGLE_CHAIN_DIAG OR FOC_SPEED_DYNAMIC_DIAG OR FOC_BREAKAWAY_CURRENT_TEST OR NOT FOC_TORQUE_CHAIN_IQ_MA STREQUAL "450"))
+    message(FATAL_ERROR "450mA diagnostic requires its exclusive protected manual IQ profile")
+endif()
+option(FOC_ANGLE_CHAIN_DIAG "Manual output-off angle audit and one 400ms electrical offset trial" OFF)
+option(FOC_ANGLE_HAND_ONLY "Compile out angle diagnostic power admission" OFF)
+if(FOC_ANGLE_HAND_ONLY AND NOT FOC_ANGLE_CHAIN_DIAG)
+    message(FATAL_ERROR "Hand-only requires angle-chain diagnostic")
+endif()
+if(FOC_ANGLE_CHAIN_DIAG AND (NOT FOC_TORQUE_CHAIN_DIAG OR FOC_TORQUE350_FIVE_SECOND OR FOC_BREAKAWAY_CURRENT_TEST OR FOC_SPEED_DYNAMIC_DIAG))
+    message(FATAL_ERROR "Angle diagnostic needs its exclusive protected manual owner")
+endif()
+if(FOC_ANGLE_CHAIN_DIAG AND NOT FOC_ANGLE_HAND_ONLY AND NOT FOC_TORQUE_CHAIN_IQ_MA STREQUAL "350")
+    message(FATAL_ERROR "Offset trials require exactly +350mA")
+endif()
+if(FOC_TORQUE350_FIVE_SECOND AND (NOT FOC_TORQUE_CHAIN_DIAG OR FOC_BREAKAWAY_CURRENT_TEST OR FOC_SPEED_DYNAMIC_DIAG OR NOT FOC_TORQUE_CHAIN_IQ_MA STREQUAL "350"))
+    message(FATAL_ERROR "350mA diagnostic requires its exclusive protected manual IQ profile")
+endif()
 if(FOC_SPEED_DYNAMIC_DIAG AND (NOT FOC_TORQUE_CHAIN_DIAG OR FOC_BREAKAWAY_CURRENT_TEST))
     message(FATAL_ERROR "Dynamic SPEED trial needs the protected manual owner, not breakaway")
 endif()
@@ -157,7 +193,7 @@ if(FOC_BREAKAWAY_CURRENT_TEST AND NOT FOC_TORQUE_CHAIN_DIAG)
 endif()
 set(FOC_TORQUE_CHAIN_IQ_MA "100" CACHE STRING "Fixed diagnostic magnitude; 50 is historical only")
 set_property(CACHE FOC_TORQUE_CHAIN_IQ_MA PROPERTY STRINGS 50 100 200)
-if(FOC_TORQUE_CHAIN_DIAG AND NOT FOC_TORQUE_CHAIN_IQ_MA MATCHES "^(50|100|200)$")
+if(FOC_TORQUE_CHAIN_DIAG AND NOT FOC_ANGLE_CHAIN_DIAG AND NOT FOC_TORQUE350_FIVE_SECOND AND NOT FOC_TORQUE450_FIVE_SECOND AND NOT FOC_TORQUE_CHAIN_IQ_MA MATCHES "^(50|100|200)$")
     message(FATAL_ERROR "Torque current must be an explicit 50/100/200mA profile; no automatic increase")
 endif()
 if(FOC_TORQUE_CHAIN_DIAG AND (NOT FOC_RUNDOWN_DIAGNOSTIC OR NOT FOC_PWM_PIPELINE_CLOSED_LOOP OR NOT FOC_SPEED_BRAKE_TRACK))
@@ -463,6 +499,15 @@ if(CAN_CONTROL_REJECT_ONLY AND (NOT CAN_STATUS_TELEMETRY OR CAN_LINK_PROBE_ONLY)
 endif()
 
 add_executable(${CMAKE_PROJECT_NAME})
+if(FOC_PWM_COMMON_MODE_ENABLE)
+    target_sources(${CMAKE_PROJECT_NAME} PRIVATE ../firmware_common/foc_pwm_common_mode.c)
+    target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE FOC_PWM_COMMON_MODE_ENABLE=1)
+endif()
+if(FOC_INTENT_FSM_CANDIDATE)
+    target_sources(${CMAKE_PROJECT_NAME} PRIVATE ../firmware_common/tightening_intent_fsm.c)
+    set_source_files_properties(../firmware_common/tightening_intent_fsm.c PROPERTIES COMPILE_OPTIONS "-Oz")
+    target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE FOC_INTENT_FSM_CANDIDATE=1)
+endif()
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ../firmware_common/tighten_params.cpp
     ../firmware_common/tighten_params_storage.cpp
@@ -690,6 +735,23 @@ if(FOC_TORQUE_CHAIN_DIAG)
 endif()
 if(FOC_SPEED_DYNAMIC_DIAG)
     target_compile_definitions(stm32cubemx INTERFACE FOC_SPEED_DYNAMIC_DIAG=1)
+endif()
+if(FOC_TORQUE350_FIVE_SECOND)
+    target_compile_definitions(stm32cubemx INTERFACE FOC_TORQUE350_FIVE_SECOND=1 MOTOR_DIRECT_IQ_LIMIT_A=0.35f)
+endif()
+if(FOC_TORQUE450_FIVE_SECOND)
+    target_compile_definitions(stm32cubemx INTERFACE FOC_TORQUE450_FIVE_SECOND=1 MOTOR_DIRECT_IQ_LIMIT_A=0.45f)
+endif()
+if(FOC_TORQUE450_150RPM)
+    target_compile_definitions(stm32cubemx INTERFACE FOC_TORQUE450_150RPM=1)
+endif()
+if(FOC_ANGLE_CHAIN_DIAG)
+    target_compile_definitions(stm32cubemx INTERFACE FOC_ANGLE_CHAIN_DIAG=1)
+    if(FOC_ANGLE_HAND_ONLY)
+        target_compile_definitions(stm32cubemx INTERFACE FOC_ANGLE_HAND_ONLY=1)
+    else()
+        target_compile_definitions(stm32cubemx INTERFACE MOTOR_DIRECT_IQ_LIMIT_A=0.35f)
+    endif()
 endif()
 if(FOC_BREAKAWAY_CURRENT_TEST)
     target_compile_definitions(stm32cubemx INTERFACE FOC_BREAKAWAY_CURRENT_TEST=1)
@@ -995,6 +1057,15 @@ set_source_files_properties(
     PROPERTIES COMPILE_OPTIONS "-Os"
 )
 
+set(PW_LOG_BACKEND_INCLUDES ${PW_ROOT}/pw_log_string/public_overrides)
+if(PW_LOG_TOKENIZED_DEFAULT)
+    # C++ constexpr-compatible official metadata backend + tokenizer indicator.
+    # Do not keep the string
+    # override in this list: PW_LOG_* must not silently select the old facade.
+    set(PW_LOG_BACKEND_INCLUDES
+        ${CMAKE_CURRENT_SOURCE_DIR}/../firmware_common/pw_log_tokenized_override
+        ${PW_ROOT}/pw_log_tokenized/public_overrides)
+endif()
 target_include_directories(pigweed_platform PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../firmware_common
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Inc
@@ -1021,7 +1092,7 @@ target_include_directories(pigweed_platform PUBLIC
     ${PW_ROOT}/pw_kvs/public
     ${PW_ROOT}/pw_log/public
     ${PW_ROOT}/pw_log_string/public
-    ${PW_ROOT}/pw_log_string/public_overrides
+    ${PW_LOG_BACKEND_INCLUDES}
     ${PW_ROOT}/pw_log_tokenized/public
     ${PW_ROOT}/pw_memory/public
     ${PW_ROOT}/pw_numeric/public

@@ -39,7 +39,7 @@
 #define BREAKAWAY_ASYMMETRY_RATIO            0.20f
 #define BREAKAWAY_FF_MARGIN_RATIO            0.15f
 
-#if defined(FOC_BREAKAWAY_FIVE_SECOND)
+#if defined(FOC_BREAKAWAY_FIVE_SECOND) || defined(FOC_TORQUE350_FIVE_SECOND) || defined(FOC_TORQUE450_FIVE_SECOND) || (defined(FOC_ANGLE_CHAIN_DIAG) && !defined(FOC_ANGLE_HAND_ONLY))
 /* Task-only, all fresh outer observations, not just the 32 saved frames.
  * Raw encoder distance prevents the 200ms trace decimation from hiding
  * sub-frame back-and-forth motion. Integer counters, no ISR work. */

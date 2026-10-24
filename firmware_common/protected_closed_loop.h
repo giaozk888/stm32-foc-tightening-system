@@ -1,6 +1,7 @@
 #ifndef PROTECTED_CLOSED_LOOP_H
 #define PROTECTED_CLOSED_LOOP_H
 #include <stdint.h>
+#include "foc_rundown240_candidate.h"
 #if !defined(FOC_PROTECTED_CLOSED_LOOP) || FOC_PROTECTED_CLOSED_LOOP != 1 || \
     !defined(FOC_CURRENT_TREND4) || FOC_CURRENT_TREND4 != 1 || \
     !defined(FOC_CURRENT_SPIKE_ONLY) || FOC_CURRENT_SPIKE_ONLY != 1 || \
@@ -22,7 +23,9 @@ enum { CL_BAD_ADC=4U, CL_BAD_ZERO=8U, CL_BAD_OUTPUT=16U, CL_BAD_ENCODER=32U,
  * rundown + 2 s stop settle + 1.7 s current/hold sequence. */
 #if defined(FOC_TORQUE_CHAIN_DIAG)
 #include "foc_torque_chain_diag.h"
-#if defined(FOC_BREAKAWAY_FIVE_SECOND) || defined(FOC_SPEED_DYNAMIC_DIAG)
+#if defined(FOC_ANGLE_CHAIN_DIAG)
+#define CL_LEASE_TEXT "400000"
+#elif defined(FOC_BREAKAWAY_FIVE_SECOND) || defined(FOC_SPEED_DYNAMIC_DIAG) || defined(FOC_TORQUE350_FIVE_SECOND) || defined(FOC_TORQUE450_FIVE_SECOND)
 #define CL_LEASE_TEXT "5000000"
 #else
 #define CL_LEASE_TEXT "200000"
@@ -38,8 +41,32 @@ enum { CL_MAX_US=12000000U };
 #define CL_LEASE_TEXT "400000"
 enum { CL_MAX_US=400000U };
 #endif
-enum { CL_OUTER_DEADLINE_US=2000U, CL_SPEED_RPM=20U,
-       CL_OVERSPEED_RPM=60U, CL_REPAIR_WINDOW=6U, CL_REPAIR_STREAK=4U };
+/* Explicit experiments only: 450mA/150rpm, or A's 240rpm/300rpm candidate.
+ * Ordinary builds retain the existing 60rpm trip; never a speed command. */
+#if defined(FOC_RUNDOWN240_CANDIDATE)
+/* Both guards share this value in the opt-in PSI 500rpm diagnostic.
+ * All existing rundown profiles retain their 300rpm trip. */
+#define CL_OVERSPEED_TEXT FOC_RUNDOWN240_TRIP_TEXT
+enum { CL_OVERSPEED_RPM=FOC_RUNDOWN240_TRIP_RPM };
+#elif defined(FOC_TORQUE450_150RPM)
+#if !defined(FOC_TORQUE450_FIVE_SECOND)
+#error 150rpm comparison requires the exclusive 450mA manual diagnostic
+#endif
+#define CL_OVERSPEED_TEXT "150"
+enum { CL_OVERSPEED_RPM=150U };
+#else
+#define CL_OVERSPEED_TEXT "60"
+enum { CL_OVERSPEED_RPM=60U };
+#endif
+#if defined(FOC_RUNDOWN240_CANDIDATE)
+#define CL_SPEED_TEXT FOC_RUNDOWN240_TARGET_TEXT
+enum { CL_SPEED_RPM=FOC_RUNDOWN240_TARGET_RPM };
+#else
+#define CL_SPEED_TEXT "20"
+enum { CL_SPEED_RPM=20U };
+#endif
+enum { CL_OUTER_DEADLINE_US=2000U,
+       CL_REPAIR_WINDOW=6U, CL_REPAIR_STREAK=4U };
 /* One admission per boot; STOP consumes a queued request too. No reset/clear
  * function is exposed. Time arithmetic works across a 32-bit clock wrap. */
 typedef struct {

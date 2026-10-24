@@ -64,7 +64,7 @@ TightenParamsFlashLoadStatus_t legacy(
 
 extern "C" uint8_t TightenParams_StorageSave(
     TightenParamsState_t *state, const TightenParamsStoragePort_t *port) {
-#if defined(TIGHTEN_SPEED_X2_OFFLINE)
+#if defined(TIGHTEN_SPEED_X2_OFFLINE) || defined(FOC_RUNDOWN240_CANDIDATE)
     /* Never persist experimental values into the shared normal V1 recipe. */
     (void)state;
     (void)port;

@@ -1,0 +1,73 @@
+{
+  "simulator": "MATLAB Simulink",
+  "mode": "full",
+  "trials": 495,
+  "repeats": 5,
+  "estimator_passed": true,
+  "on_scan_executed": true,
+  "firmware_sources_unchanged": true,
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "unvalidated": [
+    "real motor/electrical FOC",
+    "ADC/PWM/CUR_CONFIRM timing",
+    "real load torque",
+    "hardware protection and WCET"
+  ],
+  "configuration": {
+    "root": "D:\\new project\\simulation\\dob_simulink",
+    "repo": "D:\\new project",
+    "build": "D:\\new project\\simulation\\dob_simulink\\build",
+    "results": "D:\\new project\\simulation\\dob_simulink\\results",
+    "model": "dob_offline",
+    "dt": 0.001,
+    "pwm_dt": 5E-5,
+    "stop_s": 7,
+    "target_rpm": 240,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105
+    ],
+    "plant_vector": [
+      0.000386049,
+      0.00155158,
+      0.11945168237076952,
+      0.00054966003251495415,
+      0.001
+    ],
+    "gains": [
+      0,
+      0.15,
+      0.25,
+      0.5,
+      1
+    ],
+    "caps_a": [
+      0.0125,
+      0.025
+    ],
+    "noise_speed_rpm": 0.4,
+    "noise_current_a": 0.002,
+    "noise_id_a": 0.003,
+    "id_baseline_a": 0.005,
+    "id_spike_a": 0.7,
+    "id_persistent_a": 0.09,
+    "load_a": 0.04,
+    "event_s": 3,
+    "unload_s": 4.6,
+    "accept": {
+      "rmse_a": 0.012,
+      "bias_a": 0.008,
+      "valid_rate": 0.9,
+      "delay_s": 0.5,
+      "recovery_s": 0.8
+    },
+    "hardware_access": false,
+    "physical_performance_validated": false
+  },
+  "nonevent_metrics_are_not_applicable": true,
+  "semantic_reducer_sha256": "3666dedbaabc23addf971353ce153019e1cb882c96b3116624ff2c6aa5c9b7f5"
+}

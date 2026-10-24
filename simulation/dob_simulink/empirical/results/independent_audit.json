@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "trials": 124,
+  "matched_pairs": 87,
+  "quarantined_frames_checked": 2348,
+  "physical_pulse_frames": 4960,
+  "exogenous_fields": [
+    "time_s",
+    "target_rpm",
+    "load_ground_truth_a",
+    "speed_noise_rpm",
+    "iq_noise_a",
+    "id_raw_a",
+    "physical_current_pulse_a",
+    "input_valid",
+    "input_voltage_sat",
+    "input_encoder_age_us",
+    "input_running"
+  ],
+  "hardware_access": false,
+  "physical_performance_validated": false
+}

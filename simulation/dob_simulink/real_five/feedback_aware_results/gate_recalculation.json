@@ -1,0 +1,18 @@
+{
+  "original_results_unchanged": true,
+  "original_metrics_sha256": "7640fb41eda777069afa7bbfee1576fc7983093783dc4d901c00aab22c699519",
+  "metric": "100ms qualified time; hold<=5ms, fade pauses<20ms, expiry resets>=20ms; fresh inaccurate resets",
+  "hardware_access": false,
+  "hypotheses": [
+    {
+      "hypothesis": "measurement",
+      "trials": 100,
+      "passed": true
+    },
+    {
+      "hypothesis": "torque",
+      "trials": 100,
+      "passed": true
+    }
+  ]
+}

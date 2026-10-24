@@ -1,6 +1,48 @@
 /* Task-only owner. No CCR/MOE/SD writes. Existing admission/ADC protection and
  * independent TIM7 lease own hardware. No calibration/fault bypass. */
-#if defined(FOC_SPEED_DYNAMIC_DIAG)
+#if defined(FOC_ANGLE_CHAIN_DIAG)
+#include "foc_angle_chain_binding.inc"
+static int TorqueChain_Command(const char *cmd,char *out,size_t size)
+{ return AngleChain_Command(cmd,out,size); }
+#elif defined(FOC_TORQUE450_FIVE_SECOND)
+__attribute__((optimize("Os")))
+static int TorqueChain_Command(const char *cmd,char *out,size_t size)
+{
+    if (strncmp(cmd,"MOTOR TEST TORQUE450",sizeof("MOTOR TEST TORQUE450")-1U)) return 0;
+    if (!strcmp(cmd,"MOTOR TEST TORQUE450 STATUS")) {
+        snprintf(out,size,"OK TORQUE450 IQ_MA=450 LIMIT_MA=450 ID_MA=0 LEASE_US=5000000 PERIOD_US=200000 RPM_LIMIT=" CL_OVERSPEED_TEXT " USED=%u ACTIVE=%u DENIED=%u",
+            torque_diag.used,torque_diag.active,torque_diag.denied);
+        return 1;
+    }
+    uint32_t mask=__get_PRIMASK(); __disable_irq();
+    uint8_t ready=(uint8_t)(cl_session.state==CL_READY && !cl_session.used &&
+        ProtectedLoop_Ready() && motor_control_mode==MOTOR_MODE_IDLE &&
+        !Tightening_IsBusy() && !tightening_start_request && !tightening_stop_request);
+    int accepted=FocTorqueChain_Queue(&torque_diag,cmd,ready);
+    __set_PRIMASK(mask);
+    snprintf(out,size,accepted ? "OK TORQUE450 QUEUED MANUAL_ONE_SHOT=1" : "ERR 109 TORQUE450_DENIED");
+    return 1;
+}
+#elif defined(FOC_TORQUE350_FIVE_SECOND)
+__attribute__((optimize("Os")))
+static int TorqueChain_Command(const char *cmd,char *out,size_t size)
+{
+    if (strncmp(cmd,"MOTOR TEST TORQUE350",sizeof("MOTOR TEST TORQUE350")-1U)) return 0;
+    if (!strcmp(cmd,"MOTOR TEST TORQUE350 STATUS")) {
+        snprintf(out,size,"OK TORQUE350 IQ_MA=350 LIMIT_MA=350 ID_MA=0 LEASE_US=5000000 PERIOD_US=200000 USED=%u ACTIVE=%u DENIED=%u",
+            torque_diag.used,torque_diag.active,torque_diag.denied);
+        return 1;
+    }
+    uint32_t mask=__get_PRIMASK(); __disable_irq();
+    uint8_t ready=(uint8_t)(cl_session.state==CL_READY && !cl_session.used &&
+        ProtectedLoop_Ready() && motor_control_mode==MOTOR_MODE_IDLE &&
+        !Tightening_IsBusy() && !tightening_start_request && !tightening_stop_request);
+    int accepted=FocTorqueChain_Queue(&torque_diag,cmd,ready);
+    __set_PRIMASK(mask);
+    snprintf(out,size,accepted ? "OK TORQUE350 QUEUED MANUAL_ONE_SHOT=1" : "ERR 109 TORQUE350_DENIED");
+    return 1;
+}
+#elif defined(FOC_SPEED_DYNAMIC_DIAG)
 /* Reuse the protected one-shot owner, NOT the fixed-Iq control mode. */
 __attribute__((optimize("Os")))
 static int TorqueChain_Command(const char *cmd,char *out,size_t size)

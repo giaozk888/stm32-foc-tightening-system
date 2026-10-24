@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "trials": 200,
+  "maximum_metric_abs_delta": 4.973799150320701e-14,
+  "confirmed_min_s": 0.14800000000000058,
+  "confirmed_max_s": 0.39200000000000035,
+  "missing_samples_promoted_to_valid": false,
+  "hardware_access": false
+}

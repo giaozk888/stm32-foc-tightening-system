@@ -112,6 +112,12 @@ static AsDmaCursor encoder_dma_cursor;
 #include "uart_firmware_transfer.h"
 #endif
 #include "tighten_params_storage.h"
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+#include "tightening_intent_fsm.h"
+static TighteningFsm intent_fsm;
+static uint8_t TighteningIntent_PrecheckOnly(void);
+static void TighteningIntent_PrintStatus(uint32_t request_id);
+#endif
 #if defined(TIGHTEN_SPEED_X2_OFFLINE) && \
     (!defined(FOC_ISOLATED_CONCURRENCY) || !defined(TIGHTEN_SYNTHETIC_BENCH))
 #error Double-speed recipe is restricted to the output-locked synthetic profile
@@ -529,7 +535,15 @@ _Static_assert(PWM_ARR == FOC_ADC_TIMER_ARR, "Review ADC timing after PWM clock/
 #define MOTOR_SPEED_STALL_REF_MIN_RPM    20.0f
 #define MOTOR_SPEED_STALL_TIMEOUT_S      2.0f
 
+#ifndef MOTOR_DIRECT_IQ_LIMIT_A
 #define MOTOR_DIRECT_IQ_LIMIT_A          0.20f
+#endif
+#if defined(FOC_TORQUE350_FIVE_SECOND)
+_Static_assert((unsigned)(MOTOR_DIRECT_IQ_LIMIT_A*1000.0f+0.5f)==350U,"350mA command must not be silently clamped");
+#endif
+#if defined(FOC_TORQUE450_FIVE_SECOND)
+_Static_assert((unsigned)(MOTOR_DIRECT_IQ_LIMIT_A*1000.0f+0.5f)==450U,"450mA command must not be silently clamped");
+#endif
 
 #define TIGHTEN_TEST_IDLE_1_MS             2000U
 
@@ -638,6 +652,10 @@ static TightenRundownGuard tightening_rundown;
 #define POLE_PAIRS 10U
 #define ENCODER_DIRECTION (-1)
 #define ELECTRICAL_ZERO_RAW 10507U
+#if defined(FOC_ANGLE_CHAIN_DIAG)
+_Static_assert(POLE_PAIRS==10U && ENCODER_DIRECTION==-1 && ELECTRICAL_ZERO_RAW==10507U,
+    "Angle diagnostic observer/report must match the existing mapping");
+#endif
 
 /* USER CODE END PD */
 
@@ -2422,8 +2440,11 @@ static void TighteningResult_Sample(TighteningStageResult_t *r)
 }
 
 
+#if defined(FOC_PWM_COMMON_MODE_ENABLE)
+__attribute__((optimize("Oz"))) /* Cold result formatting only. */
+#endif
 static void TighteningResult_PrintStage(const char *name,
-                                        const TighteningStageResult_t *r)
+                                       const TighteningStageResult_t *r)
 {
     char msg[256];
     float iq_avg_A = 0.0f;
@@ -2487,13 +2508,22 @@ static void TighteningResult_PrintStage(const char *name,
 #if defined(ESP_NETWORK_OBSERVER)
 #include "network_observer.inc"
 #endif
+#if defined(FOC_PWM_COMMON_MODE_ENABLE)
+__attribute__((optimize("Oz"))) /* Cold report only; no control/ISR optimization change. */
+#endif
 static void TighteningResult_PrintSummary(const char *result_text)
 {
     char msg[256];
 #if defined(ESP_NETWORK_OBSERVER)
     NetworkObserver_Publish(NET_KIND_RESULT);
 #endif
-
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+    UART_SendFormatted(msg,sizeof msg,
+        "START_REQ=%lu RESULT=%s CONTACT=%u CONTACT_MDEG=%ld POST_MDEG=%ld\r\n",
+        (unsigned long)tightening_cycle_request_id,result_text,tightening_contact_confirmed,
+        (long)(tightening_contact_position_deg*1000.0f),
+        (long)(tightening_post_contact_travel_deg*1000.0f));
+#else
     UART_SendLiteral(
         "\r\n"
         "========== TIGHTEN RESULT ==========\r\n");
@@ -2535,15 +2565,20 @@ static void TighteningResult_PrintSummary(const char *result_text)
     }
 
 
+#endif
     TighteningResult_PrintStage("SEATING", &tighten_result_seating);
     TighteningResult_PrintStage("TIGHTEN#1", &tighten_result_010);
     TighteningResult_PrintStage("TIGHTEN#2", &tighten_result_012);
     TighteningResult_PrintStage("TIGHTEN#3", &tighten_result_015);
     TighteningResult_PrintStage("HOLD", &tighten_result_hold);
 
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+    UART_SendLiteral("NOTE: Iq != calibrated N.m\r\n");
+#else
     UART_SendLiteral(
         "NOTE: Iq values are electrical q-axis current, NOT calibrated N.m\r\n"
         "====================================\r\n\r\n");
+#endif
 }
 
 
@@ -2785,6 +2820,9 @@ static void TighteningRepeat_PrintAggregate(void)
 
 static uint8_t Tightening_IsBusy(void)
 {
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+    return TighteningFsm_Busy(&intent_fsm);
+#else
     switch (tightening_test_stage)
     {
         case TIGHTEN_STATE_RUNDOWN:
@@ -2799,6 +2837,7 @@ static uint8_t Tightening_IsBusy(void)
         default:
             return 0U;
     }
+#endif
 }
 
 
@@ -3456,6 +3495,9 @@ static void Protocol_SendCycleEvent(
 }
 
 
+#if defined(FOC_PWM_COMMON_MODE_ENABLE)
+__attribute__((optimize("Oz"))) /* UART task report, not a controller. */
+#endif
 static void Protocol_PrintStatus(uint32_t request_id)
 {
     char msg[384];
@@ -3499,6 +3541,9 @@ static void Protocol_PrintStatus(uint32_t request_id)
         (unsigned long)UART_RxDma_GetQueuedBytes(),
         (unsigned long)UART_RxDma_GetDroppedBytes(),
         (unsigned long)UART_RxDma_GetTotalBytes());
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+    TighteningIntent_PrintStatus(request_id);
+#endif
 }
 
 
@@ -6996,6 +7041,9 @@ static void ProtocolTask(void *argument)
 }
 
 
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+#include "tightening_intent_binding.inc"
+#else
 #include "tightening_rundown_binding.inc"
 /* Size-optimize only the 100Hz application FSM, not any FOC/PI/IRQ function. */
 __attribute__((optimize("Os")))
@@ -7067,8 +7115,8 @@ static void TighteningTask(void *argument)
 #if defined(FOC_TORQUE_CHAIN_DIAG)
         TorqueChain_Service();
 #endif
-#if defined(FOC_SPEED_DYNAMIC_DIAG)
-        /* Separate SPEED-only experiment. Never enter fixed-Iq tightening
+#if defined(FOC_SPEED_DYNAMIC_DIAG) || defined(FOC_TORQUE350_FIVE_SECOND) || defined(FOC_TORQUE450_FIVE_SECOND) || defined(FOC_ANGLE_CHAIN_DIAG)
+        /* Separate single-mode experiment. Never enter fixed-Iq tightening
          * stages or consume normal START into the original FSM here. */
         ProtectedLoop_RundownEnd();
         vTaskDelay(pdMS_TO_TICKS(10U));
@@ -7865,6 +7913,7 @@ static void TighteningTask(void *argument)
 }
 
 
+#endif /* legacy task excluded only from the opt-in intent candidate */
 static void BootHealthTask(void *argument)
 {
     TickType_t last_wake_time;
@@ -8713,7 +8762,7 @@ static void EncoderDiag_InitCycleCounter(void)
 
 static float Encoder_ElectricalAngleRad(uint16_t raw)
 {
-#if defined(FOC_TORQUE_CHAIN_DIAG) && !defined(FOC_SPEED_DYNAMIC_DIAG)
+#if defined(FOC_TORQUE_CHAIN_DIAG) && !defined(FOC_SPEED_DYNAMIC_DIAG) && !defined(FOC_TORQUE350_FIVE_SECOND) && !defined(FOC_TORQUE450_FIVE_SECOND) && !defined(FOC_ANGLE_HAND_ONLY)
     return FocTorqueChain_Angle(AS5047P_ElectricalAngleRad(raw,
         ELECTRICAL_ZERO_RAW,POLE_PAIRS,ENCODER_DIRECTION),torque_diag.offset_deg);
 #else

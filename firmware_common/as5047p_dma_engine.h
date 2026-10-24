@@ -2,16 +2,11 @@
 #define AS5047P_DMA_ENGINE_H
 
 #include <stdint.h>
+#include "as5047p_timing_policy.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#define AS_DMA_TRANSACTION_US 200U
-#define AS_DMA_GUARD_US 2U
-#define AS_DMA_PERIOD_US 1000U
-#define AS_DMA_SAMPLE_MAX_AGE_US 1500U
-#define AS_DMA_CONTROL_WATCHDOG_US 2500U
 
 typedef enum {
     AS_DMA_OK = 0, AS_DMA_PENDING, AS_DMA_TIMEOUT, AS_DMA_PARITY,
@@ -24,10 +19,23 @@ typedef enum {
 
 typedef struct {
     AsDmaStatus status;
+    /* sample_us retains the port's RX-IRQ receipt-time convention, not a
+     * hardware-latched magnetic sample aperture. elapsed_us is protocol
+     * completion duration; freshness and control-consumption age are separate. */
     uint32_t sequence, sample_us, completed_us, elapsed_us;
     uint16_t raw, response, errfl;
     uint8_t errfl_valid, recovered;
 } AsDmaSample;
+
+#if defined(AS5047P_DMA_TIMING_POLICY_V2)
+typedef struct { uint32_t slow_count,ok_max_us; } AsDmaTimingStats;
+static inline void AsDmaTiming_Record(AsDmaTimingStats *stats,const AsDmaSample *sample)
+{
+    if (sample->status!=AS_DMA_OK) return;
+    if (sample->elapsed_us>=AS_DMA_TRANSACTION_WARN_US) ++stats->slow_count;
+    if (sample->elapsed_us>stats->ok_max_us) stats->ok_max_us=sample->elapsed_us;
+}
+#endif
 
 typedef struct { uint32_t sequence, sample_us; uint8_t valid; } AsDmaCursor;
 /* Snapshot consumer: 1 = new valid sample, 0 = pending/duplicate,

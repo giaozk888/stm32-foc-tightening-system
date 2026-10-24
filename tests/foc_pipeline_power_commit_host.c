@@ -19,6 +19,9 @@ void mock_barrier(void)
 {
     if (break_during_write) { mock_tim.BDTR&=~TIM_BDTR_MOE; break_during_write=0U; }
 }
+#if defined(FOC_COMMON_MODE_ADAPTER_TEST)
+#define main existing_pipeline_cases
+#endif
 int main(int argc,char **argv)
 {
     unsigned which=argc==2 ? (unsigned)strtoul(argv[1],NULL,10) : 0U;
@@ -72,4 +75,5 @@ int main(int argc,char **argv)
         assert(!FocAdcTiming_PipelineActuationReady());
     }
     puts("PASS actuating CCR permit / no gate resurrection / fixed ADC window / timing admission");
+    return 0;
 }

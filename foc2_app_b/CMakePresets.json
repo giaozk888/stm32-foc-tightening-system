@@ -2,6 +2,54 @@
     "version": 3,
     "configurePresets": [
         {
+            "name": "TighteningCommonModeTokenizedCandidate",
+            "inherits": "TighteningCommonModeCandidate",
+            "cacheVariables": { "PW_LOG_TOKENIZED_DEFAULT": "ON" }
+        },
+        {
+            "name": "TighteningCommonModeCandidate",
+            "inherits": "TighteningIntentCandidate",
+            "cacheVariables": { "FOC_PWM_COMMON_MODE_ENABLE": "ON" }
+        },
+        {
+            "name": "TighteningIntentCandidate",
+            "inherits": "RundownGuardTrial",
+            "cacheVariables": {
+                "FOC_INTENT_FSM_CANDIDATE": "ON",
+                "UART_LOG_BAUD": "115200",
+                "FOC_TORQUE_CHAIN_DIAG": "OFF",
+                "FOC_TORQUE450_FIVE_SECOND": "OFF",
+                "FOC_TORQUE450_150RPM": "OFF",
+                "FOC_SPEED_DYNAMIC_DIAG": "OFF",
+                "FOC_ANGLE_CHAIN_DIAG": "OFF"
+            }
+        },
+        {
+            "name": "Torque450mA150rpmFiveSecondDiagnostic",
+            "inherits": "Torque450mAFiveSecondDiagnostic",
+            "cacheVariables": { "FOC_TORQUE450_150RPM": "ON" }
+        },
+        {
+            "name": "Torque450mAFiveSecondDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_TORQUE450_FIVE_SECOND": "ON", "FOC_TORQUE_CHAIN_IQ_MA": "450", "FOC_TORQUE350_FIVE_SECOND": "OFF", "FOC_ANGLE_CHAIN_DIAG": "OFF", "FOC_ANGLE_HAND_ONLY": "OFF", "FOC_SPEED_DYNAMIC_DIAG": "OFF", "FOC_BREAKAWAY_CURRENT_TEST": "OFF", "FOC_BREAKAWAY_FIVE_SECOND": "OFF", "UART_LOG_BAUD": "115200" }
+        },
+        {
+            "name": "ElectricalAngleHandDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_ANGLE_CHAIN_DIAG": "ON", "FOC_ANGLE_HAND_ONLY": "ON" }
+        },
+        {
+            "name": "ElectricalZeroOffsetDiagnostic",
+            "inherits": "ElectricalAngleHandDiagnostic",
+            "cacheVariables": { "FOC_ANGLE_HAND_ONLY": "OFF", "FOC_TORQUE_CHAIN_IQ_MA": "350" }
+        },
+        {
+            "name": "Torque350mAFiveSecondDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_TORQUE350_FIVE_SECOND": "ON", "FOC_TORQUE_CHAIN_IQ_MA": "350", "FOC_SPEED_DYNAMIC_DIAG": "OFF", "FOC_BREAKAWAY_CURRENT_TEST": "OFF", "FOC_BREAKAWAY_FIVE_SECOND": "OFF" }
+        },
+        {
             "name": "Speed500mADynamicDiagnostic",
             "inherits": "TorqueChain100mADiagnostic",
             "cacheVariables": { "FOC_SPEED_DYNAMIC_DIAG": "ON", "FOC_BREAKAWAY_CURRENT_TEST": "OFF", "FOC_BREAKAWAY_FIVE_SECOND": "OFF" }
@@ -451,6 +499,14 @@
         }
     ],
     "buildPresets": [
+        { "name": "TighteningCommonModeTokenizedCandidate", "configurePreset": "TighteningCommonModeTokenizedCandidate" },
+        { "name": "TighteningCommonModeCandidate", "configurePreset": "TighteningCommonModeCandidate" },
+        { "name": "TighteningIntentCandidate", "configurePreset": "TighteningIntentCandidate" },
+        { "name": "Torque450mA150rpmFiveSecondDiagnostic", "configurePreset": "Torque450mA150rpmFiveSecondDiagnostic" },
+        { "name": "Torque450mAFiveSecondDiagnostic", "configurePreset": "Torque450mAFiveSecondDiagnostic" },
+        { "name": "ElectricalAngleHandDiagnostic", "configurePreset": "ElectricalAngleHandDiagnostic" },
+        { "name": "ElectricalZeroOffsetDiagnostic", "configurePreset": "ElectricalZeroOffsetDiagnostic" },
+        { "name": "Torque350mAFiveSecondDiagnostic", "configurePreset": "Torque350mAFiveSecondDiagnostic" },
         { "name": "Speed500mADynamicDiagnostic", "configurePreset": "Speed500mADynamicDiagnostic" },
         { "name": "BreakawayFiveSecondDiagnostic", "configurePreset": "BreakawayFiveSecondDiagnostic" },
         { "name": "BreakawayCurrentDiagnostic", "configurePreset": "BreakawayCurrentDiagnostic" },

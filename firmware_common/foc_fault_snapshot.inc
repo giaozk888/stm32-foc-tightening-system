@@ -17,6 +17,12 @@ static void FaultDiag_CapturePacked(uint32_t domain_reason,
 {
     uint32_t mask=__get_PRIMASK(); __disable_irq();
     if (foc_fault_snapshot.valid) { __set_PRIMASK(mask); return; }
+#if defined(FOC_OUTER_OBSERVE_AFTER_ACK)
+    /* Two integer stores inside the EXISTING first-fault critical section.
+     * No scan, clock read, formatting, watchdog write or extra IRQ mask. */
+    outer_completion_trace.fault_phase=outer_completion_trace.current.phase;
+    outer_completion_trace.frozen=1U;
+#endif
     volatile FocFaultSnapshot *s=&foc_fault_snapshot;
     s->timestamp_ms=HAL_GetTick();
     s->domain=domain_reason&255U; s->fault_reason=domain_reason>>8;

@@ -21,8 +21,11 @@
 #include "foc_startup_trace.h"
 static ClSession cl_session;
 static FocTorqueChainDiag torque_diag;
+#if defined(FOC_ANGLE_CHAIN_DIAG)
+static FocAngleHand angle_hand;
+#endif
 static struct { unsigned CCER,BDTR; } timer;
-static struct { unsigned BSRR; } gpio;
+static struct { unsigned BSRR,ODR; } gpio;
 #define TIM1 (&timer)
 #define DRIVER_SD_GPIO_Port (&gpio)
 #define DRIVER_SD_Pin 64U
@@ -73,13 +76,16 @@ static void ProtectedLoop_Stop(void)
 static void reset(void)
 {
     cl_session=(ClSession){.state=CL_READY}; torque_diag=(FocTorqueChainDiag){0};
+#if defined(FOC_ANGLE_CHAIN_DIAG)
+    angle_hand=(FocAngleHand){0};
+#endif
     timer.CCER=timer.BDTR=gpio.BSRR=0;
     cl_outer_n=1; healthy=1; busy=adc_fault=foc_fault=analog_safe_latched=0;
     tightening_start_request=tightening_stop_request=0; mask_depth=0;
     fault_in_prepare=stop_in_prepare=0;
     now_us=1000; cl_session.outer_us=1000; MotorControl_SetIdle();
 }
-#if !defined(FOC_SPEED_DYNAMIC_DIAG)
+#if !defined(FOC_SPEED_DYNAMIC_DIAG) && !defined(FOC_ANGLE_CHAIN_DIAG)
 static void start(const char *cmd,float iq,int offset)
 {
     char out[256]; reset();
@@ -92,7 +98,15 @@ static void start(const char *cmd,float iq,int offset)
     assert(torque_diag.active && cl_session.state==CL_RUNNING);
     assert(motor_control_mode==MOTOR_MODE_IQ && foc_id_ref_A==0);
     assert(fabsf(foc_iq_ref_A-iq)<1e-7f);
-#if defined(FOC_BREAKAWAY_CURRENT_TEST)
+#if defined(FOC_TORQUE450_FIVE_SECOND)
+    TorqueChain_Command("MOTOR TEST TORQUE450 STATUS",out,sizeof out);
+    assert(strstr(out,"IQ_MA=450 LIMIT_MA=450 ID_MA=0 LEASE_US=5000000"));
+    assert(torque_diag.iq_mA==450U);
+#elif defined(FOC_TORQUE350_FIVE_SECOND)
+    TorqueChain_Command("MOTOR TEST TORQUE350 STATUS",out,sizeof out);
+    assert(strstr(out,"IQ_MA=350 LIMIT_MA=350 ID_MA=0 LEASE_US=5000000"));
+    assert(torque_diag.iq_mA==350U);
+#elif defined(FOC_BREAKAWAY_CURRENT_TEST)
     TorqueChain_Command("MOTOR TEST BREAKAWAY STATUS",out,sizeof out);
     assert(strstr(out,"LIMIT_MA=200 ID_MA=0"));
     assert(torque_diag.iq_mA==(unsigned)(fabsf(iq)*1000.0f+0.5f));
@@ -107,7 +121,111 @@ static void start(const char *cmd,float iq,int offset)
 #endif
 int main(void)
 {
-#if defined(FOC_SPEED_DYNAMIC_DIAG)
+#if defined(FOC_ANGLE_CHAIN_DIAG)
+    char out[256]; const char *cmd="MOTOR TEST ANGLE OFFSET +20 CONFIRM";
+    (void)speed_pi_calls;
+    (void)foc_int_d_V; (void)foc_int_q_V; (void)foc_id_ref_A; (void)foc_vd_V; (void)foc_vq_V;
+    LatestOriginal_FsmService();
+    reset(); TorqueChain_Command(cmd,out,sizeof out); assert(!torque_diag.used);
+    assert(!LatestOriginal_Admit());
+    TorqueChain_Command("MOTOR TEST ANGLE BEGIN",out,sizeof out); assert(strstr(out,"OK ANGLE BEGIN"));
+    unsigned raw=1234; int counts=0;
+    for(unsigned i=0;i<=2048;++i) {
+        if(i) { int step=i<=1024 ? -16 : 16; raw=(raw+step)&16383; counts-=step; }
+        FocAngleHand_Observe(&angle_hand,1000+i*1000,raw,
+            AS5047P_ElectricalAngleRad(raw,10507,10,-1),counts*360.0f/16384,1,1);
+    }
+    TorqueChain_Command("MOTOR TEST ANGLE END",out,sizeof out); assert(strstr(out,"PASS=1"));
+    TorqueChain_Command("MOTOR TEST ANGLE READ 0",out,sizeof out); assert(strstr(out,"MISSING"));
+    char read[80]; snprintf(read,sizeof read,"MOTOR TEST ANGLE READ %u",angle_hand.records-1);
+    TorqueChain_Command(read,out,sizeof out); assert(strstr(out,"OK ANGLE ROW="));
+    healthy=0; TorqueChain_Command(cmd,out,sizeof out); assert(!torque_diag.used); healthy=1;
+#if !defined(FOC_ANGLE_HAND_ONLY)
+    const char *angles[]={"-30","-20","-10","0","+10","+20","+30"};
+    for(unsigned i=0;i<7;++i) {
+        FocTorqueChainDiag single={0}; char choice[96];
+        snprintf(choice,sizeof choice,"MOTOR TEST ANGLE OFFSET %s CONFIRM",angles[i]);
+        assert(FocTorqueChain_Queue(&single,choice,1));
+        assert(single.iq_mA==350 && single.sign==1 && FocAngleOffset_Allowed(single.offset_deg));
+        assert(!FocTorqueChain_Queue(&single,choice,1));
+    }
+#endif
+    TorqueChain_Command(cmd,out,sizeof out);
+#if defined(FOC_ANGLE_HAND_ONLY)
+    assert(strstr(out,"HAND_ONLY") && !torque_diag.used && !LatestOriginal_Admit());
+    assert(!(timer.BDTR & TIM_BDTR_MOE));
+#else
+    assert(strstr(out,"QUEUED") && torque_diag.offset_deg==20 && torque_diag.iq_mA==350);
+    assert(CL_MAX_US==400000U && FOC_STARTUP_PERIOD_US==12000U);
+    TorqueChain_Service(); ++cl_outer_n; TorqueChain_Service();
+    assert(torque_diag.active && motor_control_mode==MOTOR_MODE_IQ && foc_id_ref_A==0);
+    assert(fabsf(foc_iq_ref_A-.35f)<1e-7f);
+    assert(!ClSession_Expired(&cl_session,cl_session.start_us+399999U));
+    assert(ClSession_Expired(&cl_session,cl_session.start_us+400000U));
+    ProtectedLoop_Stop(); TorqueChain_Service(); assert(!torque_diag.active);
+    TorqueChain_Command(cmd,out,sizeof out); assert(!torque_diag.queued);
+    assert(!LatestOriginal_Admit());
+#endif
+    assert(!speed_pi_calls);
+    return 0;
+#elif defined(FOC_TORQUE450_FIVE_SECOND)
+    char out[256]; const char *cmd="MOTOR TEST TORQUE450 CONFIRM";
+#if defined(FOC_TORQUE450_150RPM)
+    assert(CL_OVERSPEED_RPM==150U);
+#else
+    assert(CL_OVERSPEED_RPM==60U);
+#endif
+    assert(CL_MAX_US==5000000U && FOC_STARTUP_PERIOD_US==200000U);
+    start(cmd,.45f,0);
+    TorqueChain_Command("MOTOR TEST TORQUE450 STATUS",out,sizeof out);
+    assert(strstr(out,"RPM_LIMIT=" CL_OVERSPEED_TEXT));
+    assert(!ClSession_Expired(&cl_session,cl_session.start_us+4999999U));
+    assert(ClSession_Expired(&cl_session,cl_session.start_us+5000000U));
+    ProtectedLoop_Stop(); TorqueChain_Service(); assert(!torque_diag.active);
+    assert(motor_control_mode==MOTOR_MODE_IDLE && !(timer.BDTR & TIM_BDTR_MOE));
+    TorqueChain_Command(cmd,out,sizeof out); assert(!torque_diag.queued);
+    const char *bad[]={"MOTOR TEST TORQUE350 CONFIRM","MOTOR TEST TORQUE450 NEG CONFIRM",
+        "MOTOR TEST TORQUE450 CONFIRM extra","MOTOR TEST SPEED500 CONFIRM","START"};
+    for(unsigned i=0;i<sizeof bad/sizeof bad[0];++i) {
+        reset(); TorqueChain_Command(bad[i],out,sizeof out); assert(!torque_diag.used);
+    }
+    for(unsigned race=0;race<2;++race) {
+        reset(); TorqueChain_Command(cmd,out,sizeof out); TorqueChain_Service(); ++cl_outer_n;
+        if(race) stop_in_prepare=1; else fault_in_prepare=1;
+        TorqueChain_Service(); assert(torque_diag.denied && !torque_diag.active && !(timer.BDTR & TIM_BDTR_MOE));
+    }
+    start(cmd,.45f,0); foc_fault=1; ProtectedLoop_Stop(); cl_session.state=CL_FAULT;
+    TorqueChain_Service(); assert(!torque_diag.active && !LatestOriginal_Admit());
+    return 0;
+#elif defined(FOC_TORQUE350_FIVE_SECOND)
+    char out[256]; const char *cmd="MOTOR TEST TORQUE350 CONFIRM";
+    assert(CL_MAX_US==5000000U && FOC_STARTUP_PERIOD_US==200000U);
+    start(cmd,.35f,0);
+    assert(!ClSession_Expired(&cl_session,cl_session.start_us+4999999U));
+    assert(ClSession_Expired(&cl_session,cl_session.start_us+5000000U));
+    ProtectedLoop_Stop(); TorqueChain_Service(); assert(!torque_diag.active);
+    assert(motor_control_mode==MOTOR_MODE_IDLE && !(timer.BDTR & TIM_BDTR_MOE));
+    TorqueChain_Command(cmd,out,sizeof out); assert(!torque_diag.queued);
+    const char *bad[]={"MOTOR TEST TORQUE NEG ZERO CONFIRM","MOTOR TEST TORQUE POS ZERO CONFIRM",
+        "MOTOR TEST BREAKAWAY POS 350 CONFIRM","MOTOR TEST SPEED500 CONFIRM",
+        "MOTOR TEST TORQUE350 CONFIRM extra","MOTOR TEST TORQUE350 NEG CONFIRM"};
+    for(unsigned i=0;i<sizeof bad/sizeof bad[0];++i) {
+        reset(); TorqueChain_Command(bad[i],out,sizeof out); assert(!torque_diag.used);
+    }
+    for(unsigned race=0;race<2;++race) {
+        reset(); TorqueChain_Command(cmd,out,sizeof out); TorqueChain_Service(); ++cl_outer_n;
+        if(race) stop_in_prepare=1; else fault_in_prepare=1;
+        TorqueChain_Service(); assert(torque_diag.denied && !torque_diag.active && !(timer.BDTR & TIM_BDTR_MOE));
+    }
+    start(cmd,.35f,0); foc_fault=1; ProtectedLoop_Stop(); cl_session.state=CL_FAULT;
+    TorqueChain_Service(); assert(!torque_diag.active && !LatestOriginal_Admit());
+    FocBreakawayMotion motion={0};
+    for(unsigned i=0;i<5000U;++i)
+        FocBreakaway_Observe(&motion,i*1000U,(uint16_t)((17000U-i)&16383U),1,1,1,1);
+    assert(motion.count==5000U && motion.net_counts==4999 && motion.absolute_counts==4999U);
+    assert(motion.tail_net_counts>1600 && !motion.bad_ref && !motion.bad_gates);
+    return 0;
+#elif defined(FOC_SPEED_DYNAMIC_DIAG)
     char out[256]; const char *cmd="MOTOR TEST SPEED500 CONFIRM";
     (void)speed_pi_calls;
     assert(CL_MAX_US==5000000U && FOC_STARTUP_PERIOD_US==200000U);

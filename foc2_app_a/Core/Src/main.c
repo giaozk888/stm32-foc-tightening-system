@@ -19,6 +19,153 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "foc_fast_path_profile.h"
+#if defined(FOC_BEMF_CANDIDATE)
+#include "foc_bemf_feedforward.h"
+static volatile uint8_t bemf_enabled=FOC_BEMF_ENABLED_DEFAULT;
+#if defined(FOC_BEMF_GAIN_DIAG)
+static volatile uint32_t bemf_gain_percent=0U;
+#endif
+static volatile FocBemfFrame bemf_frame;
+static uint8_t Bemf_Command(const char *cmd,char *out,size_t size);
+#if defined(FOC_PSI_IDENT_DIAG)
+#include "psi_ke_identification.h"
+static PsiIdentification psi_ident;
+static uint8_t PsiIdent_Command(const char *cmd,char *out,size_t size);
+#endif
+#endif
+#if defined(FOC_DQ_DECOUPLING_CANDIDATE)
+#include "foc_dq_decoupling.h"
+static volatile uint8_t dq_decoupling_enabled=FOC_DQ_DECOUPLING_ENABLED_DEFAULT;
+static volatile FocDqDecouplingFrame dq_decoupling_frame;
+static uint8_t DqDecoupling_Command(const char *cmd,char *out,size_t size);
+#if defined(FOC_DQ_AUDIT_ENABLE)
+#include "foc_dq_audit.h"
+static volatile FocDqAudit dq_audit;
+static void DqAudit_Monitor(void);
+#endif
+#endif
+#if defined(FOC_SPEED_SCURVE_CANDIDATE)
+#include "speed_scurve.h"
+static SpeedScurve speed_scurve;
+#endif
+#if defined(FOC_ACCEL_FEEDFORWARD_CANDIDATE)
+#include "speed_accel_feedforward.h"
+static uint8_t speed_accel_ff_enabled=FOC_ACCEL_FF_ENABLED_DEFAULT;
+static SpeedAccelFfFrame speed_accel_ff_frame;
+static SpeedAccelFfStats speed_accel_ff_stats;
+#if defined(FOC_MECHANICAL_IDENT_DIAG)
+#include "mechanical_identification.h"
+static volatile MechanicalCurrent mechanical_current;
+static MechanicalCapture mechanical_capture;
+#if defined(FOC_MECHANICAL_DOB_SHADOW)
+#include "mechanical_dob_monitor.h"
+static MechanicalDobMonitor mechanical_dob_monitor;
+#if defined(FOC_DOB_REAL_TRACE)
+#include "dob_real_trace.h"
+#endif
+#if defined(FOC_DOB_FEEDBACK_CANDIDATE)
+#if defined(FOC_DOB_GAIN_AB_DIAG)
+static float dob_gain_ab=.25f; /* RAM only; task changes with every output OFF. */
+#undef DOB_FB_GAIN
+#define DOB_FB_GAIN dob_gain_ab
+#endif
+#include "dob_feedback_candidate.h"
+#if defined(FOC_DOB_NORMAL_CONTROL)
+#include "dob_normal_control.h"
+#if defined(FOC_DOB_REAL_TRACE)
+static DobFeedbackCandidate dob_feedback; /* Passive acquisition: default OFF. */
+#else
+static DobFeedbackCandidate dob_feedback={.enabled=1U}; /* No motor auto-start. */
+#endif
+#else
+static DobFeedbackCandidate dob_feedback; /* Runtime OFF until guarded command. */
+#endif
+#endif
+#if defined(FOC_DOB_ID_TRACE)
+#include "dob_id_trace.h"
+#endif
+#if defined(FOC_ID_STEADY_STATS)
+#include "id_steady_stats.h"
+static IdSteadyStats id_steady_stats;
+#endif
+#endif
+#if defined(FOC_OUTER_OBSERVE_AFTER_ACK)
+#include "outer_completion_trace.h"
+static OuterCompletionTrace outer_completion_trace;
+static struct {
+    MechanicalCurrent current;
+    uint32_t observed_us,sample_us,dt_us;
+    int32_t delta;
+    float dt_s,omega_rad_s,friction_a;
+    uint8_t pending,valid,saturated;
+} outer_observation;
+static void OuterObservation_Flush(void);
+#endif
+#endif
+#if defined(FOC_KA_SYNC_DIAG) || defined(FOC_KA_FULL_DIAG)
+#include "ka_sync_diagnostic.h"
+static volatile KaSyncCurrent ka_sync_current;
+#if defined(FOC_KA_FULL_DIAG)
+#include "ka_full_diagnostic.h"
+static KaFullDiagnostic ka_full_diagnostic;
+#else
+static KaSyncDiagnostic ka_sync_diagnostic;
+#endif
+#endif
+#if defined(FOC_KA_IDENT_DIAG)
+#include "ka_identification.h"
+static KaIdentification ka_identification;
+#endif
+#if defined(FOC_ACCEL_FF_AUDIT)
+#include "speed_accel_audit.h"
+static SpeedAccelAudit speed_accel_audit;
+#if defined(FOC_STARTUP_TIMESTAMPS_DIAG)
+#include "startup_timestamps.h"
+static StartupTimestamps startup_timestamps;
+#endif
+static float speed_accel_audit_ka=SPEED_ACCEL_FF_KA_A_PER_RPM_S;
+#define SPEED_ACCEL_EFFECTIVE_KA speed_accel_audit_ka
+#else
+#define SPEED_ACCEL_EFFECTIVE_KA SPEED_ACCEL_FF_KA_A_PER_RPM_S
+#endif
+static void SpeedAccelFf_Reset(void);
+static void SpeedAccelFf_Monitor(void);
+static uint8_t SpeedAccelFf_Command(const char *cmd,char *out,size_t size);
+#endif
+#if defined(FOC_SPEED_FRICTION_CANDIDATE)
+#include "speed_friction_compensation.h"
+static uint8_t speed_friction_enabled=FOC_FRICTION_ENABLED_DEFAULT;
+static SpeedFrictionFrame speed_friction_frame;
+static SpeedFrictionStats speed_friction_stats;
+static void SpeedFriction_Reset(void);
+#if !defined(FOC_ACCEL_FF_AUDIT) && !defined(FOC_KA_IDENT_DIAG) && !defined(FOC_KA_SYNC_DIAG) && !defined(FOC_KA_FULL_DIAG)
+static void SpeedFriction_Monitor(void);
+#endif
+static uint8_t SpeedFriction_Command(const char *cmd,char *out,size_t size);
+#endif
+#if defined(FOC_FRICTION_CALIBRATION_DIAG)
+#include "friction_calibration.h"
+static FrictionCalibration friction_calibration;
+static uint8_t FrictionCalibration_Command(const char *cmd,char *out,size_t size);
+static void FrictionCalibration_Observe(float dt);
+#endif
+#if defined(FOC_MOTOR_IDENTIFICATION_DIAG)
+#include "motor_identification.h"
+static MotorIdentification motor_ident;
+static uint8_t MotorIdent_Command(const char *cmd,char *out,size_t size);
+static uint8_t MotorIdent_Ref(float id,float iq);
+static void MotorIdent_Capture(void);
+#endif
+#if defined(FOC_CURRENT_STEP_AB_DIAG)
+#include "current_step_ab.h"
+static CurrentStepAB current_step_ab;
+unsigned current_step_pi_new=1U;
+static float current_step_out_d,current_step_out_q;
+static uint8_t current_step_saturated;
+static uint8_t CurrentStep_Command(const char *cmd,char *out,size_t size);
+static uint8_t CurrentStep_FocReference(void);
+static void CurrentStep_Capture(void);
+#endif
 #if defined(FOC_SPEED_STARTUP_BRAKE)
 #include "speed_startup_brake.h"
 #endif
@@ -26,6 +173,9 @@
 #include "speed_bumpless.h"
 #if defined(FOC_SPEED_BRAKE_TRACK)
 #include "speed_brake_track.h"
+#if defined(FOC_SPEED_PI_ANTI_WINDUP)
+#include "speed_pi_anti_windup.h"
+#endif
 static SpeedBrakeTrack speed_brake_track;
 #endif
 #endif
@@ -112,6 +262,12 @@ static AsDmaCursor encoder_dma_cursor;
 #include "uart_firmware_transfer.h"
 #endif
 #include "tighten_params_storage.h"
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+#include "tightening_intent_fsm.h"
+static TighteningFsm intent_fsm;
+static uint8_t TighteningIntent_PrecheckOnly(void);
+static void TighteningIntent_PrintStatus(uint32_t request_id);
+#endif
 #if defined(TIGHTEN_SPEED_X2_OFFLINE) && \
     (!defined(FOC_ISOLATED_CONCURRENCY) || !defined(TIGHTEN_SYNTHETIC_BENCH))
 #error Double-speed recipe is restricted to the output-locked synthetic profile
@@ -302,6 +458,7 @@ _Static_assert(PWM_ARR == FOC_ADC_TIMER_ARR, "Review ADC timing after PWM clock/
 #define FOC_TS_S                    0.00005f   /* 20 kHz */
 #define FOC_CURRENT_KP_V_PER_A      0.080f
 #define FOC_CURRENT_KI_V_PER_AS     188.0f
+#include "current_pi_identified_candidate.h"
 
 #define FOC_ID_REF_A                0.0f
 
@@ -458,7 +615,11 @@ _Static_assert(PWM_ARR == FOC_ADC_TIMER_ARR, "Review ADC timing after PWM clock/
 #define SPEED_IQ_LIMIT_A            0.40f
 #define SPEED_INT_LIMIT_A           0.35f
 #define SPEED_FILTER_TAU_S          0.020f
+#if defined(FOC_PSI_IDENT_TRIP500) || defined(FOC_MECHANICAL_HIGH_SPEED_DIAG)
+#define SPEED_OVERSPEED_RPM         ((float)FOC_RUNDOWN240_TRIP_RPM)
+#else
 #define SPEED_OVERSPEED_RPM         300.0f
+#endif
 
 /*
  * Dual mechanical-speed estimator.
@@ -520,9 +681,23 @@ _Static_assert(PWM_ARR == FOC_ADC_TIMER_ARR, "Review ADC timing after PWM clock/
  * speed estimator and PI are validated away from the severe 5-rpm
  * stick-slip region.
  */
+#if defined(FOC_MECHANICAL_HIGH_SPEED_DIAG)
+#define MOTOR_SPEED_API_LIMIT_RPM      800.0f
+#elif defined(FOC_PSI_IDENT_API400)
+#if !defined(FOC_PSI_IDENT_DIAG) || !defined(FOC_PSI_IDENT_TRIP500)
+#error 400rpm API requires the exclusive PSI diagnostic with 500rpm trip
+#endif
+#define MOTOR_SPEED_API_LIMIT_RPM      400.0f
+#elif defined(FOC_FRICTION_HIGH_SPEED_GRID)
+/* Explicit diagnostic command range only; independent 300rpm trip unchanged. */
+#define MOTOR_SPEED_API_LIMIT_RPM      280.0f
+#else
 #define MOTOR_SPEED_API_LIMIT_RPM      250.0f
+#endif
 #define MOTOR_SPEED_TEST_RPM           100.0f
-#if defined(FOC_SPEED_DYNAMIC_DIAG)
+#if defined(FOC_RUNDOWN240_CANDIDATE)
+#define MOTOR_SPEED_IQ_LIMIT_A           FOC_RUNDOWN240_IQ_LIMIT_A
+#elif defined(FOC_SPEED_DYNAMIC_DIAG)
 #define MOTOR_SPEED_IQ_LIMIT_A           0.50f
 #else
 #define MOTOR_SPEED_IQ_LIMIT_A           0.40f
@@ -531,7 +706,15 @@ _Static_assert(PWM_ARR == FOC_ADC_TIMER_ARR, "Review ADC timing after PWM clock/
 #define MOTOR_SPEED_STALL_REF_MIN_RPM    20.0f
 #define MOTOR_SPEED_STALL_TIMEOUT_S      2.0f
 
+#ifndef MOTOR_DIRECT_IQ_LIMIT_A
 #define MOTOR_DIRECT_IQ_LIMIT_A          0.20f
+#endif
+#if defined(FOC_TORQUE350_FIVE_SECOND)
+_Static_assert((unsigned)(MOTOR_DIRECT_IQ_LIMIT_A*1000.0f+0.5f)==350U,"350mA command must not be silently clamped");
+#endif
+#if defined(FOC_TORQUE450_FIVE_SECOND)
+_Static_assert((unsigned)(MOTOR_DIRECT_IQ_LIMIT_A*1000.0f+0.5f)==450U,"450mA command must not be silently clamped");
+#endif
 
 #define TIGHTEN_TEST_IDLE_1_MS             2000U
 
@@ -615,7 +798,18 @@ static TightenRundownGuard tightening_rundown;
  * Reject isolated jumps above this value from the speed estimator.
  * Three consecutive implausible samples are treated as an encoder fault.
  */
+#if defined(FOC_ENCODER_CONTROL_ADMISSION_FIX) && !defined(FOC_DOB_NORMAL_CONTROL)
+#if !defined(FOC_MECHANICAL_HIGH_SPEED_DIAG)
+#error Encoder admission fix requires the reviewed high-speed mechanical A diagnostic
+#endif
+/* The manual 800rpm diagnostic cannot reject normal motion at the legacy
+ * 600rpm ceiling. Use its ALREADY authorized 1000rpm envelope, not a second
+ * unrelated magic threshold. Normal A/B and prior diagnostics stay at 600.
+ * Filtered-speed overspeed, three bad samples, age and control watchdog remain. */
+#define SPEED_INSTANT_PLAUSIBLE_RPM ((float)FOC_RUNDOWN240_TRIP_RPM)
+#else
 #define SPEED_INSTANT_PLAUSIBLE_RPM 600.0f
+#endif
 #define SPEED_GLITCH_STREAK_LIMIT   3U
 
 #define FOC_DC_BUS_V                12.0f
@@ -640,6 +834,10 @@ static TightenRundownGuard tightening_rundown;
 #define POLE_PAIRS 10U
 #define ENCODER_DIRECTION (-1)
 #define ELECTRICAL_ZERO_RAW 10507U
+#if defined(FOC_ANGLE_CHAIN_DIAG)
+_Static_assert(POLE_PAIRS==10U && ENCODER_DIRECTION==-1 && ELECTRICAL_ZERO_RAW==10507U,
+    "Angle diagnostic observer/report must match the existing mapping");
+#endif
 
 /* USER CODE END PD */
 
@@ -2227,6 +2425,18 @@ static const char *MotorControl_ModeName(MotorControlMode_t mode)
 #endif
 #if defined(FOC_PROTECTED_CLOSED_LOOP)
 #include "protected_closed_loop.inc"
+#if defined(FOC_BEMF_CANDIDATE)
+#include "foc_bemf_feedforward_binding.inc"
+#endif
+#if defined(FOC_DQ_DECOUPLING_CANDIDATE)
+#include "foc_dq_decoupling_binding.inc"
+#endif
+#if defined(FOC_ACCEL_FEEDFORWARD_CANDIDATE)
+#include "speed_accel_feedforward_binding.inc"
+#endif
+#if defined(FOC_SPEED_FRICTION_CANDIDATE)
+#include "speed_friction_compensation_binding.inc"
+#endif
 #if defined(FOC_LATEST_ORIGINAL_FSM)
 #include "latest_original_fsm.inc"
 #endif
@@ -2463,8 +2673,11 @@ static void TighteningResult_Sample(TighteningStageResult_t *r)
 }
 
 
+#if defined(FOC_PWM_COMMON_MODE_ENABLE)
+__attribute__((optimize("Oz"))) /* Cold result formatting only. */
+#endif
 static void TighteningResult_PrintStage(const char *name,
-                                        const TighteningStageResult_t *r)
+                                       const TighteningStageResult_t *r)
 {
     char msg[256];
     float iq_avg_A = 0.0f;
@@ -2528,13 +2741,22 @@ static void TighteningResult_PrintStage(const char *name,
 #if defined(ESP_NETWORK_OBSERVER)
 #include "network_observer.inc"
 #endif
+#if defined(FOC_PWM_COMMON_MODE_ENABLE)
+__attribute__((optimize("Oz"))) /* Cold report only; no control/ISR optimization change. */
+#endif
 static void TighteningResult_PrintSummary(const char *result_text)
 {
     char msg[256];
 #if defined(ESP_NETWORK_OBSERVER)
     NetworkObserver_Publish(NET_KIND_RESULT);
 #endif
-
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+    UART_SendFormatted(msg,sizeof msg,
+        "START_REQ=%lu RESULT=%s CONTACT=%u CONTACT_MDEG=%ld POST_MDEG=%ld\r\n",
+        (unsigned long)tightening_cycle_request_id,result_text,tightening_contact_confirmed,
+        (long)(tightening_contact_position_deg*1000.0f),
+        (long)(tightening_post_contact_travel_deg*1000.0f));
+#else
     UART_SendLiteral(
         "\r\n"
         "========== TIGHTEN RESULT ==========\r\n");
@@ -2576,15 +2798,20 @@ static void TighteningResult_PrintSummary(const char *result_text)
     }
 
 
+#endif
     TighteningResult_PrintStage("SEATING", &tighten_result_seating);
     TighteningResult_PrintStage("TIGHTEN#1", &tighten_result_010);
     TighteningResult_PrintStage("TIGHTEN#2", &tighten_result_012);
     TighteningResult_PrintStage("TIGHTEN#3", &tighten_result_015);
     TighteningResult_PrintStage("HOLD", &tighten_result_hold);
 
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+    UART_SendLiteral("NOTE: Iq != calibrated N.m\r\n");
+#else
     UART_SendLiteral(
         "NOTE: Iq values are electrical q-axis current, NOT calibrated N.m\r\n"
         "====================================\r\n\r\n");
+#endif
 }
 
 
@@ -2826,6 +3053,9 @@ static void TighteningRepeat_PrintAggregate(void)
 
 static uint8_t Tightening_IsBusy(void)
 {
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+    return TighteningFsm_Busy(&intent_fsm);
+#else
     switch (tightening_test_stage)
     {
         case TIGHTEN_STATE_RUNDOWN:
@@ -2840,6 +3070,7 @@ static uint8_t Tightening_IsBusy(void)
         default:
             return 0U;
     }
+#endif
 }
 
 
@@ -3497,6 +3728,9 @@ static void Protocol_SendCycleEvent(
 }
 
 
+#if defined(FOC_PWM_COMMON_MODE_ENABLE)
+__attribute__((optimize("Oz"))) /* UART task report, not a controller. */
+#endif
 static void Protocol_PrintStatus(uint32_t request_id)
 {
     char msg[384];
@@ -3540,6 +3774,9 @@ static void Protocol_PrintStatus(uint32_t request_id)
         (unsigned long)UART_RxDma_GetQueuedBytes(),
         (unsigned long)UART_RxDma_GetDroppedBytes(),
         (unsigned long)UART_RxDma_GetTotalBytes());
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+    TighteningIntent_PrintStatus(request_id);
+#endif
 }
 
 
@@ -3666,6 +3903,22 @@ static TightenParamsFlashLoadStatus_t TightenParams_LoadFromFlash(void)
 {
     return TightenParams_StorageLoad(&recipe_state, &params_storage_port);
 }
+
+#if defined(FOC_RUNDOWN240_CANDIDATE)
+static void TightenParams_ApplyRundown240Candidate(void)
+{
+    /* Startup only, after normal load/defaults and before tasks/START.
+     * Never persist A candidate recipe overrides into B. */
+    recipe_state.params.rundown_rpm=FOC_RUNDOWN240_TARGET_RPM;
+#if defined(FOC_RUNDOWN240_TRAVEL20000)
+    recipe_state.params.max_travel_deg=FOC_RUNDOWN240_MAX_TRAVEL_DEG;
+#endif
+#if defined(FOC_DOB_CONTACT20_OBSERVE10)
+    recipe_state.params.contact_rpm=DOB_CONTACT20_RPM;
+#endif
+    recipe_state.dirty=1U;
+}
+#endif
 
 
 /*
@@ -5614,6 +5867,12 @@ static void Protocol_HandleLine(char *line)
         if (protocol_reply_route_active || !protocol_esp_ping_uart_local) {
             Protocol_SendError(request_id,PROTO_ERR_FW_STATE,"LOCAL_CONSOLE_ONLY"); return;
         }
+#if defined(FOC_DQ_DECOUPLING_CANDIDATE)
+        if (!DqDecoupling_Command(cmd,msg,sizeof(msg)))
+#endif
+#if defined(FOC_BEMF_CANDIDATE)
+        if (!Bemf_Command(cmd,msg,sizeof(msg)))
+#endif
         ProtectedLoop_Command(cmd,msg,sizeof(msg));
         Protocol_SendTaggedLine(request_id,msg);
     }
@@ -7076,6 +7335,17 @@ static void ProtocolTask(void *argument)
 }
 
 
+#if defined(FOC_PSI_IDENT_DIAG)
+#include "psi_ke_identification_binding.inc"
+#elif defined(FOC_CURRENT_STEP_AB_DIAG)
+#include "current_step_ab_binding.inc"
+#elif defined(FOC_MOTOR_IDENTIFICATION_DIAG)
+#include "motor_identification_binding.inc"
+#elif defined(FOC_FRICTION_CALIBRATION_DIAG)
+#include "friction_calibration_binding.inc"
+#elif defined(FOC_INTENT_FSM_CANDIDATE)
+#include "tightening_intent_binding.inc"
+#else
 #include "tightening_rundown_binding.inc"
 /* Size-optimize only the 100Hz application FSM, not any FOC/PI/IRQ function. */
 __attribute__((optimize("Os")))
@@ -7147,8 +7417,8 @@ static void TighteningTask(void *argument)
 #if defined(FOC_TORQUE_CHAIN_DIAG)
         TorqueChain_Service();
 #endif
-#if defined(FOC_SPEED_DYNAMIC_DIAG)
-        /* Separate SPEED-only experiment. Never enter fixed-Iq tightening
+#if defined(FOC_SPEED_DYNAMIC_DIAG) || defined(FOC_TORQUE350_FIVE_SECOND) || defined(FOC_TORQUE450_FIVE_SECOND) || defined(FOC_ANGLE_CHAIN_DIAG)
+        /* Separate single-mode experiment. Never enter fixed-Iq tightening
          * stages or consume normal START into the original FSM here. */
         ProtectedLoop_RundownEnd();
         vTaskDelay(pdMS_TO_TICKS(10U));
@@ -7945,6 +8215,7 @@ static void TighteningTask(void *argument)
 }
 
 
+#endif /* legacy task excluded only from the opt-in intent candidate */
 static void BootHealthTask(void *argument)
 {
     TickType_t last_wake_time;
@@ -8280,6 +8551,12 @@ static void MonitorTask(void *argument)
                         pdMS_TO_TICKS(ANALOG_LIVE_PERIOD_MS));
 
         FaultDiag_Monitor(); /* Task-only, immutable first-fault evidence. */
+#if defined(FOC_DQ_AUDIT_ENABLE)
+        DqAudit_Monitor();
+#endif
+#if defined(FOC_ACCEL_FEEDFORWARD_CANDIDATE)
+        SpeedAccelFf_Monitor(); /* Decimated token logs, not the control owner. */
+#endif
 
 #if defined(CAN_STATUS_TELEMETRY)
         CAN_StatusTx_Service(HAL_GetTick());
@@ -8830,7 +9107,7 @@ static void EncoderDiag_InitCycleCounter(void)
 
 static float Encoder_ElectricalAngleRad(uint16_t raw)
 {
-#if defined(FOC_TORQUE_CHAIN_DIAG) && !defined(FOC_SPEED_DYNAMIC_DIAG)
+#if defined(FOC_TORQUE_CHAIN_DIAG) && !defined(FOC_SPEED_DYNAMIC_DIAG) && !defined(FOC_TORQUE350_FIVE_SECOND) && !defined(FOC_TORQUE450_FIVE_SECOND) && !defined(FOC_ANGLE_HAND_ONLY)
     return FocTorqueChain_Angle(AS5047P_ElectricalAngleRad(raw,
         ELECTRICAL_ZERO_RAW,POLE_PAIRS,ENCODER_DIRECTION),torque_diag.offset_deg);
 #else
@@ -9068,6 +9345,12 @@ static float ClampFloat(float x, float lo, float hi)
 
 static void FOC_ResetController(void)
 {
+#if defined(FOC_BEMF_CANDIDATE)
+    bemf_frame.valid=0U;
+#endif
+#if defined(FOC_DQ_DECOUPLING_CANDIDATE)
+    dq_decoupling_frame.valid=0U;
+#endif
 #if defined(FOC_SPEED_BRAKE_TRACK)
     SpeedBrakeTrack_Reset(&speed_brake_track);
 #endif
@@ -9089,6 +9372,12 @@ static void FOC_ResetController(void)
 
     speed_target_rpm = SPEED_REF_RPM;
     speed_ref_rpm = SPEED_REF_RPM;
+#if defined(FOC_SPEED_SCURVE_CANDIDATE)
+    SpeedScurve_Reset(&speed_scurve, speed_ref_rpm);
+#endif
+#if defined(FOC_ACCEL_FEEDFORWARD_CANDIDATE)
+    SpeedAccelFf_Reset();
+#endif
     speed_integrator_A = 0.0f;
     speed_integrator_bleed_active = 0U;
     speed_overspeed_bleed_active = 0U;
@@ -9174,12 +9463,16 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
     float c;
     float id_A;
     float iq_A;
+#if !defined(FOC_IDENT_VOLTAGE_STEP_DIAG)
     float err_d;
     float err_q;
+#endif
     float vd;
     float vq;
+#if !defined(FOC_IDENT_VOLTAGE_STEP_DIAG)
     float mag2;
     float limit2;
+#endif
     float v_alpha;
     float v_beta;
     float vu;
@@ -9369,6 +9662,18 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
     iq_A = -i_alpha * s + i_beta * c;
     FocProfile_Mark(FOC_PROF_TRANSFORM);
 
+#if defined(FOC_MOTOR_IDENTIFICATION_DIAG)
+    /* Diagnostic-only reference owner; PI and all math below are unchanged. */
+    if (!MotorIdent_Ref(id_A,iq_A)) return;
+#endif
+#if defined(FOC_IDENT_VOLTAGE_STEP_DIAG)
+    /* Exclusive manual voltage diagnostic: no PI/error/integrator update.
+     * IDLE/READY/non-active always generates neutral, never stale PI output. */
+    MotorIdent_Voltage(&motor_ident,cl_frame.source_us,&vd,&vq);
+#else
+#if defined(FOC_CURRENT_STEP_AB_DIAG)
+    if (!CurrentStep_FocReference()) return;
+#endif
     err_d = foc_id_ref_A - id_A;
     err_q = foc_iq_ref_A - iq_A;
 
@@ -9376,14 +9681,16 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
      * PI controller:
      *   Kp ~= L*w_c = 0.08 V/A
      *   Ki ~= R*w_c = 188 V/(A*s)
-     * for roughly 300 Hz initial current-loop bandwidth using the present
-     * R ~= 0.10 ohm and L ~= 42.3 uH motor estimates.
+     * for roughly 300 Hz initial current-loop bandwidth using the historical
+     * R ~= 0.10 ohm and L ~= 42.3 uH motor estimates. Opt-in A comparison
+     * selects axis-specific gains in current_pi_identified_candidate.h;
+     * PI order, vector saturation and integrator tracking are unchanged.
      */
 #if FOC_CURRENT_FAULT_TRACE_ENABLE
     FocCurrentTrace_Pi(); /* Diagnostic only: actual PI-update reachability. */
 #endif
-    foc_int_d_V += FOC_CURRENT_KI_V_PER_AS * err_d * FOC_TS_S;
-    foc_int_q_V += FOC_CURRENT_KI_V_PER_AS * err_q * FOC_TS_S;
+    foc_int_d_V += FOC_CURRENT_KI_D_V_PER_AS * err_d * FOC_TS_S;
+    foc_int_q_V += FOC_CURRENT_KI_Q_V_PER_AS * err_q * FOC_TS_S;
 
     foc_int_d_V = ClampFloat(foc_int_d_V,
                              -FOC_INTEGRATOR_LIMIT_V,
@@ -9392,8 +9699,43 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
                              -FOC_INTEGRATOR_LIMIT_V,
                               FOC_INTEGRATOR_LIMIT_V);
 
-    vd = FOC_CURRENT_KP_V_PER_A * err_d + foc_int_d_V;
-    vq = FOC_CURRENT_KP_V_PER_A * err_q + foc_int_q_V;
+    vd = FOC_CURRENT_KP_D_V_PER_A * err_d + foc_int_d_V;
+    vq = FOC_CURRENT_KP_Q_V_PER_A * err_q + foc_int_q_V;
+
+#if defined(FOC_DQ_DECOUPLING_CANDIDATE)
+    float vd_ff,vq_ff;
+    uint8_t dq_on=dq_decoupling_enabled;
+    float dq_omega=encoder_omega_e_rad_s;
+    if (!FocDqDecoupling_Apply(dq_on,dq_omega,id_A,iq_A,&vd_ff,&vq_ff)) {
+        dq_decoupling_frame.valid=0U;
+        ProtectedLoop_EmergencyOff(CL_BAD_OUTPUT); return;
+    }
+    float vd_pi=vd,vq_pi=vq;
+    /* OFF bypasses even +0, preserving the historical PI bit pattern. */
+    if (dq_on) { vd+=vd_ff; vq+=vq_ff; }
+#endif
+
+#if defined(FOC_BEMF_CANDIDATE)
+    float bemf_q,bemf_vd_pi=vd,bemf_vq_pi=vq;
+    uint8_t bemf_on=bemf_enabled;
+    float bemf_omega=encoder_omega_e_rad_s;
+#if defined(FOC_BEMF_GAIN_DIAG)
+    if (!FocBemfGain_Apply(bemf_on,bemf_omega,bemf_gain_percent,&bemf_q)) {
+#else
+    if (!FocBemf_Apply(bemf_on,bemf_omega,&bemf_q)) {
+#endif
+        bemf_frame.valid=0U;
+        ProtectedLoop_EmergencyOff(CL_BAD_OUTPUT); return;
+    }
+    /* OFF skips even +0. No output/pipeline owner is changed here. */
+    if (bemf_on) {
+        vq+=bemf_q;
+        if (!isfinite(vq)) {
+            bemf_frame.valid=0U;
+            ProtectedLoop_EmergencyOff(CL_BAD_OUTPUT); return;
+        }
+    }
+#endif
 
     /*
      * Vector-voltage limit. 0.8 V is intentionally small for the first
@@ -9401,6 +9743,10 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
      */
     mag2 = vd * vd + vq * vq;
     limit2 = FOC_VOLTAGE_LIMIT_V * FOC_VOLTAGE_LIMIT_V;
+#if defined(FOC_CURRENT_STEP_AB_DIAG)
+    current_step_out_d=vd;current_step_out_q=vq;
+    current_step_saturated=(uint8_t)(mag2>limit2);
+#endif
 
     if (mag2 > limit2)
     {
@@ -9413,8 +9759,16 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
          * Simple tracking anti-windup: after vector saturation, move each
          * integrator to the value consistent with the saturated command.
          */
-        foc_int_d_V = vd - FOC_CURRENT_KP_V_PER_A * err_d;
-        foc_int_q_V = vq - FOC_CURRENT_KP_V_PER_A * err_q;
+        foc_int_d_V = vd - FOC_CURRENT_KP_D_V_PER_A * err_d;
+        foc_int_q_V = vq - FOC_CURRENT_KP_Q_V_PER_A * err_q;
+#if defined(FOC_BEMF_CANDIDATE)
+        /* Saturation tracking owns PI voltage only, not PI+back-EMF. */
+        if (bemf_on) foc_int_q_V-=bemf_q;
+#endif
+#if defined(FOC_DQ_DECOUPLING_CANDIDATE)
+        /* Track the PI contribution, NOT total PI+feedforward voltage. */
+        if (dq_on) { foc_int_d_V-=vd_ff; foc_int_q_V-=vq_ff; }
+#endif
 
         foc_int_d_V = ClampFloat(foc_int_d_V,
                                  -FOC_INTEGRATOR_LIMIT_V,
@@ -9424,6 +9778,34 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
                                   FOC_INTEGRATOR_LIMIT_V);
     }
 
+#if defined(FOC_DQ_DECOUPLING_CANDIDATE)
+    /* Single ISR writer; task reader masks interrupts for a bounded copy.
+     * Fixed binary latest-frame assignment only, not a historical trace. */
+    dq_decoupling_frame=(FocDqDecouplingFrame){
+        .seq=injected_seq_count,.source_us=cl_frame.source_us,.enabled=dq_on,
+        .saturated=(uint32_t)(mag2>limit2),.valid=1U,
+        .omega_e=dq_omega,.id=id_A,.iq=iq_A,.vd_pi=vd_pi,.vq_pi=vq_pi,
+        .vd_ff=vd_ff,.vq_ff=vq_ff,.vd=vd,.vq=vq};
+#if defined(FOC_DQ_AUDIT_ENABLE)
+    _Static_assert(POLE_PAIRS==10U,"DQA1 independent speed conversion assumes existing 10 pole pairs");
+    uint32_t dq_flags=(dq_on ? DQA_ON : 0U) | (cl_session.state==CL_RUNNING ? DQA_RUNNING : 0U) |
+        (mag2>limit2 ? DQA_SATURATED : 0U) | ((uint32_t)DECOUPLING_SIGN_MODE<<8);
+    if (motor_control_mode==MOTOR_MODE_SPEED && fabsf(speed_ref_rpm-speed_target_rpm)<=.001f &&
+        fabsf(speed_scurve.acceleration_rpm_s)<=.001f) dq_flags|=DQA_CRUISE;
+    FocDqAuditFrame dq_record={.seq=injected_seq_count,.us=cl_frame.source_us,.flags=dq_flags,
+        .mech_rpm=encoder_speed_rpm,.we_rad_s=dq_omega,.id=id_A,.iq=iq_A,
+        .vd_pi=vd_pi,.vq_pi=vq_pi,.vd_dec=vd_ff,.vq_dec=vq_ff,.vd_cmd=vd,.vq_cmd=vq,
+        .speed_ref=speed_ref_rpm,.speed_meas=encoder_speed_rpm};
+    FocDqAudit_Record(&dq_audit,&dq_record);
+#endif
+#endif
+#if defined(FOC_BEMF_CANDIDATE)
+    bemf_frame=(FocBemfFrame){.seq=injected_seq_count,.source_us=cl_frame.source_us,
+        .enabled=bemf_on,.saturated=(uint32_t)(mag2>limit2),.valid=1U,
+        .omega_e=bemf_omega,.id=id_A,.iq=iq_A,.vd_pi=bemf_vd_pi,.vq_pi=bemf_vq_pi,
+        .vq_ff=bemf_q,.vd=vd,.vq=vq};
+#endif
+#endif /* Exclusive voltage diagnostic, original current PI otherwise. */
     FocProfile_Mark(FOC_PROF_PI);
     /* Inverse Park. */
 #if defined(FOC_CURRENT_TREND4) && !defined(FOC_FAST_CURRENT_REJECT)
@@ -9481,9 +9863,37 @@ static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,
 
     foc_id_A = id_A;
     foc_iq_A = iq_A;
+#if defined(FOC_MECHANICAL_IDENT_DIAG)
+    /* Publication only; original PI, PWM and protection owners stay unchanged. */
+    uint32_t mechanical_begin=DWT->CYCCNT;
+    Mechanical_Publish(&mechanical_current,cl_frame.source_seq,cl_frame.source_us,
+        AS5047P_DmaNowUs(),id_A,iq_A,mag2>limit2?MEC_SATURATED:0U);
+    uint32_t mechanical_cycles=DWT->CYCCNT-mechanical_begin;
+    if (mechanical_cycles>mechanical_capture.publish_cycles_max)
+        mechanical_capture.publish_cycles_max=mechanical_cycles;
+#endif
+#if defined(FOC_KA_SYNC_DIAG) || defined(FOC_KA_FULL_DIAG)
+    /* Diagnostic only. Source_us is the existing pair-read timestamp,
+     * not a claim to measure the physical ADC sampling aperture. */
+    uint32_t sync_begin=DWT->CYCCNT;
+    KaSync_Publish(&ka_sync_current,cl_frame.source_seq,cl_frame.source_us,AS5047P_DmaNowUs(),iq_A);
+    uint32_t sync_cycles=DWT->CYCCNT-sync_begin;
+#if defined(FOC_KA_FULL_DIAG)
+    if (sync_cycles>ka_full_diagnostic.publish_cycles_max) ka_full_diagnostic.publish_cycles_max=sync_cycles;
+#else
+    if (sync_cycles>ka_sync_diagnostic.publish_cycles_max) ka_sync_diagnostic.publish_cycles_max=sync_cycles;
+#endif
+#endif
     foc_vd_V = vd;
     foc_vq_V = vq;
+#if defined(FOC_CURRENT_STEP_AB_DIAG)
+    CurrentStep_Capture();
+#endif
 
+#if defined(FOC_MOTOR_IDENTIFICATION_DIAG)
+    /* Binary record only; no UART/estimation/heap in the fast path. */
+    MotorIdent_Capture();
+#endif
     foc_duty_u = du;
     foc_duty_v = dv;
     foc_duty_w = dw;
@@ -9518,6 +9928,10 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
     if (!AS5047P_DmaGetSample(&sample)) return HAL_BUSY;
     uint32_t consume_now=AS5047P_DmaNowUs();
     int consumed = AsDma_Consume(&encoder_dma_cursor, &sample,consume_now,&dt_us);
+#if defined(FOC_OUTER_OBSERVE_AFTER_ACK)
+    outer_observation.pending=0U;
+    if (consumed>0) OuterTrace_Consume(&outer_completion_trace,consume_now,sample.sample_us,sample.sequence);
+#endif
     if (consumed == 0) return HAL_BUSY;
     if (consumed < 0)
     {
@@ -9605,7 +10019,14 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
                 return HAL_ERROR;
             }
 
+            /* Rejected data did not publish angle/speed or acknowledge the
+             * encoder watchdog. Do not tell TaskService it was a fresh update.
+             * No ACK here: a genuinely invalid stream must still trip. */
+#if defined(FOC_ENCODER_CONTROL_ADMISSION_FIX)
+            return HAL_BUSY;
+#else
             return HAL_OK;
+#endif
         }
 
         encoder_speed_glitch_streak = 0U;
@@ -9692,6 +10113,12 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
 #endif
             speed_target_rpm = 0.0f;
             speed_ref_rpm = 0.0f;
+#if defined(FOC_SPEED_SCURVE_CANDIDATE)
+            SpeedScurve_Reset(&speed_scurve, speed_ref_rpm);
+#endif
+#if defined(FOC_ACCEL_FEEDFORWARD_CANDIDATE)
+            if (mode==MOTOR_MODE_SPEED) SpeedAccelFf_Reset();
+#endif
             speed_integrator_A = 0.0f;
             speed_integrator_bleed_active = 0U;
             speed_overspeed_bleed_active = 0U;
@@ -9952,6 +10379,23 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
          */
         if (run_speed_pi != 0U)
         {
+#if defined(FOC_ACCEL_FEEDFORWARD_CANDIDATE)
+            SpeedAccelFfResult aff;
+#endif
+#if defined(FOC_SPEED_FRICTION_CANDIDATE)
+            SpeedFrictionResult friction;
+#endif
+#if defined(FOC_SPEED_SCURVE_CANDIDATE)
+            if (mode == MOTOR_MODE_SPEED) {
+#if defined(FOC_STARTUP_TIMESTAMPS_DIAG)
+                StartupTimes_Begin(&startup_timestamps,AS5047P_DmaNowUs(),speed_target_rpm);
+#endif
+                speed_ref_rpm = SpeedScurve_Step(&speed_scurve, speed_target_rpm, dt_meas);
+#if defined(FOC_ACCEL_FF_AUDIT)
+                ++speed_accel_audit.meta.trajectory_updates;
+#endif
+            } else {
+#endif
             if (speed_ref_rpm < speed_target_rpm)
             {
                 float step =
@@ -9972,6 +10416,9 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
                 if (speed_ref_rpm < speed_target_rpm)
                     speed_ref_rpm = speed_target_rpm;
             }
+#if defined(FOC_SPEED_SCURVE_CANDIDATE)
+            } /* POSITION retains the original linear reference ramp. */
+#endif
 
             speed_err =
                 speed_ref_rpm - encoder_speed_rpm;
@@ -10095,6 +10542,58 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
                            -SPEED_INT_LIMIT_A,
                             SPEED_INT_LIMIT_A);
 
+#if defined(FOC_SPEED_PI_ANTI_WINDUP)
+            if (mode == MOTOR_MODE_SPEED) {
+#if defined(FOC_ACCEL_FEEDFORWARD_CANDIDATE)
+#if defined(FOC_SPEED_FRICTION_CANDIDATE)
+#if defined(FOC_DOB_FEEDBACK_CANDIDATE)
+                float iq_dob=DobFeedback_Update(&dob_feedback,AS5047P_DmaNowUs(),
+                    (uint32_t)(dt_meas*1e6f+.5f),mechanical_dob_monitor.current.sample_us,
+                    mechanical_dob_monitor.current.disturbance_a,
+                    (uint8_t)(mechanical_dob_monitor.current.valid&&mechanical_dob_monitor.running&&!mechanical_dob_monitor.frozen
+#if defined(FOC_DOB_CONTACT20_OBSERVE10)
+                        &&DobObserve10_FeedbackSpeedQualified(mechanical_dob_monitor.current.omega_rad_s)
+#endif
+                        ),
+                    (uint8_t)(cl_armed&&cl_session.state==CL_RUNNING&&!adc_fault&&!foc_fault),speed_iq_limit_A);
+                friction=SpeedFrictionDob_Apply(sb2_previous_A,i_candidate,p_term,
+#else
+                friction=SpeedFriction_Apply(sb2_previous_A,i_candidate,p_term,
+#endif
+                    speed_scurve.acceleration_rpm_s,SPEED_ACCEL_EFFECTIVE_KA,
+                    speed_ref_rpm,SPEED_FRICTION_I_A,SPEED_FRICTION_DEADBAND_RPM,
+                    speed_iq_limit_A,SPEED_INT_LIMIT_A,
+                    (uint8_t)(speed_integrator_bleed_active || speed_overspeed_bleed_active),
+                    speed_accel_ff_enabled,speed_friction_enabled
+#if defined(FOC_DOB_FEEDBACK_CANDIDATE)
+                    ,iq_dob
+#endif
+                    );
+                aff=friction.speed;
+#if defined(FOC_DOB_FEEDBACK_CANDIDATE)
+                dob_feedback.iq_pi_a=aff.iq_pi_a;dob_feedback.iq_raw_a=aff.iq_raw_a;
+                dob_feedback.iq_ref_a=aff.iq_ref_a;dob_feedback.integral_a=aff.integral_a;
+                dob_feedback.saturation=aff.saturated;
+#endif
+#else
+                aff=SpeedAccelFf_Apply(sb2_previous_A,i_candidate,p_term,
+                    speed_scurve.acceleration_rpm_s,SPEED_ACCEL_EFFECTIVE_KA,
+                    speed_iq_limit_A,SPEED_INT_LIMIT_A,
+                    (uint8_t)(speed_integrator_bleed_active || speed_overspeed_bleed_active),
+                    speed_accel_ff_enabled);
+#endif
+                speed_integrator_A=aff.integral_a;
+                iq_cmd=aff.iq_ref_a;
+#else
+                SpeedPiAntiWindupResult aw=SpeedPiAntiWindup_Apply(
+                    sb2_previous_A,i_candidate,p_term,speed_iq_limit_A,SPEED_INT_LIMIT_A,
+                    (uint8_t)(speed_integrator_bleed_active || speed_overspeed_bleed_active));
+                speed_integrator_A=aw.integral_A;
+                iq_cmd=aw.current_A;
+#endif
+            } else
+            {
+#endif
             iq_unsat = p_term + i_candidate;
 
             iq_cmd =
@@ -10116,7 +10615,10 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
                 speed_integrator_A = i_candidate;
             }
 
-#if defined(FOC_SPEED_BRAKE_TRACK)
+#if defined(FOC_SPEED_PI_ANTI_WINDUP)
+            }
+#endif
+#if defined(FOC_SPEED_BRAKE_TRACK) && !defined(FOC_SPEED_SB3_DISABLE_CANDIDATE)
             if (mode == MOTOR_MODE_SPEED) {
                 SpeedBrakeTrackResult brake=SpeedBrakeTrack_Apply(&speed_brake_track,
                     speed_ref_rpm,encoder_speed_rpm,rpm_inst,p_term,speed_integrator_A,
@@ -10132,6 +10634,84 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
             /* Publish once, after the SPEED-only ceiling, so an ADC IRQ
              * cannot consume the pre-limiter driving command in between. */
             foc_iq_ref_A = iq_cmd;
+#if defined(FOC_STARTUP_TIMESTAMPS_DIAG)
+            if (mode==MOTOR_MODE_SPEED)
+                StartupTimes_Observe(&startup_timestamps,AS5047P_DmaNowUs(),sample.sample_us,
+                    (int32_t)ENCODER_DIRECTION*d_raw,encoder_speed_rpm,iq_cmd);
+#endif
+#if defined(FOC_ACCEL_FEEDFORWARD_CANDIDATE)
+            if (mode==MOTOR_MODE_SPEED) {
+                speed_accel_ff_frame=(SpeedAccelFfFrame){
+                    .seq=speed_accel_ff_frame.seq+1U,.ms=HAL_GetTick(),
+                    .command_rpm=speed_target_rpm,.speed_ref_rpm=speed_ref_rpm,
+                    .speed_meas_rpm=encoder_speed_rpm,.accel_ref_rpm_s=speed_scurve.acceleration_rpm_s,
+                    .iq_pi_a=aff.iq_pi_a,.iq_ff_a=aff.iq_ff_a,.iq_raw_a=aff.iq_raw_a,
+                    .iq_ref_a=aff.iq_ref_a,.speed_integrator_a=aff.integral_a,.iq_meas_a=foc_iq_A,
+                    .enabled=speed_accel_ff_enabled,.saturated=aff.saturated,.valid=1U};
+#if defined(FOC_KA_SYNC_DIAG) || defined(FOC_KA_FULL_DIAG)
+                KaSyncCurrent sync_current;
+                uint8_t sync_valid=KaSync_TryRead(&ka_sync_current,&sync_current);
+#if defined(FOC_KA_FULL_DIAG)
+                KaFull_Observe(&ka_full_diagnostic,AS5047P_DmaNowUs(),sample.sample_us,
+                    (uint32_t)(dt_meas*1000000.0f+.5f),raw,d_raw,encoder_speed_rpm,
+                    speed_ref_rpm,speed_scurve.acceleration_rpm_s,friction.iq_fric_a,
+                    aff.saturated,&sync_current,sync_valid);
+#else
+                KaSync_Observe(&ka_sync_diagnostic,AS5047P_DmaNowUs(),sample.sample_us,
+                    (uint32_t)(dt_meas*1000000.0f+.5f),raw,d_raw,encoder_speed_rpm,
+                    friction.iq_fric_a,aff.saturated,&sync_current,sync_valid);
+#endif
+#endif
+#if defined(FOC_KA_IDENT_DIAG)
+                KaIdent_Observe(&ka_identification,&speed_accel_ff_frame,friction.iq_fric_a,
+                    AS5047P_DmaNowUs(),sample.sample_us,current_valid_count);
+#endif
+#if defined(FOC_ACCEL_FF_AUDIT)
+                SpeedAccelAudit_Push(&speed_accel_audit,&speed_accel_ff_frame,friction.iq_fric_a,
+                    speed_scurve.phase,dt_meas,SPEED_ACCEL_EFFECTIVE_KA,speed_iq_limit_A,
+                    aff.aw_limited,(uint8_t)(speed_integrator_bleed_active || speed_overspeed_bleed_active),
+                    sb2_previous_A,i_candidate);
+#endif
+#if defined(FOC_OUTER_OBSERVE_AFTER_ACK)
+                /* Capture SAME-session inputs now; only the non-control
+                 * statistics run later, after angle publication and real ACK.
+                 * No early heartbeat on BUSY/reject/fault or unfinished PI. */
+                outer_observation.valid=Mechanical_TryRead(&mechanical_current,&outer_observation.current);
+                outer_observation.observed_us=AS5047P_DmaNowUs();
+                outer_observation.sample_us=sample.sample_us;
+                outer_observation.dt_us=(uint32_t)(dt_meas*1e6f+.5f);
+                outer_observation.delta=(int32_t)ENCODER_DIRECTION*d_raw;
+                outer_observation.omega_rad_s=encoder_speed_rpm*.10471975512f;
+                outer_observation.dt_s=dt_meas;outer_observation.saturated=aff.saturated;
+                outer_observation.friction_a=friction.iq_fric_a;
+                outer_observation.pending=1U;
+#else
+                SpeedAccelFf_Observe(&speed_accel_ff_stats,&speed_accel_ff_frame,dt_meas);
+#if defined(FOC_MECHANICAL_IDENT_DIAG)
+                MechanicalCurrent mechanical_sample;
+                uint8_t mechanical_valid=Mechanical_TryRead(&mechanical_current,&mechanical_sample);
+                Mechanical_Observe(&mechanical_capture,AS5047P_DmaNowUs(),sample.sample_us,
+                    (uint32_t)(dt_meas*1e6f+.5f),(int32_t)ENCODER_DIRECTION*d_raw,
+                    encoder_speed_rpm*.10471975512f,aff.saturated,&mechanical_sample,mechanical_valid);
+#endif
+#if defined(FOC_SPEED_FRICTION_CANDIDATE)
+                speed_friction_frame=(SpeedFrictionFrame){.control=speed_accel_ff_frame,
+                    .iq_fric_a=friction.iq_fric_a,.enabled=speed_friction_enabled};
+#if defined(FOC_STARTUP_TIMESTAMPS_DIAG)
+                uint8_t startup_was_moving=speed_friction_stats.moving;
+#endif
+                SpeedFriction_Observe(&speed_friction_stats,&speed_friction_frame,dt_meas);
+#if defined(FOC_STARTUP_TIMESTAMPS_DIAG)
+                if (!startup_was_moving && speed_friction_stats.moving)
+                    StartupTimes_Stable(&startup_timestamps,AS5047P_DmaNowUs());
+#endif
+#if defined(FOC_FRICTION_CALIBRATION_DIAG)
+                FrictionCalibration_Observe(dt_meas);
+#endif
+#endif
+#endif /* FOC_OUTER_OBSERVE_AFTER_ACK: observations only, no control math. */
+            }
+#endif
 
             /*
              * POSITION active hold overrides the speed PI only inside the
@@ -10254,6 +10834,79 @@ static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)
 #endif
     return HAL_OK;
 }
+
+#if defined(FOC_OUTER_OBSERVE_AFTER_ACK)
+/* Sole MotorControlTask writer. This has no PI/setpoint/angle/PWM writes and
+ * never acknowledges any watchdog; failed/unfinished epochs are discarded. */
+static void OuterObservation_Flush(void)
+{
+    if (!outer_observation.pending) return;
+    outer_observation.pending=0U;
+    SpeedAccelFf_Observe(&speed_accel_ff_stats,&speed_accel_ff_frame,outer_observation.dt_s);
+#if !defined(FOC_DOB_ID_TRACE) && !defined(FOC_DOB_REAL_TRACE)
+    Mechanical_Observe(&mechanical_capture,outer_observation.observed_us,outer_observation.sample_us,
+        outer_observation.dt_us,outer_observation.delta,outer_observation.omega_rad_s,
+        outer_observation.saturated,&outer_observation.current,outer_observation.valid);
+#endif
+    speed_friction_frame=(SpeedFrictionFrame){.control=speed_accel_ff_frame,
+        .iq_fric_a=outer_observation.friction_a,.enabled=speed_friction_enabled};
+    SpeedFriction_Observe(&speed_friction_stats,&speed_friction_frame,outer_observation.dt_s);
+#if defined(FOC_FRICTION_CALIBRATION_DIAG)
+    FrictionCalibration_Observe(outer_observation.dt_s);
+#endif
+#if defined(FOC_MECHANICAL_DOB_SHADOW)
+    uint32_t dob_begin=AS5047P_DmaNowUs();
+#if defined(FOC_DOB_ID_TRACE)
+    DobIdTrace_Begin((uint8_t)mechanical_dob_monitor.have_sample);
+#endif
+    MechanicalDobMonitor_Observe(&mechanical_dob_monitor,outer_observation.observed_us,
+        outer_observation.sample_us,outer_observation.dt_us,outer_observation.omega_rad_s,
+        outer_observation.saturated,&outer_observation.current,outer_observation.valid);
+    uint32_t dob_elapsed=AS5047P_DmaNowUs()-dob_begin;
+    if (dob_elapsed>mechanical_dob_monitor.max_compute_us) mechanical_dob_monitor.max_compute_us=dob_elapsed;
+#if defined(FOC_DOB_REAL_TRACE)
+    uint32_t raw_begin=DWT->CYCCNT;
+    DobRealTrace_Bind(mechanical_capture.points,sizeof mechanical_capture.points);
+    DobRealTrace_Observe((uint8_t)mechanical_dob_monitor.running,
+        outer_observation.observed_us,outer_observation.sample_us,outer_observation.current.seq,
+        outer_observation.current.id,outer_observation.current.iq,outer_observation.omega_rad_s,
+        outer_observation.valid,outer_observation.saturated,mechanical_dob_monitor.current.status,
+        (uint8_t)mechanical_dob_monitor.current.valid,(uint8_t)dob_current_admission.filter_updated,
+        speed_accel_ff_frame.speed_ref_rpm,speed_scurve.acceleration_rpm_s,foc_iq_ref_A);
+    uint32_t raw_cycles=DWT->CYCCNT-raw_begin;
+    if(raw_cycles>dob_real_trace.max_cycles)dob_real_trace.max_cycles=raw_cycles;
+#endif
+#if defined(FOC_DOB_ID_TRACE)
+    uint32_t dit_begin=AS5047P_DmaNowUs();
+    DobIdTrace_After(outer_observation.sample_us,mechanical_dob_monitor.current.adc_seq,
+        outer_observation.dt_us,mechanical_dob_monitor.current.id_a,mechanical_dob_monitor.abs_id_lpf,
+        mechanical_dob_monitor.observer.elapsed_s,mechanical_dob_monitor.current.status,
+        (uint8_t)mechanical_dob_monitor.current.valid,(uint8_t)mechanical_dob_monitor.observer.initialized,
+        (uint8_t)mechanical_dob_monitor.have_sample,speed_accel_ff_frame.speed_ref_rpm,
+        speed_scurve.acceleration_rpm_s,outer_observation.omega_rad_s*9.5492965855f
+#if defined(FOC_DOB_SPIKE_ADMISSION)
+        ,mechanical_dob_monitor.current.iq_a
+#endif
+#if defined(FOC_DOB_ADMISSION_START_GUARD)
+        ,mechanical_dob_monitor.current.adc_source_us,mechanical_dob_monitor.current.adc_published_us
+#endif
+        );
+    uint32_t dit_elapsed=AS5047P_DmaNowUs()-dit_begin;
+    if(dit_elapsed>dob_id_trace.max_compute_us) dob_id_trace.max_compute_us=dit_elapsed;
+#endif
+#if defined(FOC_ID_STEADY_STATS)
+    uint32_t ids_begin=AS5047P_DmaNowUs();
+    IdSteady_Observe(&id_steady_stats,outer_observation.observed_us,outer_observation.sample_us,
+        outer_observation.dt_us,speed_accel_ff_frame.speed_ref_rpm,speed_scurve.acceleration_rpm_s,
+        outer_observation.omega_rad_s*9.5492965855f,foc_id_ref_A,outer_observation.saturated,
+        &outer_observation.current,outer_observation.valid,mechanical_dob_monitor.abs_id_lpf,
+        mechanical_dob_monitor.current.status,(uint8_t)mechanical_dob_monitor.current.valid);
+    uint32_t ids_elapsed=AS5047P_DmaNowUs()-ids_begin;
+    if(ids_elapsed>id_steady_stats.max_compute_us) id_steady_stats.max_compute_us=ids_elapsed;
+#endif
+#endif
+}
+#endif
 
 
 static void PWM_StartAll(void)
@@ -11461,6 +12114,21 @@ static void StartupTask(void *argument)
 
     }
 
+#if defined(FOC_RUNDOWN240_CANDIDATE)
+    TightenParams_ApplyRundown240Candidate();
+#if defined(FOC_DOB_CONTACT20_OBSERVE10)
+    UART_SendLiteral("DOB C20/O10: CONTACT=20rpm OBS_MIN=10rpm FB_MIN=20rpm RAM_ONLY=1\r\n");
+#endif
+    UART_SendLiteral("RUNDOWN240: RAM=240rpm TRIP=" FOC_RUNDOWN240_TRIP_TEXT "rpm SAVE=OFF; manual START\r\n");
+#if defined(FOC_RUNDOWN240_TRAVEL20000)
+#if defined(FOC_MECHANICAL_HIGH_SPEED_DIAG)
+    UART_SendLiteral("RUNDOWN240: TRAVEL=30000deg RAM only\r\n");
+#else
+    UART_SendLiteral("RUNDOWN240: TRAVEL=20000deg RAM only\r\n");
+#endif
+#endif
+#endif
+
     /*
      * 1) ADC hardware calibration.
      */
@@ -11598,10 +12266,14 @@ static void StartupTask(void *argument)
 
 #if defined(FOC_PROTECTED_CLOSED_LOOP)
     UART_SendLiteral(cl_session.state==CL_READY ?
+#if defined(FOC_RUNDOWN240_CANDIDATE)
+        "RUNDOWN240 READY: local START only; 12s lease; no boot actuation\r\n" :
+#else
 #if defined(FOC_LATEST_ORIGINAL_FSM)
         "LATEST BACKEND / ORIGINAL FSM: explicit local START; 20 rpm / 400 ms qualification envelope; no boot actuation\r\n" :
 #else
         "PROTECTED MOTOR READY: local MOTOR TEST SPEED only; 20 rpm / 400 ms; no boot actuation\r\n" :
+#endif
 #endif
         "PROTECTED MOTOR LOCKED: startup failed, no power admission\r\n");
 #elif defined(FOC_ISOLATED_CONCURRENCY)
@@ -12072,7 +12744,9 @@ static void StartupTask(void *argument)
 #endif
     PW_SmokeTest();
     (void)PW_Allocator_RunSelfTest();
+#if !defined(PW_TARGET_UNIT_TESTS_DISABLED)
     PW_UnitTestsRun();
+#endif
     PW_ThreadSmokeStart();
     PW_Rpc_Init();
 #if defined(UART_FIRMWARE_TRANSFER)

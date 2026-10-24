@@ -1,0 +1,70 @@
+{
+  "batch": "D:\\new project\\tmp\\dob-real-batch-1792754932075767800.json",
+  "batch_sha256": "f4f317e1fd6bf7e9eca8de62bbbcb63a3e33fbe69eabb5f1340ec07c4ba4de17",
+  "sources": [
+    {
+      "source_id": 1,
+      "receipt": "D:\\new project\\tmp\\dob-real-run-1792754669991431400.json",
+      "receipt_sha256": "a0a935d304b4dad68d78285a21212443e6a52a1d452e5b41377fb183cacb6378",
+      "csv": "D:\\new project\\tmp\\dob-real-run-1792754669991431400.raw.csv",
+      "csv_sha256": "c78da1fa299c6dc372da69e3b513af9683eef9fe320f87ce9b2cbd9efb30407f",
+      "ram_sha256": "735d20907c73476b4a62e762a3dc35ce9eda0173764366a619a65df2c84b19e3",
+      "flash_sha256": "17b81be09979cde7b7ecc7fbe6d2a9f75c07c04698889a1a880f4a347d437830",
+      "quality_pass": true,
+      "samples": 192
+    },
+    {
+      "source_id": 2,
+      "receipt": "D:\\new project\\tmp\\dob-real-run-1792754932084417600.json",
+      "receipt_sha256": "0158591147819a97f45b3539b7f95e4451a7b0b7290fa0936582f433a3307af1",
+      "csv": "D:\\new project\\tmp\\dob-real-run-1792754932084417600.raw.csv",
+      "csv_sha256": "8a9769bf93ade60708b7390fe7510c39e678e2266ada908577df807c7ba614a7",
+      "ram_sha256": "7fa3a9603773843fabd9892f7a1bc75ebc80c8231fe289ad3c576680fa794da2",
+      "flash_sha256": "09fbeeb7b034a2d47f4e14de1ff6bd23547696a03e4ce8a009551b3b03838805",
+      "quality_pass": true,
+      "samples": 192
+    },
+    {
+      "source_id": 3,
+      "receipt": "D:\\new project\\tmp\\dob-real-run-1792754976558821300.json",
+      "receipt_sha256": "7502cfaee7a12ffc0cbcea9093099d0ceff3dff6a3a58856584644a71b7acec9",
+      "csv": "D:\\new project\\tmp\\dob-real-run-1792754976558821300.raw.csv",
+      "csv_sha256": "4a478c6982dfa525c8f66a6a49da70c6c6a81a80dd7179838af7ea2d6d4c2ca3",
+      "ram_sha256": "5408912b35830d51fe8b2686a53c23dd15d4da7faf1f5a1dbf35331c8fd5eb61",
+      "flash_sha256": "b40e2c2cfc3ded1f1b445d7692843d0fc95b9385e52c179c1e531e97241bd5b5",
+      "quality_pass": true,
+      "samples": 192
+    },
+    {
+      "source_id": 4,
+      "receipt": "D:\\new project\\tmp\\dob-real-run-1792755021034171700.json",
+      "receipt_sha256": "4e994e095f20b54274b6798b431f4000b61d90cdd748d36b69b42ea202b21253",
+      "csv": "D:\\new project\\tmp\\dob-real-run-1792755021034171700.raw.csv",
+      "csv_sha256": "838b9a03b8401f55df2474c9937ff74936feb793e6bc0abb8d666e3c490a6779",
+      "ram_sha256": "a5f0c9c7d52f7bcc033c5630c40fe34ec7d9d627e4a948cd2361bffc1738f8d3",
+      "flash_sha256": "859ca6e94b641a267612a272e15efcbae4a2010ae063635e582d8a0fece7eed1",
+      "quality_pass": true,
+      "samples": 192
+    },
+    {
+      "source_id": 5,
+      "receipt": "D:\\new project\\tmp\\dob-real-run-1792755065459113800.json",
+      "receipt_sha256": "1f121fdc34129c80b90375ac4f9a66867c11d013b3c23c934c0c12f2f4afb314",
+      "csv": "D:\\new project\\tmp\\dob-real-run-1792755065459113800.raw.csv",
+      "csv_sha256": "f214efcf9154cd1c59589fe06a17f1437a3c050bbf766a692a42552243cfc27e",
+      "ram_sha256": "a8c0a50f130ecd772d6c18b212f236aaaa28ede610f3d252cf4ca2b7cc678d63",
+      "flash_sha256": "f4bde5db51e025f4f8bb8337152caa81727e119215787e9c4a52757f86eb503c",
+      "quality_pass": true,
+      "samples": 192
+    }
+  ],
+  "events_sha256": "f6db5cde7be4c244ae348a4aadd5a5be8df1987b46b5dce177599ca4ad5fa4b5",
+  "samples": 960,
+  "independent_motor_runs": 5,
+  "load_ground_truth_available": false,
+  "full_historical_replay": false,
+  "current_spikes_proven_noise_only": false,
+  "speed_highpass_is_proven_sensor_noise": false,
+  "occurrence_rate_generalizable": false,
+  "note": "Five fixed192ms steady windows only. Median21 residual contains possible real dynamics. 100 software seeds do not create100 independent physical recordings."
+}

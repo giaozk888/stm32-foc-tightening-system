@@ -40,6 +40,12 @@ static MotorStartResult MotorJob_QueueStart(uint32_t request_id, uint8_t routed,
 }
 
 static void MotorJob_QueueStop(uint32_t request_id) {
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+    /* Keep task-level session revocation and mailbox publication indivisible
+     * to the new FSM owner. BASEPRI does not mask the higher-priority FOC or
+     * hardware safety IRQs; original gate closure remains immediate. */
+    taskENTER_CRITICAL();
+#endif
 #if defined(FOC_LATEST_ORIGINAL_FSM)
     /* Close power immediately; the original FSM still consumes/reports STOP. */
     ProtectedLoop_Stop();
@@ -47,6 +53,9 @@ static void MotorJob_QueueStop(uint32_t request_id) {
     tightening_stop_request_id = request_id;
     __DMB();
     tightening_stop_request = 1U;
+#if defined(FOC_INTENT_FSM_CANDIDATE)
+    taskEXIT_CRITICAL();
+#endif
 }
 
 static void MotorJob_HandleUartStart(uint32_t request_id) {

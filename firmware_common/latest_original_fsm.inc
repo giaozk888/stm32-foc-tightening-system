@@ -3,6 +3,16 @@
  * The selected profile supplies the one-shot lease; 20 rpm admission stays. */
 static uint8_t LatestOriginal_RecipeReady(void)
 {
+#if defined(FOC_PSI_IDENT_DIAG)
+    return psi_ident.admitting;
+#else
+#if defined(FOC_CURRENT_STEP_AB_DIAG)
+    return current_step_ab.admitting;
+#elif defined(FOC_MOTOR_IDENTIFICATION_DIAG)
+    return motor_ident.admitting;
+#elif defined(FOC_FRICTION_CALIBRATION_DIAG)
+    return friction_calibration.admitting;
+#else
 #if defined(FOC_TORQUE_CHAIN_DIAG)
     return torque_diag.admitting; /* No recipe mutation; manual IQ owner only. */
 #else
@@ -18,10 +28,41 @@ static uint8_t LatestOriginal_RecipeReady(void)
     return recipe_state.params.rundown_rpm > 0U &&
         recipe_state.params.rundown_rpm <= CL_SPEED_RPM;
 #endif
+#endif
+#endif
 }
 static uint8_t LatestOriginal_Ready(void)
 {
+#if defined(FOC_PSI_IDENT_DIAG)
+    if (!psi_ident.admitting || !psi_ident.queued || !psi_ident.prepared || bemf_enabled ||
+        !PsiIdent_Allowed(psi_ident.rpm,MOTOR_SPEED_API_LIMIT_RPM,CL_OVERSPEED_RPM) ||
+        motor_control_mode!=MOTOR_MODE_IDLE || !encoder_valid || fabsf(encoder_speed_rpm)>2.0f ||
+        tightening_start_request || tightening_stop_request) return 0U;
+#endif
+#if defined(FOC_CURRENT_STEP_AB_DIAG)
+    if(!current_step_ab.admitting||current_step_ab.state!=CS_QUEUED||
+       !current_step_ab.prepared||tightening_start_request||tightening_stop_request||
+       motor_control_mode!=MOTOR_MODE_IDLE||!encoder_valid||fabsf(encoder_speed_rpm)>2.0f)return 0U;
+#endif
+#if defined(FOC_MOTOR_IDENTIFICATION_DIAG)
+    if (!motor_ident.admitting || motor_ident.status!=MID_QUEUED ||
+        !motor_ident.prepared || !motor_ident.confirmed_locked ||
+        !encoder_valid || fabsf(encoder_speed_rpm)>MID_SPEED_MAX_RPM ||
+        tightening_start_request || tightening_stop_request) return 0U;
+#endif
+#if defined(FOC_FRICTION_CALIBRATION_DIAG)
+    if (!friction_calibration.queued || !friction_calibration.prepared ||
+#if defined(FOC_MECHANICAL_MOTION_DIAG)
+        !speed_friction_enabled || tightening_start_request || tightening_stop_request) return 0U;
+#else
+        speed_friction_enabled || tightening_start_request || tightening_stop_request) return 0U;
+#endif
+#endif
 #if defined(FOC_TORQUE_CHAIN_DIAG)
+#if defined(FOC_ANGLE_CHAIN_DIAG)
+    if (angle_hand.active || !angle_hand.finished || !angle_hand.passed ||
+        !FocAngleOffset_Allowed(torque_diag.offset_deg) || torque_diag.sign!=1) return 0U;
+#endif
     if (tightening_stop_request || tightening_start_request ||
         !torque_diag.queued || !torque_diag.prepared) return 0U;
 #endif
@@ -39,7 +80,7 @@ static uint8_t LatestOriginal_Admit(void)
         return 0U;
 #endif
 #endif
-#if defined(FOC_RC_DEFERRED_SHADOW) || defined(FOC_FAST_REJECT_COMPUTE_ONLY)
+#if defined(FOC_RC_DEFERRED_SHADOW) || defined(FOC_FAST_REJECT_COMPUTE_ONLY) || defined(FOC_ANGLE_HAND_ONLY)
     /* This observer must have no compiled bridge-enable transaction. */
     return 0U;
 #else
@@ -66,6 +107,31 @@ static uint8_t LatestOriginal_Admit(void)
      * The original FSM sets its speed/Iq immediately after this admission. */
     FocCurrentPi_Reset(&foc_int_d_V,&foc_int_q_V);
     foc_id_ref_A=foc_iq_ref_A=foc_vd_V=foc_vq_V=0.0f;
+#if defined(FOC_PSI_IDENT_DIAG)
+    TightenRundown_Begin(&tightening_rundown);
+    MotorControl_SetSpeed((float)psi_ident.rpm);
+    psi_ident.start_us=cl_session.start_us;psi_ident.start_angle=encoder_position_deg;
+    psi_ident.active=1U;
+#endif
+#if defined(FOC_CURRENT_STEP_AB_DIAG)
+    MotorControl_SetIq(0.0f);
+    CurrentStep_Begin(&current_step_ab,cl_session.start_us);
+#endif
+#if defined(FOC_MOTOR_IDENTIFICATION_DIAG)
+    /* Existing IQ controller mode, zero requested torque until first accepted
+     * ADC pair supplies a bounded diagnostic d/q reference. No gain changes. */
+    MotorControl_SetIq(0.0f);
+    motor_ident.start_us=cl_session.start_us;
+    motor_ident.initial_angle=encoder_position_deg;
+    motor_ident.arr=TIM1->ARR;motor_ident.ccr4=TIM1->CCR4;
+    motor_ident.cr1=TIM1->CR1;motor_ident.rcr=TIM1->RCR;motor_ident.jsqr=ADC1->JSQR;
+    motor_ident.status=MID_ACTIVE;
+#endif
+#if defined(FOC_FRICTION_CALIBRATION_DIAG)
+    TightenRundown_Begin(&tightening_rundown);
+    MotorControl_SetSpeed((float)friction_calibration.rpm);
+    friction_calibration.active=1U;
+#endif
 #if defined(FOC_TORQUE_CHAIN_DIAG)
 #if defined(FOC_SPEED_DYNAMIC_DIAG)
     /* The unchanged 1kHz SPEED PI generates Iq; no fixed-current stages. */
@@ -91,6 +157,18 @@ static uint8_t LatestOriginal_Admit(void)
 }
 static void LatestOriginal_FsmService(void)
 {
+#if defined(FOC_PSI_IDENT_DIAG)
+    if (psi_ident.active && cl_session.state==CL_RUNNING) return;
+#endif
+#if defined(FOC_CURRENT_STEP_AB_DIAG)
+    if(current_step_ab.state==CS_ACTIVE&&cl_session.state==CL_RUNNING)return;
+#endif
+#if defined(FOC_MOTOR_IDENTIFICATION_DIAG)
+    if (motor_ident.status==MID_ACTIVE && cl_session.state==CL_RUNNING) return;
+#endif
+#if defined(FOC_FRICTION_CALIBRATION_DIAG)
+    if (friction_calibration.active && cl_session.state==CL_RUNNING) return;
+#endif
 #if defined(FOC_TORQUE_CHAIN_DIAG)
     if (torque_diag.active && cl_session.state==CL_RUNNING) return;
 #endif

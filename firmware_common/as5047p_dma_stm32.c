@@ -20,6 +20,9 @@ static AsDmaFaultHook fault_hook;
 static volatile uint8_t initialized, periodic;
 static uint32_t next_period_us, control_due_us, saved_cr1, saved_cr2;
 static uint32_t timeouts, dma_errors, schedule_misses, control_stale;
+#if defined(AS5047P_DMA_TIMING_POLICY_V2)
+static AsDmaTimingStats transaction_timing;
+#endif
 static volatile uint32_t diagnostic_fault_status;
 uint32_t AS5047P_DmaFaultStatus(void) { return diagnostic_fault_status; }
 static AsDmaFaultSnapshot first_fault;
@@ -30,6 +33,12 @@ static AsDmaPublication publication;
 static uint32_t defer_fault_dma_isr,defer_fault_spi_sr;
 static volatile uint32_t defer_fault_flags_valid;
 static uint32_t defer_fault_serviced;
+#if defined(AS5047P_DMA_TERMINAL_FIX)
+static AsDmaStatus DeferTerminalClaim(AsDmaStatus status,uint32_t *now);
+static int DeferBeginAllowed(void);
+#define AS_DMA_TERMINAL_CLAIM(e,status,now) DeferTerminalClaim(status,now)
+#define AS_DMA_BEGIN_ALLOWED(e) DeferBeginAllowed()
+#endif
 #define AS_DMA_IRQ_PRIORITY 3U
 #elif defined(AS5047P_DMA_IRQ_PREEMPT_ADC)
 /* Encoder deadline/guard preempts ADC(2). TIM7 is 3 in the pipeline and
@@ -120,7 +129,12 @@ FOC_RAM_PATH static void Finish(void *context, AsDmaStatus status)
     AsDma_Publish(&publication,&engine.sample);
     if (status!=AS_DMA_OK && status!=AS_DMA_CANCELLED) defer_fault_serviced=1U;
 #endif
-    if (status == AS_DMA_OK) return;
+    if (status == AS_DMA_OK) {
+#if defined(AS5047P_DMA_TIMING_POLICY_V2)
+        AsDmaTiming_Record(&transaction_timing,&engine.sample);
+#endif
+        return;
+    }
     /* Fixed register sequence, no HAL abort or BSY wait. Restore SPI config
      * after reset so neither a partial word nor stale FIFO crosses epochs. */
     __HAL_RCC_SPI1_FORCE_RESET();
@@ -365,6 +379,14 @@ void AS5047P_DmaGetStats(AsDmaStats *s)
         (uint32_t)engine.sample.status, periodic};
     Unlock(mask);
 }
+#if defined(AS5047P_DMA_TIMING_POLICY_V2)
+void AS5047P_DmaGetTimingStats(uint32_t *slow_count,uint32_t *ok_max_us)
+{
+    uint32_t mask=Lock();
+    *slow_count=transaction_timing.slow_count;*ok_max_us=transaction_timing.ok_max_us;
+    Unlock(mask);
+}
+#endif
 void AS5047P_DmaGetFaultSnapshot(AsDmaFaultSnapshot *snapshot)
 {
     if (snapshot == NULL) return;
@@ -475,7 +497,7 @@ FOC_RAM_PATH void TIM2_IRQHandler(void)
     AsDma_Guard(&engine, TIM2->CNT);
     now = TIM2->CNT;
     if (periodic && AsDma_TimeReached(now, next_period_us)) {
-        if (now - next_period_us >= AS_DMA_TRANSACTION_US || engine.state != AS_DMA_IDLE) {
+        if (now - next_period_us >= AS_DMA_SCHEDULE_LATE_US || engine.state != AS_DMA_IDLE) {
             AsDma_Fail(&engine, AS_DMA_SCHEDULE, now);
             return; /* no burst of catch-up samples */
         }

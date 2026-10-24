@@ -1,7 +1,7 @@
 /* Included only by the opt-in startup-evidence candidate. Never at 20 kHz. */
 #include "foc_startup_trace.h"
 static FocStartupTrace cl_startup;
-#if defined(FOC_BREAKAWAY_FIVE_SECOND)
+#if defined(FOC_BREAKAWAY_FIVE_SECOND) || defined(FOC_TORQUE350_FIVE_SECOND) || defined(FOC_TORQUE450_FIVE_SECOND) || (defined(FOC_ANGLE_CHAIN_DIAG) && !defined(FOC_ANGLE_HAND_ONLY))
 static FocBreakawayMotion breakaway_motion;
 #endif
 #if defined(FOC_RUNDOWN_DIAGNOSTIC)
@@ -9,7 +9,7 @@ static FocBreakawayMotion breakaway_motion;
 extern FocPwmWriteProbe foc_pwm_write_profile;
 static void ProtectedLoop_RundownFields(FocStartupFrame *f);
 #endif
-#if defined(FOC_BREAKAWAY_FIVE_SECOND)
+#if defined(FOC_BREAKAWAY_FIVE_SECOND) || defined(FOC_TORQUE350_FIVE_SECOND) || defined(FOC_TORQUE450_FIVE_SECOND) || (defined(FOC_ANGLE_CHAIN_DIAG) && !defined(FOC_ANGLE_HAND_ONLY))
 __attribute__((optimize("Os")))
 #endif
 static FocStartupFrame ProtectedLoop_StartupFrame(uint32_t now)
@@ -29,7 +29,7 @@ static FocStartupFrame ProtectedLoop_StartupFrame(uint32_t now)
 /* Caller already holds the existing trace critical section. CCR readback is
  * the last software-written PRELOAD value, NOT proof of pin/gate output or
  * an independently observed active latch. Pipeline itself stays untouched. */
-#if defined(FOC_BREAKAWAY_FIVE_SECOND)
+#if defined(FOC_BREAKAWAY_FIVE_SECOND) || defined(FOC_TORQUE350_FIVE_SECOND) || defined(FOC_TORQUE450_FIVE_SECOND) || (defined(FOC_ANGLE_CHAIN_DIAG) && !defined(FOC_ANGLE_HAND_ONLY))
 __attribute__((optimize("Os")))
 #endif
 static void ProtectedLoop_RundownFields(FocStartupFrame *f)
@@ -80,12 +80,20 @@ static void ProtectedLoop_RundownEnd(void)
     __set_PRIMASK(mask);
 }
 #endif
-#if defined(FOC_BREAKAWAY_FIVE_SECOND)
+#if defined(FOC_BREAKAWAY_FIVE_SECOND) || defined(FOC_TORQUE350_FIVE_SECOND) || defined(FOC_TORQUE450_FIVE_SECOND) || (defined(FOC_ANGLE_CHAIN_DIAG) && !defined(FOC_ANGLE_HAND_ONLY))
 __attribute__((optimize("Os")))
 #endif
 static void ProtectedLoop_StartupPush(void)
 {
-#if defined(FOC_BREAKAWAY_FIVE_SECOND)
+#if defined(FOC_ANGLE_CHAIN_DIAG)
+    /* Accepted task sample only. No ADC ISR work and no output writes. */
+    if (angle_hand.active) FocAngleHand_Observe(&angle_hand,AS5047P_DmaNowUs(),
+        encoder_raw,encoder_theta_e,encoder_position_deg,
+        (uint8_t)(!(DRIVER_SD_GPIO_Port->ODR & DRIVER_SD_Pin) &&
+            !(TIM1->BDTR & (TIM_BDTR_MOE|TIM_BDTR_AOE)) && !TIM1->CCER),
+        (uint8_t)(encoder_valid && !encoder_speed_glitch_streak));
+#endif
+#if defined(FOC_BREAKAWAY_FIVE_SECOND) || defined(FOC_TORQUE350_FIVE_SECOND) || defined(FOC_TORQUE450_FIVE_SECOND) || (defined(FOC_ANGLE_CHAIN_DIAG) && !defined(FOC_ANGLE_HAND_ONLY))
     /* Called by the existing fresh-encoder 1kHz task, with IRQs enabled.
      * No copying/formatting in the fast ADC ISR or masked trace section. */
     if (torque_diag.active && cl_session.state==CL_RUNNING) {
@@ -127,13 +135,15 @@ static int ProtectedLoop_StartupCommand(const char *cmd,char *out,size_t size)
      * offline Python tool, never print/transfer this buffer during motion. */
     if (strncmp(cmd,"MOTOR TEST STARTUP",18U)) return 0;
 #if defined(FOC_TORQUE_CHAIN_DIAG)
-#if defined(FOC_BREAKAWAY_FIVE_SECOND) || defined(FOC_SPEED_DYNAMIC_DIAG)
-    snprintf(out,size,"OK STARTUP SCHEMA=2 BINARY_ONLY=1 ROWS=32 PERIOD_US=200000 BYTES=%lu",
+#if defined(FOC_ANGLE_CHAIN_DIAG)
+    snprintf(out,size,"OK STARTUP SCHEMA=2 BINARY_ONLY=1 ROWS=" FOC_STARTUP_ROWS_TEXT " PERIOD_US=12000 BYTES=%lu",
+#elif defined(FOC_BREAKAWAY_FIVE_SECOND) || defined(FOC_SPEED_DYNAMIC_DIAG) || defined(FOC_TORQUE350_FIVE_SECOND) || defined(FOC_TORQUE450_FIVE_SECOND)
+    snprintf(out,size,"OK STARTUP SCHEMA=2 BINARY_ONLY=1 ROWS=" FOC_STARTUP_ROWS_TEXT " PERIOD_US=200000 BYTES=%lu",
 #else
-    snprintf(out,size,"OK STARTUP SCHEMA=2 BINARY_ONLY=1 ROWS=32 PERIOD_US=8000 BYTES=%lu",
+    snprintf(out,size,"OK STARTUP SCHEMA=2 BINARY_ONLY=1 ROWS=" FOC_STARTUP_ROWS_TEXT " PERIOD_US=8000 BYTES=%lu",
 #endif
 #else
-    snprintf(out,size,"OK STARTUP SCHEMA=2 BINARY_ONLY=1 ROWS=32 PERIOD_US=50000 BYTES=%lu",
+    snprintf(out,size,"OK STARTUP SCHEMA=2 BINARY_ONLY=1 ROWS=" FOC_STARTUP_ROWS_TEXT " PERIOD_US=50000 BYTES=%lu",
 #endif
         (unsigned long)sizeof cl_startup);
     return 1;
@@ -141,7 +151,7 @@ static int ProtectedLoop_StartupCommand(const char *cmd,char *out,size_t size)
     const char *prefix="MOTOR TEST STARTUP";
     if (strncmp(cmd,prefix,strlen(prefix))) return 0;
     if (!strcmp(cmd,"MOTOR TEST STARTUP CONFIG")) {
-        snprintf(out,size,"OK STARTUP CONFIG ENABLED=1 ROWS=32 FIRST_CAUSE=1 BYTES=%lu",
+        snprintf(out,size,"OK STARTUP CONFIG ENABLED=1 ROWS=" FOC_STARTUP_ROWS_TEXT " FIRST_CAUSE=1 BYTES=%lu",
             (unsigned long)sizeof cl_startup); return 1;
     }
     /* No live transfer/formatting while bridge is enabled. A frozen trace

@@ -1,0 +1,218 @@
+{
+  "trials": 124,
+  "repeats": 5,
+  "firmware_and_base_sources_unchanged": true,
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "full_historical_replay": false,
+  "event_frequency_measured": false,
+  "event_manifest_sha256": "4bb84dfc573bcc78ff3e49445a1172063cf7752089ac90dbb5a126cbd25d9e4f",
+  "empirical_sources": [
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\empirical\\empirical_config.m",
+      "sha256": "74dc0ffbbd252bbfd7e6d54133e8ff3be473d39f9be6a685eb5d4468dda40bdc"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\empirical\\empirical_metrics.m",
+      "sha256": "bbb7d7b952fb427ae38b25fb177e690b374c944190a7559107b0ab7af4208f8e"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\empirical\\empirical_run_case.m",
+      "sha256": "5b9a43c0748c911bc2395052c8069b2f517dca39560cb983af39ad2a4a9bb4a4"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\empirical\\empirical_scenario.m",
+      "sha256": "a8a3d7edeebdd9469211a8bb836c125250ae60799a56114736ad4bbc6f24cb92"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\empirical\\prepare_empirical_model.m",
+      "sha256": "8a029abdc4bf80d2e358be1c3e956546ab6d01ccf25d4c317d47809f01abf81d"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\empirical\\run_empirical_validation.m",
+      "sha256": "0bdb3640219c3aa1ea474ccc092c0db9e8e39f0a2aeed55572341de48c4b647c"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\empirical\\audit_saved_runs.py",
+      "sha256": "f2828f09904677259531786a52740f6bda91ac747db6c500a7492362d9da60ac"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\empirical\\export_events.py",
+      "sha256": "99995585b771f38bc386ed4af9a2b7afb7ab02de82815d047764cc0f916e6186"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\empirical\\java.opts",
+      "sha256": "18b61d9af011b93ffd43a0c87fb3df5ea4e0bd6cc96fa39c6f68e2e5a4a10af7"
+    }
+  ],
+  "configuration": {
+    "root": "D:\\new project\\simulation\\dob_simulink\\empirical",
+    "repo": "D:\\new project",
+    "build": "D:\\new project\\simulation\\dob_simulink\\build",
+    "results": "D:\\new project\\simulation\\dob_simulink\\empirical\\results",
+    "model": "dob_empirical",
+    "dt": 0.001,
+    "pwm_dt": 5E-5,
+    "stop_s": 7,
+    "target_rpm": 240,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105
+    ],
+    "plant_vector": [
+      0.000386049,
+      0.00155158,
+      0.11945168237076952,
+      0.00054966003251495415,
+      0.001
+    ],
+    "gains": [
+      0,
+      0.25,
+      0.5,
+      1
+    ],
+    "caps_a": [
+      0.0125,
+      0.025
+    ],
+    "noise_speed_rpm": 0.4,
+    "noise_current_a": 0.002,
+    "noise_id_a": 0.003,
+    "id_baseline_a": 0.005,
+    "id_spike_a": 0.7,
+    "id_persistent_a": 0.09,
+    "load_a": 0.04,
+    "event_s": 3,
+    "unload_s": 4.6,
+    "accept": {
+      "rmse_a": 0.012,
+      "bias_a": 0.008,
+      "valid_rate": 0.9,
+      "delay_s": 0.5,
+      "recovery_s": 0.8
+    },
+    "hardware_access": false,
+    "physical_performance_validated": false,
+    "base": {
+      "root": "D:\\new project\\simulation\\dob_simulink",
+      "repo": "D:\\new project",
+      "build": "D:\\new project\\simulation\\dob_simulink\\build",
+      "results": "D:\\new project\\simulation\\dob_simulink\\results",
+      "model": "dob_offline",
+      "dt": 0.001,
+      "pwm_dt": 5E-5,
+      "stop_s": 7,
+      "target_rpm": 240,
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105
+      ],
+      "plant_vector": [
+        0.000386049,
+        0.00155158,
+        0.11945168237076952,
+        0.00054966003251495415,
+        0.001
+      ],
+      "gains": [
+        0,
+        0.15,
+        0.25,
+        0.5,
+        1
+      ],
+      "caps_a": [
+        0.0125,
+        0.025
+      ],
+      "noise_speed_rpm": 0.4,
+      "noise_current_a": 0.002,
+      "noise_id_a": 0.003,
+      "id_baseline_a": 0.005,
+      "id_spike_a": 0.7,
+      "id_persistent_a": 0.09,
+      "load_a": 0.04,
+      "event_s": 3,
+      "unload_s": 4.6,
+      "accept": {
+        "rmse_a": 0.012,
+        "bias_a": 0.008,
+        "valid_rate": 0.9,
+        "delay_s": 0.5,
+        "recovery_s": 0.8
+      },
+      "hardware_access": false,
+      "physical_performance_validated": false
+    },
+    "model_dir": "D:\\new project\\simulation\\dob_simulink\\empirical\\build",
+    "cases": [
+      "nominal",
+      "measured_once",
+      "measurement_train",
+      "torque_train",
+      "unloaded_stress"
+    ],
+    "event_library": "D:\\new project\\simulation\\dob_simulink\\empirical\\data\\events.csv",
+    "event_schedule_s": [
+      2.6,
+      3.2,
+      3.8,
+      4.4,
+      5
+    ]
+  },
+  "estimator_gates": [
+    {
+      "scenario": "nominal",
+      "profile": "nominal",
+      "passed": true
+    },
+    {
+      "scenario": "measured_once",
+      "profile": "nominal",
+      "passed": true
+    },
+    {
+      "scenario": "measurement_train",
+      "profile": "nominal",
+      "passed": true
+    },
+    {
+      "scenario": "torque_train",
+      "profile": "nominal",
+      "passed": true
+    },
+    {
+      "scenario": "unloaded_stress",
+      "profile": "nominal",
+      "passed": true
+    },
+    {
+      "scenario": "measurement_train",
+      "profile": "lighter_faster",
+      "passed": true
+    },
+    {
+      "scenario": "torque_train",
+      "profile": "lighter_faster",
+      "passed": true
+    },
+    {
+      "scenario": "measurement_train",
+      "profile": "heavier_slower",
+      "passed": true
+    },
+    {
+      "scenario": "torque_train",
+      "profile": "heavier_slower",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "sources": [
+    {
+      "source_id": 1,
+      "name": "v7_100",
+      "receipt": "D:\\new project\\tmp\\mechanical-ident-run-1792733225686577700.json",
+      "elf": "D:\\new project\\foc2_app_a\\build\\MechanicalDobPreLpfCandidate\\foc2.elf",
+      "receipt_sha256": "4bfc354253c1fd55f3614bbec3a2e10341a217a62b4ff4fb80aef0df507a8e95",
+      "elf_sha256": "7604165bb3f912727fee92acf5e51ce099e923ebe20387ea5b4f46988e93d0dc",
+      "dense_samples": 40,
+      "sparse_samples_excluded": 32,
+      "duration_us": 39037,
+      "min_interval_us": 997,
+      "max_interval_us": 1023,
+      "id_abs_peak_a": 0.6988868117332458,
+      "iq_abs_peak_a": 0.7716302871704102,
+      "board_provenance_verified": true
+    },
+    {
+      "source_id": 2,
+      "name": "v7_200",
+      "receipt": "D:\\new project\\tmp\\mechanical-ident-run-1792734456546723200.json",
+      "elf": "D:\\new project\\foc2_app_a\\build\\MechanicalDobPreLpf200Candidate\\foc2.elf",
+      "receipt_sha256": "b8750d8a77db9b529e7d28fda9bdb6d5c446c03fb792b1722f7a18bdc9874cde",
+      "elf_sha256": "eba0c08a3b8c76bee758570fe88b077ee89c18a05c69d660640b8cf6072930a3",
+      "dense_samples": 40,
+      "sparse_samples_excluded": 32,
+      "duration_us": 38986,
+      "min_interval_us": 995,
+      "max_interval_us": 1003,
+      "id_abs_peak_a": 0.13990770280361176,
+      "iq_abs_peak_a": 0.3781788945198059,
+      "board_provenance_verified": true
+    }
+  ],
+  "dense_samples": 80,
+  "events_sha256": "dcd42b4703867bbbf302adf7537b75add8e50b9ff340d25129d7ab024222d2b2",
+  "sparse_interpolation": false,
+  "occurrence_rate_identified": false,
+  "current_spikes_proven_noise_only": false,
+  "load_ground_truth_available": false,
+  "note": "Triggered startup windows, not representative steady/noise statistics. Iq residual = raw Iq - local median5; may include genuine current dynamics. Closed-loop embedding uses a declared synthetic schedule/grid, NOT a full real-run replay."
+}

@@ -44,6 +44,11 @@ void AsDma_Init(AsDmaEngine *e, const AsDmaOps *ops, void *context)
 
 FOC_RAM_PATH static void Complete(AsDmaEngine *e, AsDmaStatus status, uint32_t now)
 {
+#if defined(AS_DMA_TERMINAL_CLAIM)
+    /* Optional port arbitration BEFORE callbacks/cleanup. The FOC-first
+     * candidate checks live time and any already-latched physical stop. */
+    status=AS_DMA_TERMINAL_CLAIM(e,status,&now);
+#endif
     if (status != AS_DMA_OK && status != AS_DMA_CANCELLED &&
         AS_DMA_HAS_FAULT_SNAPSHOT(e))
         AS_DMA_BIND(fault_snapshot, e)(e->context, e, status, now);
@@ -88,6 +93,9 @@ FOC_RAM_PATH static void GuardAfter(AsDmaEngine *e, AsDmaState state, uint32_t n
 FOC_RAM_PATH int AsDma_Begin(AsDmaEngine *e, uint16_t reg, uint32_t now)
 {
     if (e->state != AS_DMA_IDLE) return 0;
+#if defined(AS_DMA_BEGIN_ALLOWED)
+    if (!AS_DMA_BEGIN_ALLOWED(e)) return 0;
+#endif
     e->reg = reg & 0x3FFFU;
     e->frame = 0U;
     e->errfl = e->response = 0U;

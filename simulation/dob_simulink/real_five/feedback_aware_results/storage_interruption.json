@@ -1,0 +1,13 @@
+{
+  "storage_only_interruption": true,
+  "interrupted_trace_count": 1570,
+  "checkpoint_metric_count": 1550,
+  "original_log": "D:/new project/tmp/dob_feedback_aware_full.log",
+  "archive_source": "D:/new project/simulation/dob_simulink/build/sdi_storage/6b43-d8f0-4b75-462e.dmr",
+  "cache_archive": "C:/Users/Administrator/.codex/visualizations/2026/09/12/01a093bb-434d-7463-b65f-913df38114c5/dob-sdi-interrupted-20261023/6b43-d8f0-4b75-462e.dmr",
+  "archive_bytes": 4239265792,
+  "sha256": "be01c3536dffab6f99ac38dbd4cd20bcf1c913565adb5cdbc1e6a39516c9f6da",
+  "copy_hash_verified_before_removing_source": true,
+  "physical_runs_after_safety_closure": 0,
+  "note": "Only this session's exact SDI cache was relocated after MATLAB exited. Explicit per-trial MAT files, raw hardware records and original strict results remain in place. Missing simulations only may run; existing unreadable/invalid traces must not be silently retried."
+}

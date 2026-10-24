@@ -7,6 +7,11 @@
 static volatile uint32_t defer_timer_seq,defer_rx_seq,defer_tx_seq;
 static volatile uint32_t defer_rx_us,defer_rx_raw,defer_rx_error;
 static volatile uint32_t defer_urgent;
+#if defined(AS5047P_DMA_TERMINAL_FIX)
+/* One aligned publication, serialized bottom-half owner. TIM2 observes it
+ * before deciding a transaction timeout; independent control faults ignore it. */
+static volatile uint32_t defer_terminal_claimed;
+#endif
 static uint32_t serviced_timer,serviced_rx,serviced_tx;
 volatile uint32_t encoder_deferred_service_count,encoder_timer_event_count;
 volatile uint32_t encoder_rx_event_count,encoder_tx_error_count,encoder_period_count;
@@ -16,6 +21,9 @@ static void DeferReset(void)
     defer_timer_seq=defer_rx_seq=defer_tx_seq=0U;
     serviced_timer=serviced_rx=serviced_tx=0U;
     defer_urgent=0U;
+#if defined(AS5047P_DMA_TERMINAL_FIX)
+    defer_terminal_claimed=0U;
+#endif
     defer_fault_serviced=0U;
     defer_fault_flags_valid=0U;
     NVIC_ClearPendingIRQ(TIM6_DAC_IRQn);
@@ -28,6 +36,34 @@ FOC_RAM_PATH static void DeferOff(uint32_t reason)
     DRIVER_SD_GPIO_Port->BSRR=(uint32_t)DRIVER_SD_Pin<<16U;
     if (!defer_urgent) defer_urgent=reason;
 }
+#if defined(AS5047P_DMA_TERMINAL_FIX)
+FOC_RAM_PATH static int DeferBeginAllowed(void)
+{
+    if (defer_urgent) return 0; /* No implicit recovery after physical OFF. */
+    defer_terminal_claimed=0U;
+    __DMB();
+    return defer_urgent==0U;
+}
+FOC_RAM_PATH static AsDmaStatus DeferTerminalClaim(AsDmaStatus status,uint32_t *now)
+{
+    if (status!=AS_DMA_OK) return status;
+    *now=TIM2->CNT; /* Never backdate success to an old guard/service timestamp. */
+    if (!defer_urgent && AsDma_TimeReached(*now,engine.deadline_us))
+        DeferOff(AS_DMA_TIMEOUT);
+    if (defer_urgent) return (AsDmaStatus)defer_urgent;
+    /* If TIM2(3) preempts before this publication it wins and closes outputs;
+     * after it, valid data has completed before deadline, even if callbacks
+     * take us across that deadline. ADC may preempt but never opens gates. */
+    __DMB();
+    defer_terminal_claimed=1U;
+    __DMB();
+    if (defer_urgent) {
+        *now=TIM2->CNT;
+        return (AsDmaStatus)defer_urgent; /* Sticky OFF cannot become success. */
+    }
+    return AS_DMA_OK;
+}
+#endif
 FOC_RAM_PATH static void DeferTimerTop(void)
 {
     uint32_t now=TIM2->CNT;
@@ -37,6 +73,9 @@ FOC_RAM_PATH static void DeferTimerTop(void)
     if (periodic && (enabled&TIM_DIER_CC4IE) && AsDma_TimeReached(now,control_due_us))
         DeferOff(AS_DMA_CONTROL_STALE);
     else if ((enabled&TIM_DIER_CC1IE) && engine.state!=AS_DMA_IDLE &&
+#if defined(AS5047P_DMA_TERMINAL_FIX)
+             !defer_terminal_claimed &&
+#endif
              AsDma_TimeReached(now,engine.deadline_us)) DeferOff(AS_DMA_TIMEOUT);
     ++encoder_timer_event_count;
     ++defer_timer_seq;
@@ -120,7 +159,7 @@ FOC_RAM_PATH void TIM6_DAC_IRQHandler(void)
     AsDma_Guard(&engine,now); /* necessary CS/protocol work, below FOC */
     now=TIM2->CNT;
     if (periodic && AsDma_TimeReached(now,next_period_us)) {
-        if (now-next_period_us>=AS_DMA_TRANSACTION_US || engine.state!=AS_DMA_IDLE) {
+        if (now-next_period_us>=AS_DMA_SCHEDULE_LATE_US || engine.state!=AS_DMA_IDLE) {
             AsDma_Fail(&engine,AS_DMA_SCHEDULE,now); return;
         }
         next_period_us+=AS_DMA_PERIOD_US;

@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "trials": 200,
+  "matched_actual_input_pairs": 0,
+  "quarantined_lpf_checks": 28640,
+  "full_csv_rows_checked": 1400200,
+  "source_artifact_pins_unchanged": true,
+  "hardware_access": false
+}

@@ -39,6 +39,9 @@ int AS5047P_DmaGetSample(AsDmaSample *sample);
 int AS5047P_DmaSnapshot(AsDmaSample *sample, uint32_t *now_us);
 void AS5047P_DmaAcknowledgeControl(void);
 void AS5047P_DmaGetStats(AsDmaStats *stats);
+#if defined(AS5047P_DMA_TIMING_POLICY_V2)
+void AS5047P_DmaGetTimingStats(uint32_t *slow_count,uint32_t *ok_max_us);
+#endif
 void AS5047P_DmaGetFaultSnapshot(AsDmaFaultSnapshot *snapshot);
 /* Diagnostic status published BEFORE invoking the existing output-off hook. */
 uint32_t AS5047P_DmaFaultStatus(void);

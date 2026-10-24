@@ -1,5 +1,7 @@
 # Pigweed 日志上位机增量 · 2026-09-30
 
+2026-10-20 新增普通 `PW_LOG_*` token 化候选：`PW_LOG_TOKENIZED_DEFAULT=ON`，不再仅 LOGTOK 测试走压缩。现有 `[PWT]` 接收/导出格式不改，界面当前仍可能显示“待字典解码”，需用同版本 ELF 运行文末离线工具。START/STATUS 等机器协议不变。本轮只编译和离线验证，未部署鲁班猫或刷写 STM32；见 [构建与空间核验](../docs/pw-log-tokenized-default-20261020.md)。
+
 ## 链路与范围
 
 按用户选择，改为 CAN 主链路，独立 USB-TTL 只读串口备用。

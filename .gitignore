@@ -93,3 +93,20 @@ known_hosts*
 *.launch
 *.DS_Store
 Thumbs.db
+
+# Local chat attachments and unrelated workspace content.
+/.codex-remote-attachments/
+/wechat ai/
+
+# Simulink generated models, caches and large per-run traces remain local.
+slprj/
+*.slxc
+*.mexw64
+*.dmr
+/simulation/dob_simulink/**/*.mat
+/simulation/dob_simulink/**/*.csv.gz
+/simulation/dob_simulink/**/results/
+/simulation/dob_simulink/**/smoke_results/
+/simulation/dob_simulink/**/feedback_aware_results/
+/simulation/dob_simulink/**/feedback_aware_smoke/
+# Selected small result summaries are intentionally tracked in this snapshot.
