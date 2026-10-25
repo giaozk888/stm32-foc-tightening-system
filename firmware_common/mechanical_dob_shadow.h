@@ -18,6 +18,14 @@ typedef struct {
 } MechanicalDobShadow;
 enum { DOB_SHADOW_UNCONFIGURED=1U,DOB_SHADOW_BAD_SAMPLE=2U,DOB_SHADOW_ZERO_SPEED=4U,
        DOB_SHADOW_WARMUP=8U,DOB_SHADOW_FAULT=16U };
+#if defined(FOC_DOB_WARMUP_AB)
+/* Diagnostic A, idle-only RAM selection. Does not change the observer pole. */
+#ifndef DOB_WARMUP_DEFAULT_TAU
+#define DOB_WARMUP_DEFAULT_TAU 5U
+#endif
+_Static_assert(DOB_WARMUP_DEFAULT_TAU==3U||DOB_WARMUP_DEFAULT_TAU==5U,"Warmup default must be 3 or 5 tau");
+extern volatile uint32_t dob_warmup_tau;
+#endif
 static inline void MechanicalDob_Reset(MechanicalDobShadow *s,uint32_t status)
 {
     *s=(MechanicalDobShadow){.status=status};
@@ -32,6 +40,10 @@ static inline void MechanicalDob_Observe(MechanicalDobShadow *s,
     uint8_t sample_valid,uint8_t protection_fault)
 {
     if (protection_fault) {MechanicalDob_Reset(s,DOB_SHADOW_FAULT);return;}
+#if defined(FOC_DOB_WARMUP_AB)
+    const uint32_t warmup_tau=dob_warmup_tau;
+    if(warmup_tau!=3U&&warmup_tau!=5U){MechanicalDob_Reset(s,DOB_SHADOW_UNCONFIGURED);return;}
+#endif
     if (!m->qualified || !isfinite(m->j_over_kt) || m->j_over_kt<=0 ||
         !isfinite(m->b_over_kt) || m->b_over_kt<0 ||
         !isfinite(m->coulomb_over_kt) || m->coulomb_over_kt<0 || !isfinite(m->bias_a) ||
@@ -56,7 +68,11 @@ static inline void MechanicalDob_Observe(MechanicalDobShadow *s,
     float estimate=s->drive_lpf-m->j_over_kt*g*(omega-s->omega_lpf);
     if (!isfinite(estimate)) {MechanicalDob_Reset(s,DOB_SHADOW_BAD_SAMPLE);return;}
     s->elapsed_s+=dt;s->disturbance_a=estimate;
+#if defined(FOC_DOB_WARMUP_AB)
+    s->valid=(uint32_t)(s->elapsed_s*g>=(float)warmup_tau);
+#else
     s->valid=(uint32_t)(s->elapsed_s*g>=5.f);
+#endif
     s->status=s->valid?0U:DOB_SHADOW_WARMUP;
     /* OBSERVE ONLY. No return value intended for an Iq summing junction. */
 }

@@ -1,0 +1,620 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "TighteningCommonModeTokenizedCandidate",
+            "inherits": "TighteningCommonModeCandidate",
+            "cacheVariables": { "PW_LOG_TOKENIZED_DEFAULT": "ON" }
+        },
+        {
+            "name": "TighteningCommonModeCandidate",
+            "inherits": "TighteningIntentCandidate",
+            "cacheVariables": { "FOC_PWM_COMMON_MODE_ENABLE": "ON" }
+        },
+        {
+            "name": "TighteningIntentCandidate",
+            "inherits": "RundownGuardTrial",
+            "cacheVariables": {
+                "FOC_INTENT_FSM_CANDIDATE": "ON",
+                "UART_LOG_BAUD": "115200",
+                "FOC_TORQUE_CHAIN_DIAG": "OFF",
+                "FOC_TORQUE450_FIVE_SECOND": "OFF",
+                "FOC_TORQUE450_150RPM": "OFF",
+                "FOC_SPEED_DYNAMIC_DIAG": "OFF",
+                "FOC_ANGLE_CHAIN_DIAG": "OFF"
+            }
+        },
+        {
+            "name": "Torque450mA150rpmFiveSecondDiagnostic",
+            "inherits": "Torque450mAFiveSecondDiagnostic",
+            "cacheVariables": { "FOC_TORQUE450_150RPM": "ON" }
+        },
+        {
+            "name": "Torque450mAFiveSecondDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_TORQUE450_FIVE_SECOND": "ON", "FOC_TORQUE_CHAIN_IQ_MA": "450", "FOC_TORQUE350_FIVE_SECOND": "OFF", "FOC_ANGLE_CHAIN_DIAG": "OFF", "FOC_ANGLE_HAND_ONLY": "OFF", "FOC_SPEED_DYNAMIC_DIAG": "OFF", "FOC_BREAKAWAY_CURRENT_TEST": "OFF", "FOC_BREAKAWAY_FIVE_SECOND": "OFF", "UART_LOG_BAUD": "115200" }
+        },
+        {
+            "name": "ElectricalAngleHandDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_ANGLE_CHAIN_DIAG": "ON", "FOC_ANGLE_HAND_ONLY": "ON" }
+        },
+        {
+            "name": "ElectricalZeroOffsetDiagnostic",
+            "inherits": "ElectricalAngleHandDiagnostic",
+            "cacheVariables": { "FOC_ANGLE_HAND_ONLY": "OFF", "FOC_TORQUE_CHAIN_IQ_MA": "350" }
+        },
+        {
+            "name": "Torque350mAFiveSecondDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_TORQUE350_FIVE_SECOND": "ON", "FOC_TORQUE_CHAIN_IQ_MA": "350", "FOC_SPEED_DYNAMIC_DIAG": "OFF", "FOC_BREAKAWAY_CURRENT_TEST": "OFF", "FOC_BREAKAWAY_FIVE_SECOND": "OFF" }
+        },
+        {
+            "name": "Speed500mADynamicDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_SPEED_DYNAMIC_DIAG": "ON", "FOC_BREAKAWAY_CURRENT_TEST": "OFF", "FOC_BREAKAWAY_FIVE_SECOND": "OFF" }
+        },
+        {
+            "name": "BreakawayFiveSecondDiagnostic",
+            "inherits": "BreakawayCurrentDiagnostic",
+            "cacheVariables": { "FOC_BREAKAWAY_FIVE_SECOND": "ON" }
+        },
+        {
+            "name": "BreakawayCurrentDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_BREAKAWAY_CURRENT_TEST": "ON" }
+        },
+        {
+            "name": "Rundown200mADirectLimitTrial",
+            "inherits": "RundownDiagnosticTrial",
+            "cacheVariables": { "FOC_TORQUE_CHAIN_DIAG": "OFF" }
+        },
+        {
+            "name": "TorqueChain200mADirectLimitDiagnostic",
+            "inherits": "TorqueChain200mADiagnostic"
+        },
+        {
+            "name": "TorqueChain200mADiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_TORQUE_CHAIN_IQ_MA": "200" }
+        },
+        {
+            "name": "TorqueChain100mADiagnostic",
+            "inherits": "TorqueChainDiagnostic",
+            "cacheVariables": { "FOC_TORQUE_CHAIN_IQ_MA": "100" }
+        },
+        {
+            "name": "TorqueChainDiagnostic",
+            "inherits": "RundownDiagnosticTrial",
+            "cacheVariables": { "FOC_TORQUE_CHAIN_DIAG": "ON", "FOC_TORQUE_CHAIN_IQ_MA": "50" }
+        },
+        {
+            "name": "RundownDiagnosticTrial",
+            "inherits": "RundownGuardTrial",
+            "cacheVariables": { "FOC_RUNDOWN_DIAGNOSTIC": "ON" }
+        },
+        {
+            "name": "RundownGuardTrial",
+            "inherits": "SpeedBrakeTrackTrial"
+        },
+        {
+            "name": "SpeedBrakeTrackTrial",
+            "inherits": "VoltageX2Trial",
+            "cacheVariables": { "FOC_SPEED_BRAKE_TRACK": "ON" }
+        },
+        {
+            "name": "VoltageX2Trial",
+            "inherits": "SpeedBumplessTrial",
+            "cacheVariables": { "FOC_VOLTAGE_X2_TRIAL": "ON" }
+        },
+        {
+            "name": "SpeedBumplessTrial",
+            "inherits": "ZeroValidAdmissionTrial",
+            "cacheVariables": { "FOC_SPEED_BUMPLESS": "ON" }
+        },
+        {
+            "name": "ZeroValidAdmissionTrial",
+            "inherits": "SpeedStartupBrakeTrial",
+            "cacheVariables": { "FOC_ZERO_VALID_ADMISSION": "ON" }
+        },
+        {
+            "name": "SpeedStartupBrakeTrial",
+            "inherits": "LoadedFsmTrial",
+            "cacheVariables": { "FOC_SPEED_STARTUP_BRAKE": "ON" }
+        },
+        {
+            "name": "LoadedFsmTrial",
+            "inherits": "ProtectedPipelineClosedLoop",
+            "cacheVariables": { "FOC_LOADED_FSM_TRIAL": "ON" }
+        },
+        {
+            "name": "CurrentPolarityComputeOnly",
+            "inherits": "EncoderFocFirst",
+            "cacheVariables": {
+                "FOC_CURRENT_FEEDBACK_SIGN": "1",
+                "FOC_HEAVY_PROFILE_ENABLE": "OFF"
+            }
+        },
+        {
+            "name": "CurrentFaultTrace",
+            "inherits": "ProtectedPipelineClosedLoop",
+            "cacheVariables": { "FOC_CURRENT_FAULT_TRACE_ENABLE": "ON" }
+        },
+        {
+            "name": "ProtectedPipelineClosedLoop",
+            "inherits": "FastCurrentReject",
+            "cacheVariables": {
+                "FOC_CURRENT_FAULT_TRACE_ENABLE": "OFF",
+                "FOC_PWM_PIPELINE_CLOSED_LOOP": "ON",
+                "FOC_ONE_CYCLE_PWM_PIPELINE": "ON",
+                "FOC_PREEMPT_COMMIT_PROBE": "ON",
+                "AS5047P_DMA_FOC_FIRST": "ON",
+                "FOC_FAST_REJECT_COMPUTE_ONLY": "OFF",
+                "FOC_HEAVY_PROFILE_ENABLE": "OFF"
+            }
+        },
+        {
+            "name": "EncoderFocFirst",
+            "inherits": "OneCyclePwmPipeline",
+            "cacheVariables": { "AS5047P_DMA_FOC_FIRST": "ON" }
+        },
+        {
+            "name": "OneCyclePwmPipeline",
+            "inherits": "PreemptCommitProbe",
+            "cacheVariables": { "FOC_ONE_CYCLE_PWM_PIPELINE": "ON" }
+        },
+        {
+            "name": "PreemptCommitProbe",
+            "inherits": "FastCurrentRejectComputeOnly",
+            "cacheVariables": { "FOC_PREEMPT_COMMIT_PROBE": "ON" }
+        },
+        {
+            "name": "FastPathTiming",
+            "inherits": "FastCurrentRejectComputeOnly",
+            "cacheVariables": { "FOC_FAST_PATH_PROFILE": "ON" }
+        },
+        {
+            "name": "FastCurrentReject",
+            "inherits": "RcSamplingOptimizedCandidate",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "FOC_ENABLE_LEGACY_CURRENT_REPAIR": "OFF"
+            }
+        },
+        {
+            "name": "FastCurrentRejectComputeOnly",
+            "inherits": "FastCurrentReject",
+            "cacheVariables": { "FOC_FAST_REJECT_COMPUTE_ONLY": "ON" }
+        },
+        {
+            "name": "RcDeferredShadow",
+            "inherits": "RcBoundaryLite",
+            "cacheVariables": { "FOC_RC_DEFERRED_SHADOW": "ON" }
+        },
+        {
+            "name": "RcBoundaryLite",
+            "inherits": "RcSamplingOptimizedCandidate",
+            "cacheVariables": { "FOC_PWM_BOUNDARY_LITE": "ON" }
+        },
+        {
+            "name": "RcBoundaryAttribution",
+            "inherits": "RcSamplingOptimizedCandidate",
+            "cacheVariables": { "FOC_PWM_BOUNDARY_TRACE": "ON" }
+        },
+        {
+            "name": "RcSamplingOptimizedCandidate",
+            "inherits": "RcSamplingProtectedCandidate"
+        },
+        {
+            "name": "RcSamplingProtectedCandidate",
+            "inherits": "LatestOriginalStartupEvidence",
+            "cacheVariables": {
+                "FOC_ADC_RC_PROTECTED_CANDIDATE": "ON",
+                "FOC_ADC_RC_MIN_LOW_ON_TICKS": "1700"
+            }
+        },
+        {
+            "name": "RcSamplingComputeOnly",
+            "inherits": "ProtectedIrqCompact",
+            "cacheVariables": {
+                "FOC_ADC_RC_DIAGNOSTIC": "ON",
+                "FOC_ADC_RC_MIN_LOW_ON_TICKS": "1700"
+            }
+        },
+        {
+            "name": "RepairWindowDiagnostic",
+            "inherits": "ZeroAllRejectedCompact",
+            "cacheVariables": { "FOC_REPAIR_WINDOW_TRACE": "ON" }
+        },
+        {
+            "name": "ZeroAllRejectedCompact",
+            "inherits": "ZeroAllRejectedDiagnostic",
+            "cacheVariables": { "FOC_IRQ_COMPACT": "ON" }
+        },
+        {
+            "name": "ZeroAllRejectedDiagnostic",
+            "inherits": "ProtectedAdaptiveRam",
+            "cacheVariables": { "FOC_ZERO_ALL_REJECTED_DIAG": "ON" }
+        },
+        {
+            "name": "LatestOriginalStartupEvidence",
+            "inherits": "LatestFeedbackOriginalFsmCountOnly",
+            "cacheVariables": { "FOC_STARTUP_TRACE": "ON" }
+        },
+        {
+            "name": "LatestFeedbackOriginalFsmCountOnly",
+            "inherits": "LatestFeedbackOriginalFsm",
+            "cacheVariables": { "FOC_LATEST_ZERO_COUNT_ONLY": "ON" }
+        },
+        {
+            "name": "LatestFeedbackOriginalFsm",
+            "inherits": "ProtectedGateReuse",
+            "cacheVariables": {
+                "FOC_LATEST_ORIGINAL_FSM": "ON",
+                "FOC_RAM_HOT_PATH": "ON",
+                "FOC_IRQ_COMPACT": "ON"
+            }
+        },
+        {
+            "name": "default",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+		    "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake",
+            "cacheVariables": {
+            }
+        },
+        {
+            "name": "Debug",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "Release",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "CanProbe",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CAN_LINK_PROBE_ONLY": "ON"
+            }
+        },
+        {
+            "name": "CanRpcReadOnly",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CAN_RPC_READ_ONLY": "ON",
+                "CAN_STATUS_TELEMETRY": "ON",
+                "CAN_CONTROL_REJECT_ONLY": "ON",
+                "CAN_LOG_STREAM": "ON",
+                "ESP_NETWORK_OBSERVER": "ON",
+                "CAN_LINK_PROBE_ONLY": "OFF",
+                "CAN_SHADOW_DIAG": "OFF",
+                "SAFETY_LOCKED_BOOT": "OFF",
+                "UART_LOG_BAUD": "115200"
+            }
+        },
+        {
+            "name": "RouterNetworkReadOnly",
+            "inherits": "CanRpcReadOnly",
+            "cacheVariables": { "ROUTER_READ_ONLY_NETWORK": "ON" }
+        },
+        {
+            "name": "MotorRpcAdmissionLocked",
+            "inherits": "CanRpcReadOnly",
+            "cacheVariables": { "CAN_MOTOR_CONTROL_SERVICE": "ON" }
+        },
+        {
+            "name": "RouterRpcReadOnly",
+            "inherits": "RouterNetworkReadOnly",
+            "cacheVariables": { "ROUTER_READ_ONLY_RPC": "ON" }
+        },
+        {
+            "name": "RouterTransferReadOnly",
+            "inherits": "EncoderDmaReadOnly",
+            "cacheVariables": { "ROUTER_READ_ONLY_TRANSFER": "ON" }
+        },
+        {
+            "name": "RouterTransferSamplingReadOnly",
+            "inherits": "FocSamplingReadOnly",
+            "cacheVariables": { "ROUTER_READ_ONLY_TRANSFER": "ON" }
+        },
+        {
+            "name": "RouterTransferIsolated",
+            "inherits": "RouterTransferSamplingReadOnly",
+            "cacheVariables": { "FOC_ISOLATED_CONCURRENCY": "ON" }
+        },
+        {
+            "name": "CanFdReadOnly",
+            "inherits": "RouterTransferIsolated",
+            "cacheVariables": { "CAN_FD_EXPERIMENT": "ON", "CAN_FD_BIT_RATE_SWITCH": "OFF", "CAN_FD_ECHO_ONLY": "OFF" }
+        },
+        {
+            "name": "MedianControlComputeOnly",
+            "inherits": "RouterTransferIsolated",
+            "cacheVariables": { "FOC_ZERO_MEDIAN_COMPUTE_ONLY": "ON", "PW_ALLOCATOR_HYBRID": "OFF" }
+        },
+        {
+            "name": "ControlChainReconnect",
+            "inherits": "MedianControlComputeOnly",
+            "cacheVariables": {
+                "FOC_CURRENT_SPIKE_ONLY": "ON",
+                "FOC_CURRENT_TREND4": "ON",
+                "FOC_FEEDBACK_SAFETY_BINDING": "ON",
+                "FOC_CONTROL_CHAIN_RECONNECT": "ON"
+            }
+        },
+        {
+            "name": "ProtectedIrqOptimized",
+            "inherits": "ProtectedClosedLoop"
+        },
+        {
+            "name": "ProtectedIrqDmaTrace",
+            "inherits": "ProtectedIrqOptimized"
+        },
+        {
+            "name": "ProtectedIrqPriorityFix",
+            "inherits": "ProtectedIrqDmaTrace",
+            "cacheVariables": { "AS5047P_DMA_IRQ_PREEMPT_ADC": "ON" }
+        },
+        {
+            "name": "ProtectedFastMath",
+            "inherits": "ProtectedIrqPriorityFix",
+            "cacheVariables": { "FOC_FAST_MATH": "ON" }
+        },
+        {
+            "name": "ProtectedPairFast",
+            "inherits": "ProtectedFastMath",
+            "cacheVariables": { "FOC_PAIR_FAST_PATH": "ON" }
+        },
+        {
+            "name": "ProtectedGuardFast",
+            "inherits": "ProtectedPairFast",
+            "cacheVariables": { "FOC_GUARD_FAST_PATH": "ON" }
+        },
+        {
+            "name": "ProtectedFeedbackFast",
+            "inherits": "ProtectedGuardFast",
+            "cacheVariables": { "FOC_FEEDBACK_FAST_PATH": "ON" }
+        },
+        {
+            "name": "ProtectedGateReuse",
+            "inherits": "ProtectedFeedbackFast",
+            "cacheVariables": { "FOC_GATE_REUSE": "ON" }
+        },
+        {
+            "name": "ProtectedIrqSourceTrace",
+            "inherits": "ProtectedGateReuse",
+            "cacheVariables": { "FOC_IRQ_SOURCE_TRACE": "ON" }
+        },
+        {
+            "name": "ProtectedAdaptiveFilter",
+            "inherits": "ProtectedGateReuse",
+            "cacheVariables": { "FOC_ADAPTIVE_FILTER_EXPERIMENT": "ON" }
+        },
+        {
+            "name": "ProtectedAdaptiveNoZeroQuota",
+            "inherits": "ProtectedAdaptiveFilter",
+            "cacheVariables": { "FOC_ZERO_TOTAL_BUDGET_OFF": "ON" }
+        },
+        {
+            "name": "ProtectedAdaptiveRam",
+            "inherits": "ProtectedAdaptiveNoZeroQuota",
+            "cacheVariables": { "FOC_RAM_HOT_PATH": "ON" }
+        },
+        {
+            "name": "ProtectedIrqCompact",
+            "inherits": "ProtectedAdaptiveRam",
+            "cacheVariables": { "FOC_IRQ_COMPACT": "ON" }
+        },
+        {
+            "name": "OriginalClosedLoopUpdated",
+            "inherits": "RouterTransferReadOnly",
+            "cacheVariables": {
+                "FOC_ORIGINAL_CLOSED_LOOP_UPDATED": "ON",
+                "PW_ALLOCATOR_HYBRID": "OFF",
+                "FOC_ADC_WINDOW": "OFF",
+                "FOC_ISOLATED_CONCURRENCY": "OFF",
+                "FOC_PROTECTED_CLOSED_LOOP": "OFF",
+                "FOC_CURRENT_SPIKE_ONLY": "OFF",
+                "FOC_CURRENT_TREND4": "OFF"
+            }
+        },
+        {
+            "name": "ProtectedCompactClosedLoop",
+            "inherits": "ProtectedGateReuse",
+            "cacheVariables": {
+                "FOC_COMPACT_CLOSED_LOOP": "ON",
+                "FOC_RAM_HOT_PATH": "ON",
+                "FOC_IRQ_COMPACT": "ON"
+            }
+        },
+        {
+            "name": "ProtectedClosedLoop",
+            "inherits": "RouterTransferReadOnly",
+            "cacheVariables": {
+                "FOC_PROTECTED_CLOSED_LOOP": "ON",
+                "FOC_ENABLE_LEGACY_CURRENT_REPAIR": "ON",
+                "FOC_ADC_WINDOW": "ON",
+                "FOC_ADC_SENSE_TOPOLOGY": "LOW_SIDE_UV",
+                "FOC_CURRENT_SPIKE_ONLY": "ON",
+                "FOC_CURRENT_TREND4": "ON",
+                "PW_ALLOCATOR_HYBRID": "OFF"
+            }
+        },
+        {
+            "name": "TightenSyntheticIsolated",
+            "inherits": "RouterTransferIsolated",
+            "cacheVariables": { "TIGHTEN_SYNTHETIC_BENCH": "ON", "PW_ALLOCATOR_HYBRID": "OFF" }
+        },
+        {
+            "name": "RundownSpeedX2Offline",
+            "inherits": "TightenSyntheticIsolated",
+            "cacheVariables": { "TIGHTEN_SPEED_X2_OFFLINE": "ON" }
+        },
+        {
+            "name": "CanFdEchoOnly",
+            "inherits": "CanFdReadOnly",
+            "cacheVariables": { "CAN_FD_ECHO_ONLY": "ON" }
+        },
+        {
+            "name": "CanFdBrsReadOnly",
+            "inherits": "CanFdReadOnly",
+            "cacheVariables": { "CAN_FD_BIT_RATE_SWITCH": "ON" }
+        },
+        {
+            "name": "SafetyLocked",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "SAFETY_LOCKED_BOOT": "ON",
+                "CAN_STATUS_TELEMETRY": "ON",
+                "CAN_LINK_PROBE_ONLY": "OFF",
+                "CAN_LOG_STREAM": "OFF",
+                "CAN_SHADOW_DIAG": "OFF",
+                "CAN_CONTROL_REJECT_ONLY": "ON"
+            }
+        },
+        {
+            "name": "FocSamplingReadOnly",
+            "inherits": "EncoderDmaReadOnly",
+            "cacheVariables": {
+                "FOC_ADC_WINDOW": "ON",
+                "FOC_ADC_SENSE_TOPOLOGY": "UNCONFIRMED",
+                "FOC_ADC_SETTLE_TICKS": "85"
+            }
+        },
+        {
+            "name": "EncoderDmaReadOnly",
+            "inherits": "RouterRpcReadOnly",
+            "cacheVariables": { "AS5047P_SPI_DMA": "ON" }
+        }
+    ],
+    "buildPresets": [
+        { "name": "TighteningCommonModeTokenizedCandidate", "configurePreset": "TighteningCommonModeTokenizedCandidate" },
+        { "name": "TighteningCommonModeCandidate", "configurePreset": "TighteningCommonModeCandidate" },
+        { "name": "TighteningIntentCandidate", "configurePreset": "TighteningIntentCandidate" },
+        { "name": "Torque450mA150rpmFiveSecondDiagnostic", "configurePreset": "Torque450mA150rpmFiveSecondDiagnostic" },
+        { "name": "Torque450mAFiveSecondDiagnostic", "configurePreset": "Torque450mAFiveSecondDiagnostic" },
+        { "name": "ElectricalAngleHandDiagnostic", "configurePreset": "ElectricalAngleHandDiagnostic" },
+        { "name": "ElectricalZeroOffsetDiagnostic", "configurePreset": "ElectricalZeroOffsetDiagnostic" },
+        { "name": "Torque350mAFiveSecondDiagnostic", "configurePreset": "Torque350mAFiveSecondDiagnostic" },
+        { "name": "Speed500mADynamicDiagnostic", "configurePreset": "Speed500mADynamicDiagnostic" },
+        { "name": "BreakawayFiveSecondDiagnostic", "configurePreset": "BreakawayFiveSecondDiagnostic" },
+        { "name": "BreakawayCurrentDiagnostic", "configurePreset": "BreakawayCurrentDiagnostic" },
+        { "name": "Rundown200mADirectLimitTrial", "configurePreset": "Rundown200mADirectLimitTrial" },
+        { "name": "TorqueChain200mADirectLimitDiagnostic", "configurePreset": "TorqueChain200mADirectLimitDiagnostic" },
+        { "name": "TorqueChain200mADiagnostic", "configurePreset": "TorqueChain200mADiagnostic" },
+        { "name": "TorqueChain100mADiagnostic", "configurePreset": "TorqueChain100mADiagnostic" },
+        { "name": "TorqueChainDiagnostic", "configurePreset": "TorqueChainDiagnostic" },
+        { "name": "RundownGuardTrial", "configurePreset": "RundownGuardTrial" },
+        { "name": "RundownDiagnosticTrial", "configurePreset": "RundownDiagnosticTrial" },
+        { "name": "SpeedBrakeTrackTrial", "configurePreset": "SpeedBrakeTrackTrial" },
+        { "name": "VoltageX2Trial", "configurePreset": "VoltageX2Trial" },
+        { "name": "CurrentPolarityComputeOnly", "configurePreset": "CurrentPolarityComputeOnly" },
+        { "name": "CurrentFaultTrace", "configurePreset": "CurrentFaultTrace" },
+        { "name": "ProtectedPipelineClosedLoop", "configurePreset": "ProtectedPipelineClosedLoop" },
+        { "name": "LoadedFsmTrial", "configurePreset": "LoadedFsmTrial" },
+        { "name": "SpeedStartupBrakeTrial", "configurePreset": "SpeedStartupBrakeTrial" },
+        { "name": "ZeroValidAdmissionTrial", "configurePreset": "ZeroValidAdmissionTrial" },
+        { "name": "SpeedBumplessTrial", "configurePreset": "SpeedBumplessTrial" },
+        { "name": "EncoderFocFirst", "configurePreset": "EncoderFocFirst" },
+        { "name": "OneCyclePwmPipeline", "configurePreset": "OneCyclePwmPipeline" },
+        { "name": "PreemptCommitProbe", "configurePreset": "PreemptCommitProbe" },
+        { "name": "FastPathTiming", "configurePreset": "FastPathTiming" },
+        { "name": "FastCurrentReject", "configurePreset": "FastCurrentReject" },
+        { "name": "FastCurrentRejectComputeOnly", "configurePreset": "FastCurrentRejectComputeOnly" },
+        { "name": "RcDeferredShadow", "configurePreset": "RcDeferredShadow" },
+        { "name": "RcBoundaryLite", "configurePreset": "RcBoundaryLite" },
+        { "name": "RcBoundaryAttribution", "configurePreset": "RcBoundaryAttribution" },
+        { "name": "RcSamplingOptimizedCandidate", "configurePreset": "RcSamplingOptimizedCandidate" },
+        { "name": "RcSamplingComputeOnly", "configurePreset": "RcSamplingComputeOnly" },
+        { "name": "RcSamplingProtectedCandidate", "configurePreset": "RcSamplingProtectedCandidate" },
+        { "name": "RepairWindowDiagnostic", "configurePreset": "RepairWindowDiagnostic" },
+        { "name": "ZeroAllRejectedCompact", "configurePreset": "ZeroAllRejectedCompact" },
+        { "name": "ZeroAllRejectedDiagnostic", "configurePreset": "ZeroAllRejectedDiagnostic" },
+        { "name": "LatestOriginalStartupEvidence", "configurePreset": "LatestOriginalStartupEvidence" },
+        { "name": "LatestFeedbackOriginalFsmCountOnly", "configurePreset": "LatestFeedbackOriginalFsmCountOnly" },
+        { "name": "LatestFeedbackOriginalFsm", "configurePreset": "LatestFeedbackOriginalFsm" },
+        { "name": "OriginalClosedLoopUpdated", "configurePreset": "OriginalClosedLoopUpdated" },
+        { "name": "ProtectedIrqCompact", "configurePreset": "ProtectedIrqCompact" },
+        { "name": "ProtectedCompactClosedLoop", "configurePreset": "ProtectedCompactClosedLoop" },
+        { "name": "ProtectedAdaptiveRam", "configurePreset": "ProtectedAdaptiveRam" },
+        { "name": "ProtectedAdaptiveNoZeroQuota", "configurePreset": "ProtectedAdaptiveNoZeroQuota" },
+        { "name": "ProtectedAdaptiveFilter", "configurePreset": "ProtectedAdaptiveFilter" },
+        { "name": "ProtectedGateReuse", "configurePreset": "ProtectedGateReuse" },
+        { "name": "ProtectedIrqSourceTrace", "configurePreset": "ProtectedIrqSourceTrace" },
+        { "name": "ProtectedGuardFast", "configurePreset": "ProtectedGuardFast" },
+        { "name": "ProtectedFeedbackFast", "configurePreset": "ProtectedFeedbackFast" },
+        { "name": "ProtectedPairFast", "configurePreset": "ProtectedPairFast" },
+        { "name": "ProtectedFastMath", "configurePreset": "ProtectedFastMath" },
+        { "name": "ProtectedIrqPriorityFix", "configurePreset": "ProtectedIrqPriorityFix" },
+        { "name": "ProtectedIrqDmaTrace", "configurePreset": "ProtectedIrqDmaTrace" },
+        { "name": "ProtectedIrqOptimized", "configurePreset": "ProtectedIrqOptimized" },
+        { "name": "ProtectedClosedLoop", "configurePreset": "ProtectedClosedLoop" },
+        { "name": "ControlChainReconnect", "configurePreset": "ControlChainReconnect" },
+        { "name": "MedianControlComputeOnly", "configurePreset": "MedianControlComputeOnly" },
+        { "name": "RundownSpeedX2Offline", "configurePreset": "RundownSpeedX2Offline" },
+        { "name": "TightenSyntheticIsolated", "configurePreset": "TightenSyntheticIsolated" },
+        { "name": "MotorRpcAdmissionLocked", "configurePreset": "MotorRpcAdmissionLocked" },
+        { "name": "CanFdEchoOnly", "configurePreset": "CanFdEchoOnly" },
+        { "name": "CanFdReadOnly", "configurePreset": "CanFdReadOnly" },
+        { "name": "CanFdBrsReadOnly", "configurePreset": "CanFdBrsReadOnly" },
+        {
+            "name": "RouterTransferIsolated",
+            "configurePreset": "RouterTransferIsolated"
+        },
+        {
+            "name": "RouterTransferSamplingReadOnly",
+            "configurePreset": "RouterTransferSamplingReadOnly"
+        },
+        {
+            "name": "RouterTransferReadOnly",
+            "configurePreset": "RouterTransferReadOnly"
+        },
+        {
+            "name": "FocSamplingReadOnly",
+            "configurePreset": "FocSamplingReadOnly"
+        },
+        {
+            "name": "EncoderDmaReadOnly",
+            "configurePreset": "EncoderDmaReadOnly"
+        },
+        {
+            "name": "Debug",
+            "configurePreset": "Debug"
+        },
+        {
+            "name": "Release",
+            "configurePreset": "Release"
+        },
+        {
+            "name": "CanProbe",
+            "configurePreset": "CanProbe"
+        },
+        {
+            "name": "CanRpcReadOnly",
+            "configurePreset": "CanRpcReadOnly"
+        },
+        {
+            "name": "RouterNetworkReadOnly",
+            "configurePreset": "RouterNetworkReadOnly"
+        },
+        {
+            "name": "RouterRpcReadOnly",
+            "configurePreset": "RouterRpcReadOnly"
+        },
+        {
+            "name": "SafetyLocked",
+            "configurePreset": "SafetyLocked"
+        }
+    ]
+}

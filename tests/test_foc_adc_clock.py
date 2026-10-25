@@ -1,4 +1,6 @@
 """Offline source contracts for the ES0430 async ADC1/2 clock change."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import re
 import unittest
@@ -22,7 +24,7 @@ class AdcClockTests(unittest.TestCase):
     def test_both_apps_and_msp_use_the_same_policy(self):
         for slot in "ab":
             app = ROOT / f"foc2_app_{slot}"
-            main = (app / "Core/Src/main.c").read_text(encoding="utf-8")
+            main = read_app_source(app / "Core/Src/main.c",encoding="utf-8")
             msp = (app / "Core/Src/stm32g4xx_hal_msp.c").read_text(encoding="utf-8")
             for adc in (1, 2):
                 self.assertIn(f"hadc{adc}.Init.ClockPrescaler = FOC_ADC_CLOCK_PRESCALER;", main)

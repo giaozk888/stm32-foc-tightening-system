@@ -1,4 +1,6 @@
 """Exact APP current-body limit comparison and frozen protection regressions."""
+
+from app_source_view import read_app_source
 import hashlib
 import json
 from pathlib import Path
@@ -82,7 +84,7 @@ class VoltageX2Tests(unittest.TestCase):
                'FOC_TS_S','FOC_CURRENT_KP_V_PER_A','FOC_CURRENT_KI_V_PER_AS',
                'FOC_DC_BUS_V','FOC_VOLTAGE_LIMIT_V','FOC_INTEGRATOR_LIMIT_V')
         for slot in 'ab':
-            text=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text()
+            text=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c')
             begin=text.index('static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,\n')
             end=text.index('\n\n/*\n * Update AS5047P,',begin)
             (self.out/'voltage_x2_current_body.inc').write_text(text[begin:end])

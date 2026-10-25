@@ -22,6 +22,15 @@ enum {
     DOB_MONITOR_OFF=32U, DOB_MONITOR_TIME=64U, DOB_MONITOR_SATURATED=128U,
     DOB_MONITOR_ID=256U, DOB_MONITOR_SEQUENCE=512U, DOB_MONITOR_CURRENT=1024U
 };
+#if defined(FOC_DOB_SATURATION_CONTINUE)
+/* Candidate-only counters. Limited estimates are observable but cannot be
+ * admitted as fresh current compensation while SATURATED remains set. */
+typedef struct {
+    uint32_t samples,iq_limited,voltage_limited,limited_valid;
+    uint32_t input_resets,feedback_blocks,current_skips,warmup_frames;
+} DobSaturationAudit;
+extern DobSaturationAudit dob_saturation_audit;
+#endif
 typedef struct {
     uint32_t sample_us,adc_seq,adc_source_us,adc_published_us,status,valid;
     float omega_rad_s,iq_a,iq_matched_a,id_a,disturbance_a;

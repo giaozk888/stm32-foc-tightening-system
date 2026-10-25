@@ -2,6 +2,71 @@
     "version": 3,
     "configurePresets": [
         {
+            "name": "DobLoadSpeedContactHoldCandidate",
+            "inherits": "DobLoadSpeedCandidate",
+            "cacheVariables": { "FOC_DOB_LOAD_SPEED_CONTACT_HOLD": "ON" }
+        },
+        {
+            "name": "DobLoadSpeedCandidate",
+            "inherits": "DobWindow75Warmup3Candidate",
+            "cacheVariables": { "FOC_DOB_LOAD_SPEED": "ON" }
+        },
+        {
+            "name": "DobLowRecoveryAuditCandidate",
+            "inherits": "DobShortLowRecoveryCandidate",
+            "cacheVariables": { "FOC_DOB_LOW_AUDIT": "ON" }
+        },
+        {
+            "name": "DobShortLowRecoveryCandidate",
+            "inherits": "DobWindow75Warmup3Candidate",
+            "cacheVariables": { "FOC_DOB_SHORT_LOW_RECOVERY": "ON" }
+        },
+        {
+            "name": "DobRecoveryBreakdownCandidate",
+            "inherits": "DobWindow75Warmup3Candidate",
+            "cacheVariables": { "FOC_DOB_RECOVERY_TIMING": "ON" }
+        },
+        {
+            "name": "DobWindow75Warmup3Candidate",
+            "inherits": "DobWarmup3Candidate",
+            "cacheVariables": { "FOC_DOB_TREND_WINDOW75": "ON" }
+        },
+        {
+            "name": "DobWarmup3Candidate",
+            "inherits": "DobWarmupAbCandidate",
+            "cacheVariables": { "FOC_DOB_WARMUP_DEFAULT_TAU": "3" }
+        },
+        {
+            "name": "DobWarmupAbCandidate",
+            "inherits": "DobSaturationContinuousCandidate",
+            "cacheVariables": { "FOC_DOB_WARMUP_AB": "ON" }
+        },
+        {
+            "name": "DobSaturationContinuousCandidate",
+            "inherits": "DobTrendContinuousTrip500Candidate",
+            "cacheVariables": { "FOC_DOB_SATURATION_CONTINUE": "ON" }
+        },
+        {
+            "name": "DobTrendContinuousTrip500Candidate",
+            "inherits": "DobTrendShadowTrip500Candidate",
+            "cacheVariables": { "FOC_DOB_TREND_CONTINUOUS": "ON" }
+        },
+        {
+            "name": "DobTrendShadowTrip500Candidate",
+            "inherits": "DobTrendShadowCandidate",
+            "cacheVariables": { "FOC_NORMAL_RUN_TRIP500": "ON" }
+        },
+        {
+            "name": "TighteningDob025Trip500",
+            "inherits": "TighteningDob025",
+            "cacheVariables": { "FOC_NORMAL_RUN_TRIP500": "ON" }
+        },
+        {
+            "name": "DobTrendShadowCandidate",
+            "inherits": "TighteningDob025Contact20Observe10Candidate",
+            "cacheVariables": { "FOC_DOB_TREND_SHADOW": "ON" }
+        },
+        {
             "name": "DobGainAbCandidate",
             "inherits": "DobRealTraceCandidate",
             "cacheVariables": { "FOC_DOB_GAIN_AB_DIAG": "ON" }
@@ -21,6 +86,7 @@
             "inherits": "MechanicalDobFeedbackCandidate",
             "cacheVariables": {
                 "FOC_DOB_NORMAL_CONTROL": "ON",
+                "FOC_NORMAL_RUN_TRIP500": "ON",
                 "FOC_MECHANICAL_HIGH_SPEED_DIAG": "OFF",
                 "FOC_MECHANICAL_MOTION_DIAG": "OFF",
                 "FOC_FRICTION_CALIBRATION_DIAG": "OFF",
@@ -980,6 +1046,19 @@
         }
     ],
     "buildPresets": [
+        { "name": "DobLoadSpeedContactHoldCandidate", "configurePreset": "DobLoadSpeedContactHoldCandidate" },
+        { "name": "DobLoadSpeedCandidate", "configurePreset": "DobLoadSpeedCandidate" },
+        { "name": "DobLowRecoveryAuditCandidate", "configurePreset": "DobLowRecoveryAuditCandidate" },
+        { "name": "DobShortLowRecoveryCandidate", "configurePreset": "DobShortLowRecoveryCandidate" },
+        { "name": "DobRecoveryBreakdownCandidate", "configurePreset": "DobRecoveryBreakdownCandidate" },
+        { "name": "DobWindow75Warmup3Candidate", "configurePreset": "DobWindow75Warmup3Candidate" },
+        { "name": "DobWarmup3Candidate", "configurePreset": "DobWarmup3Candidate" },
+        { "name": "DobWarmupAbCandidate", "configurePreset": "DobWarmupAbCandidate" },
+        { "name": "DobSaturationContinuousCandidate", "configurePreset": "DobSaturationContinuousCandidate" },
+        { "name": "DobTrendContinuousTrip500Candidate", "configurePreset": "DobTrendContinuousTrip500Candidate" },
+        { "name": "DobTrendShadowTrip500Candidate", "configurePreset": "DobTrendShadowTrip500Candidate" },
+        { "name": "TighteningDob025Trip500", "configurePreset": "TighteningDob025Trip500" },
+        { "name": "DobTrendShadowCandidate", "configurePreset": "DobTrendShadowCandidate" },
         { "name": "DobRealTraceCandidate", "configurePreset": "DobRealTraceCandidate" },
         { "name": "TighteningDob025Contact20Observe10Candidate", "configurePreset": "TighteningDob025Contact20Observe10Candidate" },
         { "name": "TighteningDob025", "configurePreset": "TighteningDob025" },

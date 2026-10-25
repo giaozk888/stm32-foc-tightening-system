@@ -1,0 +1,117 @@
+{
+  "phase": 1,
+  "mode": "smoke",
+  "paired_repeats": 1,
+  "classification": {
+    "model": "dob_load_phase1",
+    "seeds": 1,
+    "scenarios": [
+      "no_load",
+      "unload",
+      "spike",
+      "long_gap",
+      "negative_step",
+      "real_measurement",
+      "real_torque"
+    ],
+    "features": [
+      0.01,
+      0.025,
+      0.005,
+      0.02,
+      0.03,
+      0.06,
+      0.6,
+      0.02
+    ],
+    "feature_names": [
+      "load_state",
+      "load_label_valid",
+      "load_mean_a",
+      "load_trend_a_s",
+      "load_coverage",
+      "load_feature_updated",
+      "load_reason",
+      "load_accepted",
+      "load_rejected",
+      "load_quality_resets",
+      "load_dwell_ms",
+      "load_window_good",
+      "load_directional_raw_a",
+      "load_source_age_ms",
+      "load_transitions",
+      "load_proposal"
+    ],
+    "state_names": [
+      "UNKNOWN",
+      "LIGHT",
+      "MEDIUM",
+      "RISING",
+      "HIGH",
+      "RELEASING"
+    ],
+    "accept": {
+      "false_high_max": 0.01,
+      "high_detect_max_s": 0.8
+    }
+  },
+  "base": {
+    "root": "D:\\new project\\simulation\\dob_simulink",
+    "repo": "D:\\new project",
+    "build": "D:\\new project\\simulation\\dob_simulink\\build",
+    "results": "D:\\new project\\simulation\\dob_simulink\\phase1_results\\20261024_105233",
+    "model": "dob_load_phase1",
+    "dt": 0.001,
+    "pwm_dt": 5E-5,
+    "stop_s": 7,
+    "target_rpm": 240,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105
+    ],
+    "plant_vector": [
+      0.000386049,
+      0.00155158,
+      0.11945168237076952,
+      0.00054966003251495415,
+      0.001
+    ],
+    "gains": [
+      0,
+      0.15,
+      0.25,
+      0.5,
+      1
+    ],
+    "caps_a": [
+      0.0125,
+      0.025
+    ],
+    "noise_speed_rpm": 0.4,
+    "noise_current_a": 0.002,
+    "noise_id_a": 0.003,
+    "id_baseline_a": 0.005,
+    "id_spike_a": 0.7,
+    "id_persistent_a": 0.09,
+    "load_a": 0.04,
+    "event_s": 3,
+    "unload_s": 4.6,
+    "accept": {
+      "rmse_a": 0.012,
+      "bias_a": 0.008,
+      "valid_rate": 0.9,
+      "delay_s": 0.5,
+      "recovery_s": 0.8
+    },
+    "hardware_access": false,
+    "physical_performance_validated": false,
+    "model_dir": "D:\\new project\\simulation\\dob_simulink\\build\\load_phase1"
+  },
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "control_dob_feedback": false,
+  "control_adaptation": false
+}

@@ -1,4 +1,6 @@
 """No hardware: actual encoder math, hand observer, diagnostic admission."""
+
+from app_source_view import read_app_source
 import hashlib
 import json
 from pathlib import Path
@@ -69,7 +71,7 @@ class AngleChainTests(unittest.TestCase):
 
     def test_defaults_source_mapping_and_no_persistent_zero_update(self):
         for slot in 'ab':
-            text=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text()
+            text=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c')
             for constant in ('#define POLE_PAIRS 10U','#define ENCODER_DIRECTION (-1)',
                              '#define ELECTRICAL_ZERO_RAW 10507U'):
                 self.assertIn(constant,text)
@@ -114,7 +116,7 @@ class AngleChainTests(unittest.TestCase):
         with self.assertRaises(ValueError): decoder.hand_report('no data')
 
     def test_all_seven_offsets_rotated_vector_is_orthogonal_no_math_sign_change(self):
-        source=(ROOT/'foc2_app_a/Core/Src/main.c').read_text()
+        source=read_app_source(ROOT/'foc2_app_a/Core/Src/main.c')
         for a in (-30,-20,-10,0,10,20,30):
             for raw in (0,1,10506,10507,10508,16383):
                 base=(-((raw-10507+8192)%16384-8192)*2*math.pi*10/16384)%(2*math.pi)

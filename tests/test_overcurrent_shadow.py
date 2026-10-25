@@ -1,4 +1,6 @@
 """Observe-only protection contracts; no powered protection qualification."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import sys
 import unittest
@@ -38,7 +40,7 @@ class OvercurrentShadowTests(unittest.TestCase):
 
     def test_ab_integration_cannot_delay_or_suppress_hard_trip(self):
         for slot in 'ab':
-            src=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            src=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             begin=src.index('static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,\n')
             fn=src[begin:src.index('static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)\n{',begin)]
             trip=fn[fn.index('    if (\n#if defined(FOC_CURRENT_TREND4)\n'):]

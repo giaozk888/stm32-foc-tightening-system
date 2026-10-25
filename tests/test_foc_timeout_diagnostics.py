@@ -1,4 +1,6 @@
 """Offline only. Never imports a board runner or opens hardware."""
+
+from app_source_view import read_app_source
 import hashlib
 import json
 import re
@@ -33,7 +35,7 @@ class TimeoutDiagnostics(unittest.TestCase):
         self.assertEqual(digest,'a77bf47b2fb3082bf331b0c54782488e253b644cb0f289f4c94b47150288275d')
 
     def test_timeout_limits_not_relaxed(self):
-        main=(ROOT/'foc2_app_a/Core/Src/main.c').read_text('utf-8')
+        main=read_app_source(ROOT/'foc2_app_a/Core/Src/main.c','utf-8')
         for name,value in (('RUN_ZERO_TIMEOUT_MS','1500U'),('PREFLIGHT_CHAIN_MAX_STALE_MS','(50U)'),
                            ('TIGHTEN_RUNDOWN_TIMEOUT_MS','8000U'),('TIGHTEN_STOP_TIMEOUT_MS','2000U'),
                            ('STALL_TIMEOUT_S','1.5f'),('MOTOR_SPEED_STALL_TIMEOUT_S','2.0f')):

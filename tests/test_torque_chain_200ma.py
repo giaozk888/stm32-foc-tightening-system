@@ -1,4 +1,6 @@
 """Explicit positive-only 200mA preparation, never accesses hardware."""
+
+from app_source_view import read_app_source
 import json
 from pathlib import Path
 import re
@@ -28,7 +30,7 @@ class Torque200Tests(unittest.TestCase):
         # clamp. Compile the actual setter AND actual outer IQ assignment.
         out=ROOT/'tests/torque_chain_build'; out.mkdir(exist_ok=True)
         for slot in 'ab':
-            source=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text()
+            source=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c')
             limit=re.search(r'^#define MOTOR_DIRECT_IQ_LIMIT_A\s+(\S+)',source,re.M).group(1)
             self.assertEqual(limit,'0.20f')
             outer=function(source,'FOC_EncoderSpeedUpdate')

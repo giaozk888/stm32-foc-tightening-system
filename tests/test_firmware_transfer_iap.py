@@ -1,4 +1,6 @@
 """No COM port, no Flash, no subprocess: exercise the local upgrade safety contract."""
+
+from app_source_view import read_app_source
 import importlib.util
 import struct
 import unittest
@@ -140,7 +142,7 @@ class SafetyTests(unittest.TestCase):
                       "GPIO_PIN_RESET", "Fw_TargetVectorValid", "Fw_TargetCrc32", "LOCAL_UART_ONLY"):
             self.assertIn(guard, port)
         for slot in ("a", "b"):
-            main = (ROOT / f"foc2_app_{slot}/Core/Src/main.c").read_text()
+            main = read_app_source(ROOT / f"foc2_app_{slot}/Core/Src/main.c")
             self.assertIn("OFFICIAL_TRANSFER_OWNS_IAP", main)
             self.assertIn("PW_UartFirmwareTransfer_Service();", main)
             self.assertIn("packet.src == 0U", main)

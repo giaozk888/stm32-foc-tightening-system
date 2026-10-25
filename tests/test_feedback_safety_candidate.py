@@ -1,4 +1,6 @@
 """Actual C pipeline tests; no device access, firmware upload or power control."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import subprocess
 import unittest
@@ -42,7 +44,7 @@ class FeedbackSafetyCandidateTests(unittest.TestCase):
         p = subprocess.run(args + hard_off, capture_output=True, text=True)
         self.assertEqual(p.returncode, 0, p.stderr)
         for slot in 'ab':
-            src = (ROOT / f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            src = read_app_source(ROOT / f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             self.assertNotIn('FocFeedbackSafety_', src)
             self.assertNotIn('foc_feedback_safety_candidate.h', src)
             self.assertIn('physical_trip ||', src)

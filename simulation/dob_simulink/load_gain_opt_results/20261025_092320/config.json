@@ -1,0 +1,40 @@
+{
+  "scenarios": [
+    "no_load",
+    "step",
+    "unload"
+  ],
+  "seeds": 1,
+  "variants": [
+    "off",
+    "fixed",
+    "adaptive",
+    "fast",
+    "floor",
+    "combined"
+  ],
+  "new_variants": [
+    "fast",
+    "floor",
+    "combined"
+  ],
+  "reference_variants": [
+    "off",
+    "fixed",
+    "adaptive"
+  ],
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "fast_restart": false,
+  "actual_plant_parameters_logged": true,
+  "speed_scheduling": false,
+  "acceptance": {
+    "loaded_mae_ratio": 1.05,
+    "loaded_mae_allowance_rpm": 0.1,
+    "unload_extra_rpm": 1,
+    "unload_extra_recovery_ms": 50,
+    "no_load_extra_comp_a": 0.0001,
+    "iq_limit_a": 0.500001,
+    "dob_limit_a": 0.025001
+  }
+}

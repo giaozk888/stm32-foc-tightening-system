@@ -1,0 +1,29 @@
+{
+  "completed_runs": 4,
+  "runs": [
+    {
+      "scenario": "unload",
+      "seed": 1,
+      "rows": 7001,
+      "profile_count": 4
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 1,
+      "rows": 7001,
+      "profile_count": 4
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 1,
+      "rows": 7001,
+      "profile_count": 4
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 1,
+      "rows": 7001,
+      "profile_count": 4
+    }
+  ]
+}

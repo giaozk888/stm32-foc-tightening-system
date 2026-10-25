@@ -1,0 +1,12 @@
+scene,criterion,passed
+no_load,false_compensation_not_worse_0.1mA,True
+step,loaded_mae_not_worse_5percent_plus_0.1rpm,False
+ramp,loaded_mae_not_worse_5percent_plus_0.1rpm,True
+unload,loaded_mae_not_worse_5percent_plus_0.1rpm,False
+unload,unload_peak_not_worse_1rpm,True
+unload,unload_recovery_not_worse_50ms,True
+noise,loaded_mae_not_worse_5percent_plus_0.1rpm,False
+replay,loaded_mae_not_worse_5percent_plus_0.1rpm,False
+negative_load,loaded_mae_not_worse_5percent_plus_0.1rpm,False
+contact_early,no_paired_completion_loss,True
+contact_late,no_paired_completion_loss,True

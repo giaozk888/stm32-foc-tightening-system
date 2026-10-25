@@ -1,4 +1,6 @@
 """Local compilation and mocks only. Never open UART, SWD, or a motor."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import hashlib
 import re
@@ -50,7 +52,7 @@ class ReconnectAdapterTests(unittest.TestCase):
                 'FOC_TS_S','FOC_CURRENT_KP_V_PER_A','FOC_CURRENT_KI_V_PER_AS',
                 'FOC_DC_BUS_V','FOC_VOLTAGE_LIMIT_V','FOC_INTEGRATOR_LIMIT_V')
         for slot in 'ab':
-            src=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            src=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             first=src.index('static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,\n')
             last=src.index('\n\n/*\n * Update AS5047P,',first)
             # Generated test-build inputs, never edit the application algorithm.
@@ -67,7 +69,7 @@ class ReconnectAdapterTests(unittest.TestCase):
 
     def test_ab_original_loop_and_task_binding_contracts(self):
         for slot in 'ab':
-            src=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            src=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             self.assertIn('#include "control_chain_reconnect.inc"',src)
             self.assertIn('ControlChain_TaskService();',src)
             self.assertIn('ControlChain_StartReady(start_request_id)',src)

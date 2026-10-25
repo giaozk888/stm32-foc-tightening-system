@@ -1,0 +1,4193 @@
+{
+  "audit": "PASS",
+  "repeats": 10,
+  "model_runs": 130,
+  "classifier_evaluations": 520,
+  "summaries": [
+    {
+      "scenario": "long_gap",
+      "window_ms": 100,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.8760869565217392,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.8869565217391304,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 133.8999999999999,
+        "sd": 0.7378647873725379
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 133.50000000000017,
+        "sd": 0.5270462766949097
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.557625,
+        "sd": 0.0004930066485916241
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.053066666666666665,
+        "sd": 0.0002108185106778936
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "long_gap",
+      "window_ms": 75,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.8793478260869565,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.8902173913043478,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 125.99999999999989,
+        "sd": 0.6666666666665909
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 125.70000000000024,
+        "sd": 0.4830458915398127
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.5761875000000001,
+        "sd": 0.0005472468973568358
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.048299999999999996,
+        "sd": 0.0002459549291242058
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "long_gap",
+      "window_ms": 50,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.8826086956521739,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.8934782608695652,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 117.1,
+        "sd": 0.5676462121974852
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 116.80000000000011,
+        "sd": 0.4216370213555562
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.5944375,
+        "sd": 0.0006215180787573325
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.043666666666666666,
+        "sd": 0.00022222222222222088
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "long_gap",
+      "window_ms": 30,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.8852173913043478,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.8960869565217391,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 109.09999999999998,
+        "sd": 0.5676462121974821
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 108.8000000000001,
+        "sd": 0.42163702135555026
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.6085625,
+        "sd": 0.0005929270612815585
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.0401,
+        "sd": 0.0002744242007828532
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "negative_step",
+      "window_ms": 100,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 133.29999999999995,
+        "sd": 0.6749485577104761
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 133.00000000000017,
+        "sd": 0.6666666666665909
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.8826875,
+        "sd": 0.00042184284856913045
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.0529,
+        "sd": 0.00016101529717988167
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "negative_step",
+      "window_ms": 75,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 125.49999999999994,
+        "sd": 0.8498365855987009
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 125.20000000000016,
+        "sd": 0.6324555320337029
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.8918125,
+        "sd": 0.0006215180787573325
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.04806666666666667,
+        "sd": 0.00026293687924887024
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "negative_step",
+      "window_ms": 50,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 116.70000000000003,
+        "sd": 0.6749485577104827
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 116.30000000000038,
+        "sd": 0.4830458915393871
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.9005625,
+        "sd": 0.0006215180787573325
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.04343333333333333,
+        "sd": 0.00022498285257018444
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "negative_step",
+      "window_ms": 30,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 108.50000000000004,
+        "sd": 0.52704627669467
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 108.30000000000038,
+        "sd": 0.4830458915393802
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.9073125,
+        "sd": 0.0006620936909195985
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.04,
+        "sd": 0.00022222222222222088
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "no_load",
+      "window_ms": 100,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "fall_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "high_recall": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0,
+        "sd": 0.0
+      },
+      "rise_hits": 0,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 0,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "no_load",
+      "window_ms": 75,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "fall_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "high_recall": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0,
+        "sd": 0.0
+      },
+      "rise_hits": 0,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 0,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "no_load",
+      "window_ms": 50,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "fall_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "high_recall": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0,
+        "sd": 0.0
+      },
+      "rise_hits": 0,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 0,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "no_load",
+      "window_ms": 30,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "fall_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "high_recall": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0,
+        "sd": 0.0
+      },
+      "rise_hits": 0,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 0,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "noise",
+      "window_ms": 100,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 134.6999999999999,
+        "sd": 2.8303906287138525
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 134.60000000000053,
+        "sd": 2.756809750418068
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.8825625,
+        "sd": 0.002346872919439844
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.053566666666666665,
+        "sd": 0.001197218999737865
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "noise",
+      "window_ms": 75,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 126.79999999999993,
+        "sd": 2.699794230842178
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 126.50000000000041,
+        "sd": 2.549509756796415
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.891625,
+        "sd": 0.0025549516194593174
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.04883333333333333,
+        "sd": 0.0012196943555611184
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "noise",
+      "window_ms": 50,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 117.90000000000003,
+        "sd": 2.601281735350209
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 117.4000000000003,
+        "sd": 2.1186998109425934
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.9003125,
+        "sd": 0.0027043239553639787
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.04423333333333333,
+        "sd": 0.0012074869321686368
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "noise",
+      "window_ms": 30,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 109.49999999999997,
+        "sd": 2.3687784005919585
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 109.40000000000029,
+        "sd": 1.837873166945342
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.9071875,
+        "sd": 0.002704323955363993
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.0406,
+        "sd": 0.0012049281521534188
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "persistent_id",
+      "window_ms": 100,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.8249347826086956,
+        "sd": 0.00010500997642166735
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.8358043478260869,
+        "sd": 0.00010500997642166735
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 133.8999999999999,
+        "sd": 0.7378647873725379
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 133.30000000000018,
+        "sd": 0.8232726023486858
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.4105625,
+        "sd": 0.0004611654921079014
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.053066666666666665,
+        "sd": 0.0002108185106778936
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "persistent_id",
+      "window_ms": 75,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.828195652173913,
+        "sd": 0.00010500997642166735
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.8390652173913044,
+        "sd": 0.00010500997642166735
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 125.99999999999989,
+        "sd": 0.6666666666665909
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 125.60000000000029,
+        "sd": 0.8432740427116641
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.429125,
+        "sd": 0.0005270462766947304
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.048299999999999996,
+        "sd": 0.0002459549291242058
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "persistent_id",
+      "window_ms": 50,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.8314565217391304,
+        "sd": 0.00010500997642166735
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.8423260869565217,
+        "sd": 0.00010500997642166735
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 117.1,
+        "sd": 0.5676462121974852
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 116.90000000000015,
+        "sd": 0.5676462121974268
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.447375,
+        "sd": 0.0005743353646704257
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.043666666666666666,
+        "sd": 0.00022222222222222088
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "persistent_id",
+      "window_ms": 30,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.8340652173913043,
+        "sd": 0.00010500997642166735
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.8449347826086956,
+        "sd": 0.00010500997642166735
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 109.09999999999998,
+        "sd": 0.5676462121974821
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 108.8000000000001,
+        "sd": 0.42163702135555026
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.4615,
+        "sd": 0.0006038073644245573
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.0401,
+        "sd": 0.0002744242007828532
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "ramp",
+      "window_ms": 100,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 301.4,
+        "sd": 5.680375574437604
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 133.90000000000032,
+        "sd": 0.7378647873728735
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.8043076923076923,
+        "sd": 0.0038618861528732958
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.04896954783143648,
+        "sd": 0.00019454184313555088
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "ramp",
+      "window_ms": 75,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 288.4,
+        "sd": 5.853773711603978
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 126.00000000000034,
+        "sd": 0.6666666666668893
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.8172307692307692,
+        "sd": 0.0037074712373951347
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.04457090126115042,
+        "sd": 0.0002269654836581444
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "ramp",
+      "window_ms": 50,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 275.4999999999999,
+        "sd": 6.222718234198184
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 117.00000000000017,
+        "sd": 0.6666666666665956
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.8299487179487179,
+        "sd": 0.0036438735301126055
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.04029529375576746,
+        "sd": 0.0002050651081718438
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "ramp",
+      "window_ms": 30,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 265.09999999999997,
+        "sd": 6.57351588657936
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 108.8000000000001,
+        "sd": 0.42163702135555026
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.8401025641025641,
+        "sd": 0.0036003100490668858
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.036973239003383576,
+        "sd": 0.00019454184313555088
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "real_measurement",
+      "window_ms": 100,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9434347826086956,
+        "sd": 0.005981487930071646
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9434347826086956,
+        "sd": 0.005981487930071646
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 4.5,
+        "sd": 0.7071067811865476
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 162.2,
+        "sd": 33.927373412433006
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 149.40000000000043,
+        "sd": 12.185601704014749
+      },
+      "high_recall": {
+        "n": 9,
+        "mean": 0.7971946535957536,
+        "sd": 0.09068430287208895
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.04657203026283819,
+        "sd": 0.017188205824447345
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "real_measurement",
+      "window_ms": 75,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9434347826086956,
+        "sd": 0.005981487930071646
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9434347826086956,
+        "sd": 0.005981487930071646
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 4.5,
+        "sd": 0.7071067811865476
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 153.1999999999999,
+        "sd": 30.904152903237318
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 140.10000000000034,
+        "sd": 11.199702376997873
+      },
+      "high_recall": {
+        "n": 9,
+        "mean": 0.8037218676033939,
+        "sd": 0.09495814374668599
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.042505785863279494,
+        "sd": 0.015768570508760134
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "real_measurement",
+      "window_ms": 50,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9434347826086956,
+        "sd": 0.005981487930071646
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9434347826086956,
+        "sd": 0.005981487930071646
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 4.5,
+        "sd": 0.7071067811865476
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 141.9,
+        "sd": 26.83467905528212
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 131.0000000000004,
+        "sd": 10.132456102380495
+      },
+      "high_recall": {
+        "n": 9,
+        "mean": 0.8105489202230904,
+        "sd": 0.09795186721195936
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.038732882020006985,
+        "sd": 0.014460659206936516
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "real_measurement",
+      "window_ms": 30,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9434347826086956,
+        "sd": 0.005981487930071646
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9434347826086956,
+        "sd": 0.005981487930071646
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 4.4,
+        "sd": 0.699205898780101
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 132.7,
+        "sd": 24.88216675095277
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 121.60000000000038,
+        "sd": 6.736302975503467
+      },
+      "high_recall": {
+        "n": 9,
+        "mean": 0.8224022433423557,
+        "sd": 0.08088976248520342
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.03677149420694144,
+        "sd": 0.01402900091966266
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "real_torque",
+      "window_ms": 100,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9432173913043478,
+        "sd": 0.0057578380502417885
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9432173913043478,
+        "sd": 0.0057578380502417885
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 4.6,
+        "sd": 0.699205898780101
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 10.3,
+        "sd": 2.0027758514399734
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 9,
+        "mean": 162.11111111111111,
+        "sd": 47.553770734938674
+      },
+      "fall_delay_ms": {
+        "n": 9,
+        "mean": 150.5555555555559,
+        "sd": 13.398797624330903
+      },
+      "high_recall": {
+        "n": 9,
+        "mean": 0.7884787596394877,
+        "sd": 0.08885781547798234
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.04316774893528712,
+        "sd": 0.016792305313532097
+      },
+      "rise_hits": 9,
+      "rise_fp": 15,
+      "rise_miss": 1,
+      "fall_hits": 9,
+      "fall_fp": 17,
+      "fall_miss": 1
+    },
+    {
+      "scenario": "real_torque",
+      "window_ms": 75,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9432173913043478,
+        "sd": 0.0057578380502417885
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9432173913043478,
+        "sd": 0.0057578380502417885
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 4.1,
+        "sd": 0.7378647873726218
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 8.0,
+        "sd": 2.449489742783178
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 9,
+        "mean": 152.77777777777771,
+        "sd": 48.44785283626562
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 142.00000000000054,
+        "sd": 11.68094364529009
+      },
+      "high_recall": {
+        "n": 9,
+        "mean": 0.7983710750373014,
+        "sd": 0.0888889031800309
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.04309014941532501,
+        "sd": 0.015433258322927544
+      },
+      "rise_hits": 9,
+      "rise_fp": 15,
+      "rise_miss": 1,
+      "fall_hits": 10,
+      "fall_fp": 4,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "real_torque",
+      "window_ms": 50,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9432173913043478,
+        "sd": 0.0057578380502417885
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9432173913043478,
+        "sd": 0.0057578380502417885
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 4.0,
+        "sd": 0.6666666666666666
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 7.6,
+        "sd": 3.0623157540948935
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 9,
+        "mean": 142.11111111111114,
+        "sd": 48.650396823778344
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 132.3000000000004,
+        "sd": 10.02275189534068
+      },
+      "high_recall": {
+        "n": 9,
+        "mean": 0.8070388599544615,
+        "sd": 0.08907299303746083
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.038989383989447284,
+        "sd": 0.014078108629880006
+      },
+      "rise_hits": 9,
+      "rise_fp": 15,
+      "rise_miss": 1,
+      "fall_hits": 10,
+      "fall_fp": 2,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "real_torque",
+      "window_ms": 30,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9432173913043478,
+        "sd": 0.0057578380502417885
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9432173913043478,
+        "sd": 0.0057578380502417885
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 4.1,
+        "sd": 0.8755950357709131
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 7.3,
+        "sd": 2.8303906287138374
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 8,
+        "mean": 128.62500000000006,
+        "sd": 49.503066283095684
+      },
+      "fall_delay_ms": {
+        "n": 9,
+        "mean": 124.3333333333338,
+        "sd": 7.984359711335563
+      },
+      "high_recall": {
+        "n": 9,
+        "mean": 0.8080129784495467,
+        "sd": 0.091690077936567
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.03689479198193005,
+        "sd": 0.013554413621416229
+      },
+      "rise_hits": 8,
+      "rise_fp": 14,
+      "rise_miss": 2,
+      "fall_hits": 9,
+      "fall_fp": 4,
+      "fall_miss": 1
+    },
+    {
+      "scenario": "short_gap",
+      "window_ms": 100,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9989130434782608,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9989130434782608,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 133.8999999999999,
+        "sd": 0.7378647873725379
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 133.6000000000002,
+        "sd": 0.5163977794944984
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.8795000000000001,
+        "sd": 0.0004930066485916241
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.053066666666666665,
+        "sd": 0.0002108185106778936
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "short_gap",
+      "window_ms": 75,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9989130434782608,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9989130434782608,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 125.99999999999989,
+        "sd": 0.6666666666665909
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 125.70000000000024,
+        "sd": 0.4830458915398127
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.8886875000000001,
+        "sd": 0.0005472468973568358
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.048299999999999996,
+        "sd": 0.0002459549291242058
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "short_gap",
+      "window_ms": 50,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9989130434782608,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9989130434782608,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 117.1,
+        "sd": 0.5676462121974852
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 116.80000000000011,
+        "sd": 0.4216370213555562
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.8975624999999999,
+        "sd": 0.0006215180787573325
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.043666666666666666,
+        "sd": 0.00022222222222222088
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "short_gap",
+      "window_ms": 30,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9989130434782608,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9989130434782608,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 109.09999999999998,
+        "sd": 0.5676462121974821
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 108.8000000000001,
+        "sd": 0.42163702135555026
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.9041875,
+        "sd": 0.0005929270612816027
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.0401,
+        "sd": 0.0002744242007828532
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "spike",
+      "window_ms": 100,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9995652173913043,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9995652173913043,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "fall_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "high_recall": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0,
+        "sd": 0.0
+      },
+      "rise_hits": 0,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 0,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "spike",
+      "window_ms": 75,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9995652173913043,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9995652173913043,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "fall_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "high_recall": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0,
+        "sd": 0.0
+      },
+      "rise_hits": 0,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 0,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "spike",
+      "window_ms": 50,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9995652173913043,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9995652173913043,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "fall_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "high_recall": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0,
+        "sd": 0.0
+      },
+      "rise_hits": 0,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 0,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "spike",
+      "window_ms": 30,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.9995652173913043,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.9995652173913043,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "fall_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "high_recall": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0,
+        "sd": 0.0
+      },
+      "rise_hits": 0,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 0,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "step",
+      "window_ms": 100,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 3.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 3.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 133.8999999999999,
+        "sd": 0.7378647873725379
+      },
+      "fall_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.9518461538461539,
+        "sd": 0.00020225913788376185
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0,
+        "sd": 0.0
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 0,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "step",
+      "window_ms": 75,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 3.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 3.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 125.99999999999989,
+        "sd": 0.6666666666665909
+      },
+      "fall_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.9556153846153846,
+        "sd": 0.00022451154763355877
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0,
+        "sd": 0.0
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 0,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "step",
+      "window_ms": 50,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 3.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 3.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 117.1,
+        "sd": 0.5676462121974852
+      },
+      "fall_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.9592564102564103,
+        "sd": 0.00025498177590047515
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0,
+        "sd": 0.0
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 0,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "step",
+      "window_ms": 30,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 3.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 3.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 109.09999999999998,
+        "sd": 0.5676462121974821
+      },
+      "fall_delay_ms": {
+        "n": 0,
+        "mean": null,
+        "sd": null
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.961974358974359,
+        "sd": 0.00024325212770526117
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0,
+        "sd": 0.0
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 0,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "unload",
+      "window_ms": 100,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 133.8999999999999,
+        "sd": 0.7378647873725379
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 133.50000000000017,
+        "sd": 0.5270462766949097
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.882625,
+        "sd": 0.0004930066485916742
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.053066666666666665,
+        "sd": 0.0002108185106778936
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "unload",
+      "window_ms": 75,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 125.99999999999989,
+        "sd": 0.6666666666665909
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 125.70000000000024,
+        "sd": 0.4830458915398127
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.8918125,
+        "sd": 0.000547246897356809
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.048299999999999996,
+        "sd": 0.0002459549291242058
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "unload",
+      "window_ms": 50,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 117.1,
+        "sd": 0.5676462121974852
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 116.80000000000011,
+        "sd": 0.4216370213555562
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.9006875,
+        "sd": 0.0006215180787573325
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.043666666666666666,
+        "sd": 0.00022222222222222088
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "unload",
+      "window_ms": 30,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 1,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 5.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 109.09999999999998,
+        "sd": 0.5676462121974821
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 108.8000000000001,
+        "sd": 0.42163702135555026
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.9073125,
+        "sd": 0.0005929270612815585
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.0401,
+        "sd": 0.0002744242007828532
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "voltage_sat",
+      "window_ms": 100,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.8760869565217392,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.8869565217391304,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 133.8999999999999,
+        "sd": 0.7378647873725379
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 133.50000000000017,
+        "sd": 0.5270462766949097
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.557625,
+        "sd": 0.0004930066485916241
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.053066666666666665,
+        "sd": 0.0002108185106778936
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "voltage_sat",
+      "window_ms": 75,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.8793478260869565,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.8902173913043478,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 125.99999999999989,
+        "sd": 0.6666666666665909
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 125.70000000000024,
+        "sd": 0.4830458915398127
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.5761875000000001,
+        "sd": 0.0005472468973568358
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.048299999999999996,
+        "sd": 0.0002459549291242058
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "voltage_sat",
+      "window_ms": 50,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.8826086956521739,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.8934782608695652,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 117.1,
+        "sd": 0.5676462121974852
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 116.80000000000011,
+        "sd": 0.4216370213555562
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.5944375,
+        "sd": 0.0006215180787573325
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.043666666666666666,
+        "sd": 0.00022222222222222088
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    },
+    {
+      "scenario": "voltage_sat",
+      "window_ms": 30,
+      "trend_valid_rate": {
+        "n": 10,
+        "mean": 0.8852173913043478,
+        "sd": 0.0
+      },
+      "level_valid_rate": {
+        "n": 10,
+        "mean": 0.8960869565217391,
+        "sd": 0.0
+      },
+      "level_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "trend_changes": {
+        "n": 10,
+        "mean": 6.0,
+        "sd": 0.0
+      },
+      "quality_resets": {
+        "n": 10,
+        "mean": 1.0,
+        "sd": 0.0
+      },
+      "rise_delay_ms": {
+        "n": 10,
+        "mean": 109.09999999999998,
+        "sd": 0.5676462121974821
+      },
+      "fall_delay_ms": {
+        "n": 10,
+        "mean": 108.8000000000001,
+        "sd": 0.42163702135555026
+      },
+      "high_recall": {
+        "n": 10,
+        "mean": 0.6085625,
+        "sd": 0.0005929270612815585
+      },
+      "false_high_rate": {
+        "n": 10,
+        "mean": 0.0401,
+        "sd": 0.0002744242007828532
+      },
+      "rise_hits": 10,
+      "rise_fp": 0,
+      "rise_miss": 0,
+      "fall_hits": 10,
+      "fall_fp": 0,
+      "fall_miss": 0
+    }
+  ],
+  "selection": {
+    "100": {
+      "train": {
+        "eligible": true,
+        "failed": [],
+        "checks": {
+          "long_gap_no_extra_fp": true,
+          "long_gap_no_extra_miss": true,
+          "long_gap_valid_not_worse": true,
+          "negative_step_no_extra_fp": true,
+          "negative_step_no_extra_miss": true,
+          "negative_step_valid_not_worse": true,
+          "no_load_no_extra_fp": true,
+          "no_load_no_extra_miss": true,
+          "no_load_valid_not_worse": true,
+          "noise_no_extra_fp": true,
+          "noise_no_extra_miss": true,
+          "noise_valid_not_worse": true,
+          "persistent_id_no_extra_fp": true,
+          "persistent_id_no_extra_miss": true,
+          "persistent_id_valid_not_worse": true,
+          "ramp_no_extra_fp": true,
+          "ramp_no_extra_miss": true,
+          "ramp_valid_not_worse": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_valid_not_worse": true,
+          "real_measurement_trend_changes_bound": true,
+          "real_measurement_level_changes_bound": true,
+          "real_torque_no_extra_fp": true,
+          "real_torque_no_extra_miss": true,
+          "real_torque_valid_not_worse": true,
+          "real_torque_trend_changes_bound": true,
+          "real_torque_level_changes_bound": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_valid_not_worse": true,
+          "spike_no_extra_fp": true,
+          "spike_no_extra_miss": true,
+          "spike_valid_not_worse": true,
+          "step_no_extra_fp": true,
+          "step_no_extra_miss": true,
+          "step_valid_not_worse": true,
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_valid_not_worse": true,
+          "voltage_sat_no_extra_fp": true,
+          "voltage_sat_no_extra_miss": true,
+          "voltage_sat_valid_not_worse": true
+        },
+        "latency": {
+          "n": 55,
+          "mean": 145.7909090909092,
+          "sd": 26.35629991965009
+        }
+      },
+      "heldout": {
+        "eligible": true,
+        "failed": [],
+        "checks": {
+          "long_gap_no_extra_fp": true,
+          "long_gap_no_extra_miss": true,
+          "long_gap_valid_not_worse": true,
+          "negative_step_no_extra_fp": true,
+          "negative_step_no_extra_miss": true,
+          "negative_step_valid_not_worse": true,
+          "no_load_no_extra_fp": true,
+          "no_load_no_extra_miss": true,
+          "no_load_valid_not_worse": true,
+          "noise_no_extra_fp": true,
+          "noise_no_extra_miss": true,
+          "noise_valid_not_worse": true,
+          "persistent_id_no_extra_fp": true,
+          "persistent_id_no_extra_miss": true,
+          "persistent_id_valid_not_worse": true,
+          "ramp_no_extra_fp": true,
+          "ramp_no_extra_miss": true,
+          "ramp_valid_not_worse": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_valid_not_worse": true,
+          "real_measurement_trend_changes_bound": true,
+          "real_measurement_level_changes_bound": true,
+          "real_torque_no_extra_fp": true,
+          "real_torque_no_extra_miss": true,
+          "real_torque_valid_not_worse": true,
+          "real_torque_trend_changes_bound": true,
+          "real_torque_level_changes_bound": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_valid_not_worse": true,
+          "spike_no_extra_fp": true,
+          "spike_no_extra_miss": true,
+          "spike_valid_not_worse": true,
+          "step_no_extra_fp": true,
+          "step_no_extra_miss": true,
+          "step_valid_not_worse": true,
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_valid_not_worse": true,
+          "voltage_sat_no_extra_fp": true,
+          "voltage_sat_no_extra_miss": true,
+          "voltage_sat_valid_not_worse": true
+        },
+        "latency": {
+          "n": 55,
+          "mean": 144.96363636363643,
+          "sd": 26.174247759797172
+        }
+      },
+      "all": {
+        "eligible": true,
+        "failed": [],
+        "checks": {
+          "long_gap_no_extra_fp": true,
+          "long_gap_no_extra_miss": true,
+          "long_gap_valid_not_worse": true,
+          "negative_step_no_extra_fp": true,
+          "negative_step_no_extra_miss": true,
+          "negative_step_valid_not_worse": true,
+          "no_load_no_extra_fp": true,
+          "no_load_no_extra_miss": true,
+          "no_load_valid_not_worse": true,
+          "noise_no_extra_fp": true,
+          "noise_no_extra_miss": true,
+          "noise_valid_not_worse": true,
+          "persistent_id_no_extra_fp": true,
+          "persistent_id_no_extra_miss": true,
+          "persistent_id_valid_not_worse": true,
+          "ramp_no_extra_fp": true,
+          "ramp_no_extra_miss": true,
+          "ramp_valid_not_worse": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_valid_not_worse": true,
+          "real_measurement_trend_changes_bound": true,
+          "real_measurement_level_changes_bound": true,
+          "real_torque_no_extra_fp": true,
+          "real_torque_no_extra_miss": true,
+          "real_torque_valid_not_worse": true,
+          "real_torque_trend_changes_bound": true,
+          "real_torque_level_changes_bound": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_valid_not_worse": true,
+          "spike_no_extra_fp": true,
+          "spike_no_extra_miss": true,
+          "spike_valid_not_worse": true,
+          "step_no_extra_fp": true,
+          "step_no_extra_miss": true,
+          "step_valid_not_worse": true,
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_valid_not_worse": true,
+          "voltage_sat_no_extra_fp": true,
+          "voltage_sat_no_extra_miss": true,
+          "voltage_sat_valid_not_worse": true
+        },
+        "latency": {
+          "n": 110,
+          "mean": 145.3772727272728,
+          "sd": 26.14797221983653
+        }
+      }
+    },
+    "75": {
+      "train": {
+        "eligible": true,
+        "failed": [],
+        "checks": {
+          "long_gap_no_extra_fp": true,
+          "long_gap_no_extra_miss": true,
+          "long_gap_valid_not_worse": true,
+          "negative_step_no_extra_fp": true,
+          "negative_step_no_extra_miss": true,
+          "negative_step_valid_not_worse": true,
+          "no_load_no_extra_fp": true,
+          "no_load_no_extra_miss": true,
+          "no_load_valid_not_worse": true,
+          "noise_no_extra_fp": true,
+          "noise_no_extra_miss": true,
+          "noise_valid_not_worse": true,
+          "persistent_id_no_extra_fp": true,
+          "persistent_id_no_extra_miss": true,
+          "persistent_id_valid_not_worse": true,
+          "ramp_no_extra_fp": true,
+          "ramp_no_extra_miss": true,
+          "ramp_valid_not_worse": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_valid_not_worse": true,
+          "real_measurement_trend_changes_bound": true,
+          "real_measurement_level_changes_bound": true,
+          "real_torque_no_extra_fp": true,
+          "real_torque_no_extra_miss": true,
+          "real_torque_valid_not_worse": true,
+          "real_torque_trend_changes_bound": true,
+          "real_torque_level_changes_bound": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_valid_not_worse": true,
+          "spike_no_extra_fp": true,
+          "spike_no_extra_miss": true,
+          "spike_valid_not_worse": true,
+          "step_no_extra_fp": true,
+          "step_no_extra_miss": true,
+          "step_valid_not_worse": true,
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_valid_not_worse": true,
+          "voltage_sat_no_extra_fp": true,
+          "voltage_sat_no_extra_miss": true,
+          "voltage_sat_valid_not_worse": true
+        },
+        "latency": {
+          "n": 55,
+          "mean": 137.3909090909092,
+          "sd": 25.39843442774521
+        }
+      },
+      "heldout": {
+        "eligible": true,
+        "failed": [],
+        "checks": {
+          "long_gap_no_extra_fp": true,
+          "long_gap_no_extra_miss": true,
+          "long_gap_valid_not_worse": true,
+          "negative_step_no_extra_fp": true,
+          "negative_step_no_extra_miss": true,
+          "negative_step_valid_not_worse": true,
+          "no_load_no_extra_fp": true,
+          "no_load_no_extra_miss": true,
+          "no_load_valid_not_worse": true,
+          "noise_no_extra_fp": true,
+          "noise_no_extra_miss": true,
+          "noise_valid_not_worse": true,
+          "persistent_id_no_extra_fp": true,
+          "persistent_id_no_extra_miss": true,
+          "persistent_id_valid_not_worse": true,
+          "ramp_no_extra_fp": true,
+          "ramp_no_extra_miss": true,
+          "ramp_valid_not_worse": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_valid_not_worse": true,
+          "real_measurement_trend_changes_bound": true,
+          "real_measurement_level_changes_bound": true,
+          "real_torque_no_extra_fp": true,
+          "real_torque_no_extra_miss": true,
+          "real_torque_valid_not_worse": true,
+          "real_torque_trend_changes_bound": true,
+          "real_torque_level_changes_bound": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_valid_not_worse": true,
+          "spike_no_extra_fp": true,
+          "spike_no_extra_miss": true,
+          "spike_valid_not_worse": true,
+          "step_no_extra_fp": true,
+          "step_no_extra_miss": true,
+          "step_valid_not_worse": true,
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_valid_not_worse": true,
+          "voltage_sat_no_extra_fp": true,
+          "voltage_sat_no_extra_miss": true,
+          "voltage_sat_valid_not_worse": true
+        },
+        "latency": {
+          "n": 55,
+          "mean": 136.8272727272728,
+          "sd": 25.39816597742517
+        }
+      },
+      "all": {
+        "eligible": true,
+        "failed": [],
+        "checks": {
+          "long_gap_no_extra_fp": true,
+          "long_gap_no_extra_miss": true,
+          "long_gap_valid_not_worse": true,
+          "negative_step_no_extra_fp": true,
+          "negative_step_no_extra_miss": true,
+          "negative_step_valid_not_worse": true,
+          "no_load_no_extra_fp": true,
+          "no_load_no_extra_miss": true,
+          "no_load_valid_not_worse": true,
+          "noise_no_extra_fp": true,
+          "noise_no_extra_miss": true,
+          "noise_valid_not_worse": true,
+          "persistent_id_no_extra_fp": true,
+          "persistent_id_no_extra_miss": true,
+          "persistent_id_valid_not_worse": true,
+          "ramp_no_extra_fp": true,
+          "ramp_no_extra_miss": true,
+          "ramp_valid_not_worse": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_valid_not_worse": true,
+          "real_measurement_trend_changes_bound": true,
+          "real_measurement_level_changes_bound": true,
+          "real_torque_no_extra_fp": true,
+          "real_torque_no_extra_miss": true,
+          "real_torque_valid_not_worse": true,
+          "real_torque_trend_changes_bound": true,
+          "real_torque_level_changes_bound": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_valid_not_worse": true,
+          "spike_no_extra_fp": true,
+          "spike_no_extra_miss": true,
+          "spike_valid_not_worse": true,
+          "step_no_extra_fp": true,
+          "step_no_extra_miss": true,
+          "step_valid_not_worse": true,
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_valid_not_worse": true,
+          "voltage_sat_no_extra_fp": true,
+          "voltage_sat_no_extra_miss": true,
+          "voltage_sat_valid_not_worse": true
+        },
+        "latency": {
+          "n": 110,
+          "mean": 137.109090909091,
+          "sd": 25.283110892722046
+        }
+      }
+    },
+    "50": {
+      "train": {
+        "eligible": false,
+        "failed": [
+          "real_torque_no_extra_fp"
+        ],
+        "checks": {
+          "long_gap_no_extra_fp": true,
+          "long_gap_no_extra_miss": true,
+          "long_gap_valid_not_worse": true,
+          "negative_step_no_extra_fp": true,
+          "negative_step_no_extra_miss": true,
+          "negative_step_valid_not_worse": true,
+          "no_load_no_extra_fp": true,
+          "no_load_no_extra_miss": true,
+          "no_load_valid_not_worse": true,
+          "noise_no_extra_fp": true,
+          "noise_no_extra_miss": true,
+          "noise_valid_not_worse": true,
+          "persistent_id_no_extra_fp": true,
+          "persistent_id_no_extra_miss": true,
+          "persistent_id_valid_not_worse": true,
+          "ramp_no_extra_fp": true,
+          "ramp_no_extra_miss": true,
+          "ramp_valid_not_worse": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_valid_not_worse": true,
+          "real_measurement_trend_changes_bound": true,
+          "real_measurement_level_changes_bound": true,
+          "real_torque_no_extra_fp": false,
+          "real_torque_no_extra_miss": true,
+          "real_torque_valid_not_worse": true,
+          "real_torque_trend_changes_bound": true,
+          "real_torque_level_changes_bound": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_valid_not_worse": true,
+          "spike_no_extra_fp": true,
+          "spike_no_extra_miss": true,
+          "spike_valid_not_worse": true,
+          "step_no_extra_fp": true,
+          "step_no_extra_miss": true,
+          "step_valid_not_worse": true,
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_valid_not_worse": true,
+          "voltage_sat_no_extra_fp": true,
+          "voltage_sat_no_extra_miss": true,
+          "voltage_sat_valid_not_worse": true
+        },
+        "latency": {
+          "n": 55,
+          "mean": 127.92727272727284,
+          "sd": 24.41091479119046
+        }
+      },
+      "heldout": {
+        "eligible": true,
+        "failed": [],
+        "checks": {
+          "long_gap_no_extra_fp": true,
+          "long_gap_no_extra_miss": true,
+          "long_gap_valid_not_worse": true,
+          "negative_step_no_extra_fp": true,
+          "negative_step_no_extra_miss": true,
+          "negative_step_valid_not_worse": true,
+          "no_load_no_extra_fp": true,
+          "no_load_no_extra_miss": true,
+          "no_load_valid_not_worse": true,
+          "noise_no_extra_fp": true,
+          "noise_no_extra_miss": true,
+          "noise_valid_not_worse": true,
+          "persistent_id_no_extra_fp": true,
+          "persistent_id_no_extra_miss": true,
+          "persistent_id_valid_not_worse": true,
+          "ramp_no_extra_fp": true,
+          "ramp_no_extra_miss": true,
+          "ramp_valid_not_worse": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_valid_not_worse": true,
+          "real_measurement_trend_changes_bound": true,
+          "real_measurement_level_changes_bound": true,
+          "real_torque_no_extra_fp": true,
+          "real_torque_no_extra_miss": true,
+          "real_torque_valid_not_worse": true,
+          "real_torque_trend_changes_bound": true,
+          "real_torque_level_changes_bound": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_valid_not_worse": true,
+          "spike_no_extra_fp": true,
+          "spike_no_extra_miss": true,
+          "spike_valid_not_worse": true,
+          "step_no_extra_fp": true,
+          "step_no_extra_miss": true,
+          "step_valid_not_worse": true,
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_valid_not_worse": true,
+          "voltage_sat_no_extra_fp": true,
+          "voltage_sat_no_extra_miss": true,
+          "voltage_sat_valid_not_worse": true
+        },
+        "latency": {
+          "n": 55,
+          "mean": 127.65454545454554,
+          "sd": 24.778999607506773
+        }
+      },
+      "all": {
+        "eligible": true,
+        "failed": [],
+        "checks": {
+          "long_gap_no_extra_fp": true,
+          "long_gap_no_extra_miss": true,
+          "long_gap_valid_not_worse": true,
+          "negative_step_no_extra_fp": true,
+          "negative_step_no_extra_miss": true,
+          "negative_step_valid_not_worse": true,
+          "no_load_no_extra_fp": true,
+          "no_load_no_extra_miss": true,
+          "no_load_valid_not_worse": true,
+          "noise_no_extra_fp": true,
+          "noise_no_extra_miss": true,
+          "noise_valid_not_worse": true,
+          "persistent_id_no_extra_fp": true,
+          "persistent_id_no_extra_miss": true,
+          "persistent_id_valid_not_worse": true,
+          "ramp_no_extra_fp": true,
+          "ramp_no_extra_miss": true,
+          "ramp_valid_not_worse": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_valid_not_worse": true,
+          "real_measurement_trend_changes_bound": true,
+          "real_measurement_level_changes_bound": true,
+          "real_torque_no_extra_fp": true,
+          "real_torque_no_extra_miss": true,
+          "real_torque_valid_not_worse": true,
+          "real_torque_trend_changes_bound": true,
+          "real_torque_level_changes_bound": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_valid_not_worse": true,
+          "spike_no_extra_fp": true,
+          "spike_no_extra_miss": true,
+          "spike_valid_not_worse": true,
+          "step_no_extra_fp": true,
+          "step_no_extra_miss": true,
+          "step_valid_not_worse": true,
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_valid_not_worse": true,
+          "voltage_sat_no_extra_fp": true,
+          "voltage_sat_no_extra_miss": true,
+          "voltage_sat_valid_not_worse": true
+        },
+        "latency": {
+          "n": 110,
+          "mean": 127.7909090909092,
+          "sd": 24.48294499230529
+        }
+      }
+    },
+    "30": {
+      "train": {
+        "eligible": false,
+        "failed": [
+          "real_torque_no_extra_fp",
+          "real_torque_no_extra_miss"
+        ],
+        "checks": {
+          "long_gap_no_extra_fp": true,
+          "long_gap_no_extra_miss": true,
+          "long_gap_valid_not_worse": true,
+          "negative_step_no_extra_fp": true,
+          "negative_step_no_extra_miss": true,
+          "negative_step_valid_not_worse": true,
+          "no_load_no_extra_fp": true,
+          "no_load_no_extra_miss": true,
+          "no_load_valid_not_worse": true,
+          "noise_no_extra_fp": true,
+          "noise_no_extra_miss": true,
+          "noise_valid_not_worse": true,
+          "persistent_id_no_extra_fp": true,
+          "persistent_id_no_extra_miss": true,
+          "persistent_id_valid_not_worse": true,
+          "ramp_no_extra_fp": true,
+          "ramp_no_extra_miss": true,
+          "ramp_valid_not_worse": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_valid_not_worse": true,
+          "real_measurement_trend_changes_bound": true,
+          "real_measurement_level_changes_bound": true,
+          "real_torque_no_extra_fp": false,
+          "real_torque_no_extra_miss": false,
+          "real_torque_valid_not_worse": true,
+          "real_torque_trend_changes_bound": true,
+          "real_torque_level_changes_bound": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_valid_not_worse": true,
+          "spike_no_extra_fp": true,
+          "spike_no_extra_miss": true,
+          "spike_valid_not_worse": true,
+          "step_no_extra_fp": true,
+          "step_no_extra_miss": true,
+          "step_valid_not_worse": true,
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_valid_not_worse": true,
+          "voltage_sat_no_extra_fp": true,
+          "voltage_sat_no_extra_miss": true,
+          "voltage_sat_valid_not_worse": true
+        },
+        "latency": {
+          "n": 55,
+          "mean": 118.99090909090918,
+          "sd": 23.347117140835152
+        }
+      },
+      "heldout": {
+        "eligible": true,
+        "failed": [],
+        "checks": {
+          "long_gap_no_extra_fp": true,
+          "long_gap_no_extra_miss": true,
+          "long_gap_valid_not_worse": true,
+          "negative_step_no_extra_fp": true,
+          "negative_step_no_extra_miss": true,
+          "negative_step_valid_not_worse": true,
+          "no_load_no_extra_fp": true,
+          "no_load_no_extra_miss": true,
+          "no_load_valid_not_worse": true,
+          "noise_no_extra_fp": true,
+          "noise_no_extra_miss": true,
+          "noise_valid_not_worse": true,
+          "persistent_id_no_extra_fp": true,
+          "persistent_id_no_extra_miss": true,
+          "persistent_id_valid_not_worse": true,
+          "ramp_no_extra_fp": true,
+          "ramp_no_extra_miss": true,
+          "ramp_valid_not_worse": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_valid_not_worse": true,
+          "real_measurement_trend_changes_bound": true,
+          "real_measurement_level_changes_bound": true,
+          "real_torque_no_extra_fp": true,
+          "real_torque_no_extra_miss": true,
+          "real_torque_valid_not_worse": true,
+          "real_torque_trend_changes_bound": true,
+          "real_torque_level_changes_bound": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_valid_not_worse": true,
+          "spike_no_extra_fp": true,
+          "spike_no_extra_miss": true,
+          "spike_valid_not_worse": true,
+          "step_no_extra_fp": true,
+          "step_no_extra_miss": true,
+          "step_valid_not_worse": true,
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_valid_not_worse": true,
+          "voltage_sat_no_extra_fp": true,
+          "voltage_sat_no_extra_miss": true,
+          "voltage_sat_valid_not_worse": true
+        },
+        "latency": {
+          "n": 55,
+          "mean": 119.53636363636373,
+          "sd": 24.47577308306048
+        }
+      },
+      "all": {
+        "eligible": false,
+        "failed": [
+          "real_torque_no_extra_miss"
+        ],
+        "checks": {
+          "long_gap_no_extra_fp": true,
+          "long_gap_no_extra_miss": true,
+          "long_gap_valid_not_worse": true,
+          "negative_step_no_extra_fp": true,
+          "negative_step_no_extra_miss": true,
+          "negative_step_valid_not_worse": true,
+          "no_load_no_extra_fp": true,
+          "no_load_no_extra_miss": true,
+          "no_load_valid_not_worse": true,
+          "noise_no_extra_fp": true,
+          "noise_no_extra_miss": true,
+          "noise_valid_not_worse": true,
+          "persistent_id_no_extra_fp": true,
+          "persistent_id_no_extra_miss": true,
+          "persistent_id_valid_not_worse": true,
+          "ramp_no_extra_fp": true,
+          "ramp_no_extra_miss": true,
+          "ramp_valid_not_worse": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_valid_not_worse": true,
+          "real_measurement_trend_changes_bound": true,
+          "real_measurement_level_changes_bound": true,
+          "real_torque_no_extra_fp": true,
+          "real_torque_no_extra_miss": false,
+          "real_torque_valid_not_worse": true,
+          "real_torque_trend_changes_bound": true,
+          "real_torque_level_changes_bound": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_valid_not_worse": true,
+          "spike_no_extra_fp": true,
+          "spike_no_extra_miss": true,
+          "spike_valid_not_worse": true,
+          "step_no_extra_fp": true,
+          "step_no_extra_miss": true,
+          "step_valid_not_worse": true,
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_valid_not_worse": true,
+          "voltage_sat_no_extra_fp": true,
+          "voltage_sat_no_extra_miss": true,
+          "voltage_sat_valid_not_worse": true
+        },
+        "latency": {
+          "n": 110,
+          "mean": 119.26363636363645,
+          "sd": 23.80971094489388
+        }
+      }
+    }
+  },
+  "train_selection": 75,
+  "heldout_confirmed": true,
+  "selected_window_ms": 75,
+  "hardware_access": false,
+  "firmware_changed": false,
+  "physical_performance_validated": false,
+  "upstream_warmup": "Frozen historical software traces; not the new 3tau board candidate",
+  "event_truth": "Independent simulated load, not DOB output and not measured brake torque",
+  "traces": [
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\no_load_seed001.csv.gz",
+      "sha256": "03e51243a9b3cdffa9fe47a3295ab498cd2f2caa3c0f86506c4ce55757f3f83b",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\no_load_seed002.csv.gz",
+      "sha256": "51253e225ef86586609de20203f05c286896f9cd191c54ce59cfc57d1ebaca67",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\no_load_seed003.csv.gz",
+      "sha256": "09cab99f12557e296be4be71853f3883ceb1595682ccf2507669e2a7f1b94c51",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\no_load_seed004.csv.gz",
+      "sha256": "cefa7879611468142e1c7d853529ab97c232bde8e46eefd4fdda129b0ead4038",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\no_load_seed005.csv.gz",
+      "sha256": "fe3f6733868d4732e55afa64ed8110d584056679a18002de7c1d2f3142f0a2f6",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\no_load_seed061.csv.gz",
+      "sha256": "dfc6ad583c34dc335fb632e002e6f922bec217eace2ade0d7e3d93fa1bcd736d",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\no_load_seed062.csv.gz",
+      "sha256": "cab45ee609cd15d52524dd1b292b99527d01f234f71d3ddf332ad825bb3b8805",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\no_load_seed063.csv.gz",
+      "sha256": "bc5ac7e840d4d8065bde104f94a6d49dc1a775804f5673dabc3bdc59499baebf",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\no_load_seed064.csv.gz",
+      "sha256": "b46b79c55768d7424643510e74be378d92cb4123f20fb7fba0117194de92f209",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\no_load_seed065.csv.gz",
+      "sha256": "97161bebe1cdf9a8ee760150b70efec029d29ef7115a55fbfd97bca60b3d8ae7",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\step_seed001.csv.gz",
+      "sha256": "2f7da60377fa1934cfd433d3f0e9f5b2f5242780a2b76ac02dfe34d7b752ceb0",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\step_seed002.csv.gz",
+      "sha256": "1b533e6576300a63b8f1a8a24f481295043ba86eeb5e0f6deaade6fbcfd2725b",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\step_seed003.csv.gz",
+      "sha256": "1a7cd2e2663cad9816cc43bb9c279dd09ae591949a1d1f9db7dcd3af9bb795c3",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\step_seed004.csv.gz",
+      "sha256": "4bfab6e5c07d9b3cda6fe60282d3d5877b5482a246f800653f832492881ead25",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\step_seed005.csv.gz",
+      "sha256": "a353c6c123d62ae5d11ba36cad01565e485c278d6aa1d2ae3b434d860c2d70b8",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\step_seed061.csv.gz",
+      "sha256": "e4e601d5a1911aec789fb10b2add7111a30c5db507f855283932995d30e1c004",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\step_seed062.csv.gz",
+      "sha256": "7550b5fea3d1915d440c4d68bef198e1b0922591af0744438151c86206d3a0b6",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\step_seed063.csv.gz",
+      "sha256": "e5e5122016826cbdb95901249448fe437c6e013c75a7ac7ce855e4ab8208cd30",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\step_seed064.csv.gz",
+      "sha256": "4f909fdbe666c725e833312021aee6795dcbfd288992439a6e82879acadf3d62",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\step_seed065.csv.gz",
+      "sha256": "666cbd6ee01428b929d8490ace34f32aa60040e34d517bea695406ed7ef9db0a",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\ramp_seed001.csv.gz",
+      "sha256": "bccd5d59f15a2fbbab9fd44fd2c7debf81cf9b8094a59ab52366f7eda1a60f30",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\ramp_seed002.csv.gz",
+      "sha256": "0c12564a6faca3e97bd9b065296d36018c625ca310f01869b6df2d0c2d7cdf8d",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\ramp_seed003.csv.gz",
+      "sha256": "cd98add3d797f38adf8f31c8fc177e2e666492909e9c0e40d89b0e5f643266d1",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\ramp_seed004.csv.gz",
+      "sha256": "6a62e27ead5f5ace34652df86ce9566afb6137dc825f775a9452a45540912a47",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\ramp_seed005.csv.gz",
+      "sha256": "b5dbdf1faebcae8c6251d3506b579b9415cf04d1c46a8073c865b6f3e91b7748",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\ramp_seed061.csv.gz",
+      "sha256": "ea9701710736eb8beec32e1e4bba7287e9067b17aa0fab9c556c6ad48562f333",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\ramp_seed062.csv.gz",
+      "sha256": "984fe73f170f8fbfb8afd20fdfa015c63c4d1aa65711c1e5ed5ef865b1a4ec94",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\ramp_seed063.csv.gz",
+      "sha256": "f9c0beaddfcb52ab1222150a32ea1276818b3af3e8a4d100ed83b14812d8e901",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\ramp_seed064.csv.gz",
+      "sha256": "b60fde52fb0295183c3d321158e7c6423f7f5a36ab56fb20c8b4c56cc02afcf7",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\ramp_seed065.csv.gz",
+      "sha256": "0764821c975cecc160485676fabd2ff7957b9b83a9cb879c6e6e803c25ba1ab2",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\unload_seed001.csv.gz",
+      "sha256": "feb3e6c21a0e2511019ff6d45d5ac2bccff9961ecdd762df0548f328d2eac13c",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\unload_seed002.csv.gz",
+      "sha256": "08069bd36d18ff839ee43dac5cce1aaee6b96e97c82ff5527acf2ea8157ae621",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\unload_seed003.csv.gz",
+      "sha256": "ffddb1f74a31e3aa484ca296afb29b0919de77201d9752f0f5391ef132e9c291",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\unload_seed004.csv.gz",
+      "sha256": "e6856c3cf6846bf4553fec39004d18dd50f8ca248b66e2f2ef70f9ecf25b5fa4",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\unload_seed005.csv.gz",
+      "sha256": "c3aecb7468229b85aa67839b0de8b4ad89d3b11c25380b4aadf57ed466fed928",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\unload_seed061.csv.gz",
+      "sha256": "fe130af6ef8f22778e1775ae7c25cfb854253858f78edfea7b59a01127c203d3",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\unload_seed062.csv.gz",
+      "sha256": "2f6a83d66166f960f05895efe578297ac023863e584b21ee1e9f25cf82fab8a0",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\unload_seed063.csv.gz",
+      "sha256": "1a1f279da8abf80d8810a0dff0e3e42d181fbcabad596e7758e6da4bc1b11562",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\unload_seed064.csv.gz",
+      "sha256": "ec7fce1a3d5fa6f2fd06d82f76008e4a8d584fe1ba7e28868b84dfd2d111fdd6",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\unload_seed065.csv.gz",
+      "sha256": "11b0fb758e2e051df697a1e08b99eddba2172d0f73b1a8238b4fe8f0a7dfe53b",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\spike_seed001.csv.gz",
+      "sha256": "c9877fcec154f9c710ca7268900a505129f55f6ed7961df32bfda0d059a396d5",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\spike_seed002.csv.gz",
+      "sha256": "f796eaa1c0043a666e0d31da710f941a9622429928711c4f865f20b9bb86ae19",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\spike_seed003.csv.gz",
+      "sha256": "34cfe908f425c1897180926dc2937ae489295ee37799e0bbbd31b4c9221a6445",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\spike_seed004.csv.gz",
+      "sha256": "3a264bb8dd5fd54caee28ed8169edb144491685826e11de858fbeaa0bad688e9",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\spike_seed005.csv.gz",
+      "sha256": "08b68aa2bd3d2424a245a28e60bfcb8d510aaeb4535bbd3be47d04a5f770e791",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\spike_seed061.csv.gz",
+      "sha256": "9ade01dea7ab20ad70e1166127180231e630f57314806811316438c1cb99c90a",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\spike_seed062.csv.gz",
+      "sha256": "31e16f9ce8e2bf0d02ed7276244868546d775ff6c320a8a1425455def7c34f6d",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\spike_seed063.csv.gz",
+      "sha256": "38e0b8bd47f0abce4c19bfea0359de748abbd1005eea62e2dc782dd44be1a8cb",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\spike_seed064.csv.gz",
+      "sha256": "6ebed7878992207c35881a49ce51d4ad6a4ed1c9a14831ae77d5d616c69cb0ba",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\spike_seed065.csv.gz",
+      "sha256": "ff1f9901b9932a3a17190104224693e9cb671d54ce6a9e225de702e7fa897c0e",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\persistent_id_seed001.csv.gz",
+      "sha256": "3c0e8800af42391c3846b2323092dc9bee25b771cb040be81e5f5f927f0388ea",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\persistent_id_seed002.csv.gz",
+      "sha256": "eabf2157a0f520535bdbf0e01f7c4da05801ddc65b61f0eda645df2801cb002a",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\persistent_id_seed003.csv.gz",
+      "sha256": "f8ebb6d2c7297d3da8011fa20a5f5c0dc43232f3593214270a030539a7b9d6e5",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\persistent_id_seed004.csv.gz",
+      "sha256": "27de0a9d7facb3fa5d5f5673e9c85b32f6a9d0a9ce73a39a8343d048a5a37b1f",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\persistent_id_seed005.csv.gz",
+      "sha256": "865c3b17fb2437a582b7d90bf82b340a0a746d759986c808544e973de9e66ec7",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\persistent_id_seed061.csv.gz",
+      "sha256": "19081f4c7cc53b08543b3cca040921366ed043bac521be532e8d47482547b503",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\persistent_id_seed062.csv.gz",
+      "sha256": "9e69019a88a528cc28ac5c8577f4ff23e8338489cf37a996ef7dda46db94455b",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\persistent_id_seed063.csv.gz",
+      "sha256": "acbf44ccc522f8554c15ed7999a76b0c2fc8767367cdc193735d7fa4ae0efdc1",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\persistent_id_seed064.csv.gz",
+      "sha256": "6a6645ccb873d8ea88f66d4df3f85bae3fc26e8d5e15a7769e76494450b12095",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\persistent_id_seed065.csv.gz",
+      "sha256": "8d7d01d2af7765892d20c76320ce6490510d7c3bd0b811bcd46f85d9618cc417",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\short_gap_seed001.csv.gz",
+      "sha256": "40c1a799231b547479ee9ed5cf4388b740e72131c8eb56d4921c42053cc86437",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\short_gap_seed002.csv.gz",
+      "sha256": "f7b32e30012078dda97d81feb8cf2c867049a4f58c019fd5c339acfce6a856b0",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\short_gap_seed003.csv.gz",
+      "sha256": "45bfe3d267b83f40bd819fdc63dff9082b09f5b0ae5bd43a28fbe82ae00f0ef6",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\short_gap_seed004.csv.gz",
+      "sha256": "d05da50dcc10210d7da0fc48f7494fcf146ebcedada57a836144101a06e6c4eb",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\short_gap_seed005.csv.gz",
+      "sha256": "3343ec1903aebb3b2e0b9baebb870f277b76a9576441d593b74cdf9b786a610a",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\short_gap_seed061.csv.gz",
+      "sha256": "bbb7c39cf8616b1aefc78b23cf804e31f84b187dc817ef2f0e0008939dc2b4aa",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\short_gap_seed062.csv.gz",
+      "sha256": "6d80da0a50b45f389e017548e783335cf754d9ba64c6540449b5b1cb62c02065",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\short_gap_seed063.csv.gz",
+      "sha256": "89a8b08c8320f1f9a23647ad2abc6c2fb1b6f37b391db2c1532e69d38a31d33d",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\short_gap_seed064.csv.gz",
+      "sha256": "77bfb60e0a717e965cebd261e8a4d32ad2a2d46540268eef46e6877ab529e060",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\short_gap_seed065.csv.gz",
+      "sha256": "2d642792f42634e595e8fbc05ff03d445af4946c45fbfa1b4a2a1f8beb87638d",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\long_gap_seed001.csv.gz",
+      "sha256": "b4ce8076c8eec5fc57e984db215656b67ffd98f36802e5f4c794d35f5a25b62e",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\long_gap_seed002.csv.gz",
+      "sha256": "ac11a68b3c5c374175b6ad54fd242d7ca7b390ae389dc848719327a8f45ebe1f",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\long_gap_seed003.csv.gz",
+      "sha256": "3d172c05ca0f64623ba86ed23760a0fd9699745c0f8753094f8ff6ebb67c8b3a",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\long_gap_seed004.csv.gz",
+      "sha256": "f7d089459915a340cfb9c4372a8fe4b02b295c21681a6a28df90350e160c592f",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\long_gap_seed005.csv.gz",
+      "sha256": "5d06989171cf0ff910b8a6388fe28cb17c67b5333efa85675ff19b777665eaa0",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\long_gap_seed061.csv.gz",
+      "sha256": "c297d59ab240d3d42ecd154da760d0702545eecf68d024b3d3931017b52976a1",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\long_gap_seed062.csv.gz",
+      "sha256": "3e3b4e21b238d93ea6b90de8027517b944a7d34f9cac5242c28e2971d477528d",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\long_gap_seed063.csv.gz",
+      "sha256": "921b3b524c7ae0bc3ce9ed1af487ed88594ecd6516334faa161e56dbc94cc5cd",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\long_gap_seed064.csv.gz",
+      "sha256": "e5ad3017b3b6775b24a245d18ff1f9c3b0a61fcca3f583802315e2f4f3995bdc",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\long_gap_seed065.csv.gz",
+      "sha256": "1df4011c1ea5c759b3d6332364aba3b492a530b35bc1f634444f1a162b851467",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\voltage_sat_seed001.csv.gz",
+      "sha256": "40b5e158c655f153c941bf7ace92ffc93d26bc881ddffb5726dd299d38ff4083",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\voltage_sat_seed002.csv.gz",
+      "sha256": "79728778072b69ed795384d5103b6b84e0c76e8e80a1c888a3008b6563f28656",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\voltage_sat_seed003.csv.gz",
+      "sha256": "30934405f13e4e39866beffc2b18b341fdbac23f4743ee24487c18b41479f4a2",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\voltage_sat_seed004.csv.gz",
+      "sha256": "b807edaa53c2073386a3f34792ba86f45c49f81d73af3bfdd78b3c3218c585c7",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\voltage_sat_seed005.csv.gz",
+      "sha256": "859638c2722a9443f44a052bf57acbb302f6fed4f2eff2c014db470b97147685",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\voltage_sat_seed061.csv.gz",
+      "sha256": "b47c22fee93503cae6ff8d55b8ef7b475b49315cf84400755cbf1d5c66c7602d",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\voltage_sat_seed062.csv.gz",
+      "sha256": "711de4519a5921e73b15818c9284004fdf7451e280b561799909278a47479aec",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\voltage_sat_seed063.csv.gz",
+      "sha256": "9fb84512443ee19b79148c38eed371a59af9030f5524af1878e0b758747076d8",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\voltage_sat_seed064.csv.gz",
+      "sha256": "bc7ccddec130dbd8e2e0a83ce39ad2f2601e83da4d86508ed987b650b9cde3e7",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\voltage_sat_seed065.csv.gz",
+      "sha256": "09d5fac24e275baedf6454cf2c8dd715fb532507d23814214911eb430075fcdd",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\noise_seed001.csv.gz",
+      "sha256": "c82564fe59e939e513456365b5804068a1895c7188bc9b8d543ae4b04ca7318d",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\noise_seed002.csv.gz",
+      "sha256": "f117f4cff5b21ace590ba44d61d96e1f14cae1a79c998d1cf787ec8e43400311",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\noise_seed003.csv.gz",
+      "sha256": "ed4d14f4b9771fde8d8cd66b28fe6167bf2b31cf04936d0f4c3a8dde05864b67",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\noise_seed004.csv.gz",
+      "sha256": "d01c31b802a47ac7be18546215bc9bf79b88cf3a22e9eafe870cd18fdb33b55c",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\noise_seed005.csv.gz",
+      "sha256": "db9e6d5978f8f7ed5fa24aba15617e7a10264f3e6c13fa3d177279bbf010dd7a",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\noise_seed061.csv.gz",
+      "sha256": "afff43c2bd8ddee7526d151d3e4b50879a9745e6cd3618d82301678640d64e4d",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\noise_seed062.csv.gz",
+      "sha256": "b01d5a7db2590d24356e284728b17725a96bf1d93abacfa4cfcb604f63a4ecba",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\noise_seed063.csv.gz",
+      "sha256": "e805bc0b4ca234084280ad97b838429d2d2e8bc00f8e5723d8b1f299172eb29a",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\noise_seed064.csv.gz",
+      "sha256": "ec30ac03c0590c027928511a0706f681392a958a9e73cb6e87e644e8a76d91c0",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\noise_seed065.csv.gz",
+      "sha256": "46882ce5f774b620fdd9446794626ad98d928d96c5bb47a6f7a6d50d4dec83d0",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\negative_step_seed001.csv.gz",
+      "sha256": "6b916bf687c0677b95397a263b0e41bdbdcbcd9de4dcc75d6f6b73a1aa95cdd4",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\negative_step_seed002.csv.gz",
+      "sha256": "44fd997835ff04d6f2c85c064399e22973f1c52bac6c7fa9cedb11ca681b2785",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\negative_step_seed003.csv.gz",
+      "sha256": "639583bf8d95dbd36ee9031f817d40fcf0933bcaeab8b4de08a6acb1ff97011c",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\negative_step_seed004.csv.gz",
+      "sha256": "29668f516f773ae8bae2e3cc8a8d739b9f961ea07aac7508585aad7c70c281cd",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\negative_step_seed005.csv.gz",
+      "sha256": "9194e3819e400449b9c954c4ebac1b67ce328c3d2a06822757fe57c0d60f7759",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\negative_step_seed061.csv.gz",
+      "sha256": "e9825e884458ee64624ed24863a57d2d1f1fa29693d27554102fe320357a8b61",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\negative_step_seed062.csv.gz",
+      "sha256": "8b0c7907a2e9010f5dbb7c4aaaa5f6d6760b5ad0f32e88b301c9dc483600f2c6",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\negative_step_seed063.csv.gz",
+      "sha256": "43c5f7e6db0602b7b36d52339cc36bbaad47584ef102f0d4c1bdbefa850dc385",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\negative_step_seed064.csv.gz",
+      "sha256": "d9c466be319cb335dbd4306d6b4635156b41748413cecc252e23189129bf7837",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\negative_step_seed065.csv.gz",
+      "sha256": "9980c305713413e247f9785a4918b0f9af41327603fbacd50e31f5b8fff84285",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_measurement_seed001.csv.gz",
+      "sha256": "0ada44450f0081fb20b5c67f7f38d11fbbb40b4a4b76e0c18d59c311690ed98b",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_measurement_seed002.csv.gz",
+      "sha256": "cb78ba8c42869500b670e4794b7fe5b43341ce169e810841c68c0e29806d35c3",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_measurement_seed003.csv.gz",
+      "sha256": "6f97dee88f0b4eee499f95df93968577f7df7a61438a80730d0001722a166373",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_measurement_seed004.csv.gz",
+      "sha256": "d75cfda813173c7ba797a82f8c01035fd08077206072a9914e4b9c544a3aaf70",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_measurement_seed005.csv.gz",
+      "sha256": "7de351c550dba4b12b405ebe1c96531a40f7ed6edd0ac29c959658117b9d841c",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_measurement_seed061.csv.gz",
+      "sha256": "6798d214afcaa274169a0c2e9ce53e2df40117efb247d911aa78c2e534c72205",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_measurement_seed062.csv.gz",
+      "sha256": "362ca71559f8dc8b5017fdf924afc727a58ed8a622217ea62e01f5733ba282b0",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_measurement_seed063.csv.gz",
+      "sha256": "8827981576660a9d7907950f9240411b3d0d56a57645fb6e276f36d470bf00f2",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_measurement_seed064.csv.gz",
+      "sha256": "f7ea4dd2e88f71a853ab27dae2141b52bcc82115bf268498db9ea5526ff944e5",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_measurement_seed065.csv.gz",
+      "sha256": "ab14cc5cae97a49fc6937cfea0a53908f5ce789339e1e6d3505850993aa037db",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_torque_seed001.csv.gz",
+      "sha256": "e5f347a2584b2c0687d8373fa7416a70b06c87ec7aea34b0ce34ddb44cb4a04a",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_torque_seed002.csv.gz",
+      "sha256": "7c8dee6f202bd00dfa6cbc9de42a9076414b8373f6ff37208aa5eb7c7904437b",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_torque_seed003.csv.gz",
+      "sha256": "45b6097b2566856976f497e4dfe310659c6155ace8643e38f03939b55b95c2af",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_torque_seed004.csv.gz",
+      "sha256": "0745ba4ccfd2a2e51672497b94b4bd785e15a609b2ebcb14ec116b5756537ada",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_torque_seed005.csv.gz",
+      "sha256": "98b169901220742d4b9933fa3a91e7b45bde12c505feb04ed29994c8eaecd236",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_torque_seed061.csv.gz",
+      "sha256": "49265480fd4443559c626553cf443f92b96978efaf635f14ea698445f0afcb08",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_torque_seed062.csv.gz",
+      "sha256": "a343f67149b1152603a5d895cc176462e6f712645d3d130976c57bf652ca33dd",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_torque_seed063.csv.gz",
+      "sha256": "1250426cb7426f08c3c05ac06c7209ee2e5a9ec345cb9422d08a198e3a6a5d51",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_torque_seed064.csv.gz",
+      "sha256": "bccf2473316f4c4206990d1326ec1abbf314fc1076dc640c29eae7727218e398",
+      "rows": 7001
+    },
+    {
+      "file": "simulation\\dob_simulink\\window_scan_results\\20261024_154057\\real_torque_seed065.csv.gz",
+      "sha256": "d95575f8055c63bb4286716d840c1ecda32c55a808649dcc07275c6305cc6105",
+      "rows": 7001
+    }
+  ]
+}

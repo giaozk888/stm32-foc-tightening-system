@@ -1,0 +1,102 @@
+[
+  {
+    "file": "id_anomaly_seed001_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2098679542546,
+    "time_s": 5.041
+  },
+  {
+    "file": "id_anomaly_seed002_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2098679542546,
+    "time_s": 5.041
+  },
+  {
+    "file": "id_anomaly_seed003_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2098679542546,
+    "time_s": 5.041
+  },
+  {
+    "file": "id_anomaly_seed004_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2098679542546,
+    "time_s": 5.041
+  },
+  {
+    "file": "id_anomaly_seed005_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2098679542546,
+    "time_s": 5.041
+  },
+  {
+    "file": "id_anomaly_seed061_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2098679542546,
+    "time_s": 5.041
+  },
+  {
+    "file": "id_anomaly_seed062_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2098679542546,
+    "time_s": 5.041
+  },
+  {
+    "file": "id_anomaly_seed063_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2098679542546,
+    "time_s": 5.041
+  },
+  {
+    "file": "id_anomaly_seed064_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2098679542546,
+    "time_s": 5.041
+  },
+  {
+    "file": "id_anomaly_seed065_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2098679542546,
+    "time_s": 5.041
+  },
+  {
+    "file": "source_gap_seed001_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2365466207259,
+    "time_s": 4.946
+  },
+  {
+    "file": "source_gap_seed002_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2365466207259,
+    "time_s": 4.946
+  },
+  {
+    "file": "source_gap_seed003_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2365466207259,
+    "time_s": 4.946
+  },
+  {
+    "file": "source_gap_seed004_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2365466207259,
+    "time_s": 4.946
+  },
+  {
+    "file": "source_gap_seed005_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2365466207259,
+    "time_s": 4.946
+  },
+  {
+    "file": "source_gap_seed061_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2365466207259,
+    "time_s": 4.946
+  },
+  {
+    "file": "source_gap_seed062_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2365466207259,
+    "time_s": 4.946
+  },
+  {
+    "file": "source_gap_seed063_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2365466207259,
+    "time_s": 4.946
+  },
+  {
+    "file": "source_gap_seed064_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2365466207259,
+    "time_s": 4.946
+  },
+  {
+    "file": "source_gap_seed065_enabled1.csv.gz",
+    "max_jerk_rpm_s2": 1000.2365466207259,
+    "time_s": 4.946
+  }
+]

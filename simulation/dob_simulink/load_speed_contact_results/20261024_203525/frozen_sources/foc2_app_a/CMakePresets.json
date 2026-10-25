@@ -1,0 +1,1265 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "DobLoadSpeedContactHoldCandidate",
+            "inherits": "DobLoadSpeedCandidate",
+            "cacheVariables": { "FOC_DOB_LOAD_SPEED_CONTACT_HOLD": "ON" }
+        },
+        {
+            "name": "DobLoadSpeedCandidate",
+            "inherits": "DobWindow75Warmup3Candidate",
+            "cacheVariables": { "FOC_DOB_LOAD_SPEED": "ON" }
+        },
+        {
+            "name": "DobLowRecoveryAuditCandidate",
+            "inherits": "DobShortLowRecoveryCandidate",
+            "cacheVariables": { "FOC_DOB_LOW_AUDIT": "ON" }
+        },
+        {
+            "name": "DobShortLowRecoveryCandidate",
+            "inherits": "DobWindow75Warmup3Candidate",
+            "cacheVariables": { "FOC_DOB_SHORT_LOW_RECOVERY": "ON" }
+        },
+        {
+            "name": "DobRecoveryBreakdownCandidate",
+            "inherits": "DobWindow75Warmup3Candidate",
+            "cacheVariables": { "FOC_DOB_RECOVERY_TIMING": "ON" }
+        },
+        {
+            "name": "DobWindow75Warmup3Candidate",
+            "inherits": "DobWarmup3Candidate",
+            "cacheVariables": { "FOC_DOB_TREND_WINDOW75": "ON" }
+        },
+        {
+            "name": "DobWarmup3Candidate",
+            "inherits": "DobWarmupAbCandidate",
+            "cacheVariables": { "FOC_DOB_WARMUP_DEFAULT_TAU": "3" }
+        },
+        {
+            "name": "DobWarmupAbCandidate",
+            "inherits": "DobSaturationContinuousCandidate",
+            "cacheVariables": { "FOC_DOB_WARMUP_AB": "ON" }
+        },
+        {
+            "name": "DobSaturationContinuousCandidate",
+            "inherits": "DobTrendContinuousTrip500Candidate",
+            "cacheVariables": { "FOC_DOB_SATURATION_CONTINUE": "ON" }
+        },
+        {
+            "name": "DobTrendContinuousTrip500Candidate",
+            "inherits": "DobTrendShadowTrip500Candidate",
+            "cacheVariables": { "FOC_DOB_TREND_CONTINUOUS": "ON" }
+        },
+        {
+            "name": "DobTrendShadowTrip500Candidate",
+            "inherits": "DobTrendShadowCandidate",
+            "cacheVariables": { "FOC_NORMAL_RUN_TRIP500": "ON" }
+        },
+        {
+            "name": "TighteningDob025Trip500",
+            "inherits": "TighteningDob025",
+            "cacheVariables": { "FOC_NORMAL_RUN_TRIP500": "ON" }
+        },
+        {
+            "name": "DobTrendShadowCandidate",
+            "inherits": "TighteningDob025Contact20Observe10Candidate",
+            "cacheVariables": { "FOC_DOB_TREND_SHADOW": "ON" }
+        },
+        {
+            "name": "DobGainAbCandidate",
+            "inherits": "DobRealTraceCandidate",
+            "cacheVariables": { "FOC_DOB_GAIN_AB_DIAG": "ON" }
+        },
+        {
+            "name": "DobRealTraceCandidate",
+            "inherits": "TighteningDob025Contact20Observe10Candidate",
+            "cacheVariables": { "FOC_DOB_REAL_TRACE": "ON" }
+        },
+        {
+            "name": "TighteningDob025Contact20Observe10Candidate",
+            "inherits": "TighteningDob025",
+            "cacheVariables": { "FOC_DOB_CONTACT20_OBSERVE10": "ON" }
+        },
+        {
+            "name": "TighteningDob025",
+            "inherits": "MechanicalDobFeedbackCandidate",
+            "cacheVariables": {
+                "FOC_DOB_NORMAL_CONTROL": "ON",
+                "FOC_NORMAL_RUN_TRIP500": "ON",
+                "FOC_MECHANICAL_HIGH_SPEED_DIAG": "OFF",
+                "FOC_MECHANICAL_MOTION_DIAG": "OFF",
+                "FOC_FRICTION_CALIBRATION_DIAG": "OFF",
+                "FOC_DOB_ID_TRACE": "OFF"
+            }
+        },
+        {
+            "name": "MechanicalDobFeedbackGain015Candidate",
+            "inherits": "MechanicalDobFeedbackCandidate",
+            "cacheVariables": { "FOC_DOB_FB_GAIN_015": "ON" }
+        },
+        {
+            "name": "MechanicalDobFeedbackGainHalfCandidate",
+            "inherits": "MechanicalDobFeedbackCandidate",
+            "cacheVariables": { "FOC_DOB_FB_GAIN_HALF": "ON" }
+        },
+        {
+            "name": "MechanicalDobFeedbackGain1Candidate",
+            "inherits": "MechanicalDobFeedbackCandidate",
+            "cacheVariables": { "FOC_DOB_FB_GAIN_ONE": "ON" }
+        },
+        {
+            "name": "MechanicalDobFeedbackCandidate",
+            "inherits": "MechanicalDobPreLpf200Candidate",
+            "cacheVariables": { "FOC_DOB_FEEDBACK_CANDIDATE": "ON" }
+        },
+        {
+            "name": "MechanicalDobPreLpf200Candidate",
+            "inherits": "MechanicalDobPreLpfCandidate",
+            "cacheVariables": { "FOC_DOB_PRE_LPF_JUMP_200MA": "ON" }
+        },
+        {
+            "name": "MechanicalDobPreLpfCandidate",
+            "inherits": "MechanicalDobPersistentCandidate",
+            "cacheVariables": { "FOC_DOB_ID_PRE_LPF_QUALITY": "ON" }
+        },
+        {
+            "name": "MechanicalDobPersistentCandidate",
+            "inherits": "MechanicalDobRecoverableCandidate",
+            "cacheVariables": { "FOC_DOB_PERSISTENT_QUALITY": "ON" }
+        },
+        {
+            "name": "MechanicalDobRecoverableCandidate",
+            "inherits": "MechanicalDobDirect100Candidate",
+            "cacheVariables": { "FOC_DOB_RECOVERABLE_ADMISSION": "ON" }
+        },
+        {
+            "name": "MechanicalDobDirect100Candidate",
+            "inherits": "MechanicalDobAdmissionStartGuardCandidate",
+            "cacheVariables": { "FOC_DOB_DIRECT_JUMP_REJECT": "ON" }
+        },
+        {
+            "name": "MechanicalDobAdmissionStartGuardCandidate",
+            "inherits": "MechanicalDobSpikeAdmissionCandidate",
+            "cacheVariables": { "FOC_DOB_ADMISSION_START_GUARD": "ON" }
+        },
+        {
+            "name": "MechanicalDobSpikeAdmissionCandidate",
+            "inherits": "MechanicalDobIdTraceCandidate",
+            "cacheVariables": { "FOC_DOB_SPIKE_ADMISSION": "ON" }
+        },
+        {
+            "name": "MechanicalDobIdTraceCandidate",
+            "inherits": "MechanicalDobShadowCandidate",
+            "cacheVariables": { "FOC_DOB_ID_TRACE": "ON" }
+        },
+        {
+            "name": "MechanicalIdSteadyCandidate",
+            "inherits": "MechanicalDobShadowCandidate",
+            "cacheVariables": { "FOC_ID_STEADY_STATS": "ON" }
+        },
+        {
+            "name": "MechanicalDobShadowCandidate",
+            "inherits": "MechanicalReadinessSnapshotCandidate",
+            "cacheVariables": { "FOC_MECHANICAL_DOB_SHADOW": "ON" }
+        },
+        {
+            "name": "MechanicalReverseIdentificationCandidate",
+            "inherits": "MechanicalReadinessSnapshotCandidate",
+            "cacheVariables": { "FOC_MECHANICAL_REVERSE_IDENT_DIAG": "ON" }
+        },
+        {
+            "name": "MechanicalReadinessSnapshotCandidate",
+            "inherits": "MechanicalOuterCompletionCandidate",
+            "cacheVariables": { "FOC_READY_TIMESTAMP_SNAPSHOT": "ON" }
+        },
+        {
+            "name": "MechanicalOuterCompletionCandidate",
+            "inherits": "MechanicalHighSpeedEncoderFixCandidate",
+            "cacheVariables": { "FOC_OUTER_OBSERVE_AFTER_ACK": "ON" }
+        },
+        {
+            "name": "MechanicalHighSpeedEncoderFixCandidate",
+            "inherits": "MechanicalIdentificationHighSpeedCandidate",
+            "cacheVariables": { "FOC_ENCODER_CONTROL_ADMISSION_FIX": "ON" }
+        },
+        {
+            "name": "MechanicalIdentificationHighSpeedCandidate",
+            "inherits": "MechanicalIdentificationMotionCandidate",
+            "cacheVariables": { "FOC_MECHANICAL_HIGH_SPEED_DIAG": "ON" }
+        },
+        {
+            "name": "MechanicalIdentificationMotionCandidate",
+            "inherits": "MechanicalIdentificationCandidate",
+            "cacheVariables": {
+                "FOC_MECHANICAL_MOTION_DIAG": "ON",
+                "FOC_FRICTION_CALIBRATION_DIAG": "ON"
+            }
+        },
+        {
+            "name": "TighteningBemfHalfCandidate",
+            "inherits": "TighteningKa025Candidate",
+            "cacheVariables": {
+                "FOC_BEMF_PSI_WB": "0.00034866",
+                "FOC_BEMF_ENABLED_DEFAULT": "ON"
+            }
+        },
+        {
+            "name": "MechanicalIdentificationCandidate",
+            "inherits": "TighteningBemfHalfCandidate",
+            "cacheVariables": { "FOC_MECHANICAL_IDENT_DIAG": "ON" }
+        },
+        {
+            "name": "BemfFluxGainDiagnostic",
+            "inherits": "TighteningKa025Candidate",
+            "cacheVariables": { "FOC_BEMF_GAIN_DIAG": "ON" }
+        },
+        {
+            "name": "TighteningKa025Candidate",
+            "inherits": "BemfFittedMemoryCandidate",
+            "cacheVariables": {
+                "FOC_ACCEL_FF_KA_A_PER_RPM_S": "0.000046875",
+                "FOC_BEMF_ENABLED_DEFAULT": "OFF"
+            }
+        },
+        {
+            "name": "TighteningKa025BemfOnCandidate",
+            "inherits": "TighteningKa025Candidate",
+            "cacheVariables": { "FOC_BEMF_ENABLED_DEFAULT": "ON" }
+        },
+        {
+            "name": "Ka279ManualTrial",
+            "inherits": "AccelFfAuditGain100",
+            "cacheVariables": {
+                "FOC_ACCEL_FF_KA_A_PER_RPM_S": "0.0000279",
+                "PW_TARGET_UNIT_TESTS": "OFF",
+                "PW_LOG_STORE_SLOTS": "48"
+            }
+        },
+        {
+            "name": "KaFullAccelerationDiagnostic",
+            "inherits": "BemfFittedMemoryCandidate",
+            "cacheVariables": { "FOC_KA_FULL_DIAG": "ON", "FOC_ACCEL_FF_KA_A_PER_RPM_S": "0.0000000" }
+        },
+        {
+            "name": "KaSynchronizedMemoryDiagnostic",
+            "inherits": "KaSynchronizedDiagnostic",
+            "cacheVariables": { "PW_TARGET_UNIT_TESTS": "OFF", "PW_LOG_STORE_SLOTS": "48" }
+        },
+        {
+            "name": "BemfFittedMemoryCandidate",
+            "inherits": "BemfFittedFluxCandidate",
+            "cacheVariables": { "PW_TARGET_UNIT_TESTS": "OFF", "PW_LOG_STORE_SLOTS": "48" }
+        },
+        {
+            "name": "KaSynchronizedDiagnostic",
+            "inherits": "BemfFittedFluxCandidate",
+            "cacheVariables": { "FOC_KA_SYNC_DIAG": "ON", "FOC_ACCEL_FF_KA_A_PER_RPM_S": "0.0000000" }
+        },
+        {
+            "name": "KaIdentificationDiagnostic",
+            "inherits": "BemfFittedFluxCandidate",
+            "cacheVariables": { "FOC_KA_IDENT_DIAG": "ON", "FOC_ACCEL_FF_KA_A_PER_RPM_S": "0.0000000" }
+        },
+        {
+            "name": "StartupTimestampsDiagnostic",
+            "inherits": "AccelFfAuditGain025",
+            "cacheVariables": { "FOC_STARTUP_TIMESTAMPS_DIAG": "ON" }
+        },
+        {
+            "name": "AccelFfAuditGain100",
+            "inherits": "BemfFittedFluxCandidate",
+            "cacheVariables": { "FOC_ACCEL_FF_AUDIT": "ON", "FOC_ACCEL_FF_KA_A_PER_RPM_S": "0.0001875" }
+        },
+        {
+            "name": "AccelFfAuditGain0",
+            "inherits": "AccelFfAuditGain100",
+            "cacheVariables": { "FOC_ACCEL_FF_KA_A_PER_RPM_S": "0.0000000" }
+        },
+        {
+            "name": "AccelFfAuditGain025",
+            "inherits": "AccelFfAuditGain100",
+            "cacheVariables": { "FOC_ACCEL_FF_KA_A_PER_RPM_S": "0.000046875" }
+        },
+        {
+            "name": "AccelFfAuditGain050",
+            "inherits": "AccelFfAuditGain100",
+            "cacheVariables": { "FOC_ACCEL_FF_KA_A_PER_RPM_S": "0.00009375" }
+        },
+        {
+            "name": "BemfFittedFluxCandidate",
+            "inherits": "BemfFeedforwardCandidate",
+            "cacheVariables": {
+                "FOC_BEMF_PSI_WB": "0.00069732",
+                "FOC_BEMF_ENABLED_DEFAULT": "OFF"
+            }
+        },
+        {
+            "name": "PsiKeHighSpeedDiagnostic",
+            "inherits": "PsiKe500rpmTripDiagnostic",
+            "cacheVariables": { "FOC_PSI_IDENT_API400": "ON" }
+        },
+        {
+            "name": "PsiKe500rpmTripDiagnostic",
+            "inherits": "PsiKeIdentificationDiagnostic",
+            "cacheVariables": { "FOC_PSI_IDENT_TRIP500": "ON" }
+        },
+        {
+            "name": "PsiKeIdentificationDiagnostic",
+            "inherits": "BemfFeedforwardCandidate",
+            "cacheVariables": { "FOC_PSI_IDENT_DIAG": "ON" }
+        },
+        {
+            "name": "BemfFeedforwardCandidate",
+            "inherits": "DqOriginalRuntime",
+            "cacheVariables": {
+                "FOC_DQ_DECOUPLING_CANDIDATE": "OFF",
+                "FOC_DQ_DECOUPLING_ENABLED_DEFAULT": "OFF",
+                "FOC_BEMF_CANDIDATE": "ON",
+                "FOC_BEMF_ENABLED_DEFAULT": "OFF",
+                "FOC_BEMF_PSI_WB": "0.0"
+            }
+        },
+        {
+            "name": "DqOriginalRuntime",
+            "inherits": "DqDecouplingWireCandidate",
+            "cacheVariables": {
+                "FOC_DQ_AUDIT_ENABLE": "OFF",
+                "DECOUPLING_SIGN_TEST": "OFF",
+                "DECOUPLING_SIGN_MODE": "0",
+                "AS5047P_DMA_TERMINAL_FIX": "OFF",
+                "AS5047P_DMA_TIMING_POLICY_V2": "OFF"
+            }
+        },
+        {
+            "name": "DqAuditCurrent",
+            "inherits": "DqDecouplingWireCandidate",
+            "cacheVariables": { "FOC_DQ_AUDIT_ENABLE": "ON", "DECOUPLING_SIGN_TEST": "ON", "DECOUPLING_SIGN_MODE": "0" }
+        },
+        {
+            "name": "DqAuditReverseD",
+            "inherits": "DqAuditCurrent",
+            "cacheVariables": { "DECOUPLING_SIGN_MODE": "1" }
+        },
+        {
+            "name": "DqAuditReverseQ",
+            "inherits": "DqAuditCurrent",
+            "cacheVariables": { "DECOUPLING_SIGN_MODE": "2" }
+        },
+        {
+            "name": "DqAuditReverseBoth",
+            "inherits": "DqAuditCurrent",
+            "cacheVariables": { "DECOUPLING_SIGN_MODE": "3" }
+        },
+        {
+            "name": "DqDecouplingWireCandidate",
+            "inherits": "DqDecouplingCandidate"
+        },
+        {
+            "name": "DqDecouplingWireOffCandidate",
+            "inherits": "DqDecouplingOffCandidate"
+        },
+        {
+            "name": "DqDecouplingCandidate",
+            "inherits": "CurrentPiIdentifiedCandidate",
+            "cacheVariables": {
+                "FOC_DQ_DECOUPLING_CANDIDATE": "ON",
+                "FOC_DQ_DECOUPLING_ENABLED_DEFAULT": "ON"
+            }
+        },
+        {
+            "name": "DqDecouplingOffCandidate",
+            "inherits": "DqDecouplingCandidate",
+            "cacheVariables": { "FOC_DQ_DECOUPLING_ENABLED_DEFAULT": "OFF" }
+        },
+        {
+            "name": "CurrentStepAbIdentPolicy",
+            "inherits": "CurrentStepAbGateEvidence",
+            "binaryDir": "${sourceDir}/build/CurrentStepAbIdentPolicy",
+            "cacheVariables": {
+                "FOC_CURRENT_STEP_IDENT_POLICY": "ON",
+                "AS5047P_DMA_TERMINAL_FIX": "ON",
+                "AS5047P_DMA_TIMING_POLICY_V2": "ON"
+            }
+        },
+        {
+            "name": "CurrentStepAbGateEvidence",
+            "inherits": "CurrentStepAbDiagnostic",
+            "binaryDir": "${sourceDir}/build/CurrentStepAbGateEvidence",
+            "cacheVariables": { "FOC_OUTPUT_GATE_EVIDENCE": "ON" }
+        },
+        {
+            "name": "CurrentStepAbDiagnostic",
+            "inherits": "CurrentPiIdentifiedCandidate",
+            "cacheVariables": { "FOC_CURRENT_STEP_AB_DIAG": "ON" }
+        },
+        {
+            "name": "CurrentPiIdentifiedCandidate",
+            "inherits": "Tightening240rpmFriction105OnCandidate",
+            "cacheVariables": { "FOC_CURRENT_PI_IDENTIFIED_ENABLE": "ON", "CURRENT_PI_CANDIDATE_BANDWIDTH_HZ": "300.0" }
+        },
+        {
+            "name": "CurrentPiLegacyCompare",
+            "inherits": "CurrentPiIdentifiedCandidate",
+            "cacheVariables": { "FOC_CURRENT_PI_IDENTIFIED_ENABLE": "OFF" }
+        },
+        {
+            "name": "CurrentPiIdentifiedComputeOnly",
+            "inherits": "OneCyclePwmPipeline",
+            "cacheVariables": { "FOC_CURRENT_PI_IDENTIFIED_ENABLE": "ON", "AS5047P_DMA_FOC_FIRST": "ON", "CURRENT_PI_CANDIDATE_BANDWIDTH_HZ": "300.0" }
+        },
+        {
+            "name": "MotorParameterIdentificationVoltageStepDiagnostic",
+            "inherits": "MotorParameterIdentificationLAdmissionDiagnostic",
+            "cacheVariables": { "FOC_IDENT_VOLTAGE_STEP_DIAG": "ON" }
+        },
+        {
+            "name": "MotorParameterIdentificationLAdmissionDiagnostic",
+            "inherits": "MotorParameterIdentificationRsRejectCountDiagnostic",
+            "cacheVariables": { "FOC_IDENT_L_RS_ADMISSION_ENABLE": "ON" }
+        },
+        {
+            "name": "MotorParameterIdentificationRsRejectCountDiagnostic",
+            "inherits": "MotorParameterIdentificationRsGapCountDiagnostic",
+            "cacheVariables": { "FOC_IDENT_RS_REJECT_COUNT_ONLY": "ON" }
+        },
+        {
+            "name": "MotorParameterIdentificationRsGapCountDiagnostic",
+            "inherits": "MotorParameterIdentificationEncoderTimingDiagnostic",
+            "cacheVariables": { "FOC_IDENT_RS_GAP_COUNT_ONLY": "ON" }
+        },
+        {
+            "name": "MotorParameterIdentificationEncoderTimingDiagnostic",
+            "inherits": "MotorParameterIdentificationEncoderTerminalDiagnostic",
+            "cacheVariables": { "AS5047P_DMA_TIMING_POLICY_V2": "ON" }
+        },
+        {
+            "name": "MotorParameterIdentificationEncoderTerminalDiagnostic",
+            "inherits": "MotorParameterIdentificationRsRejectOnlyDiagnostic",
+            "cacheVariables": { "AS5047P_DMA_TERMINAL_FIX": "ON" }
+        },
+        {
+            "name": "MotorParameterIdentificationRsRejectOnlyDiagnostic",
+            "inherits": "MotorParameterIdentificationRs100usDiagnostic",
+            "cacheVariables": { "FOC_IDENT_RS_NO_TOTAL_REJECT_EXIT": "ON" }
+        },
+        {
+            "name": "MotorParameterIdentificationRs100usDiagnostic",
+            "inherits": "MotorParameterIdentificationRsGapDiagnostic",
+            "cacheVariables": { "FOC_IDENT_RS_SOFT_DT_MAX_US": "100" }
+        },
+        {
+            "name": "MotorParameterIdentificationRsGapDiagnostic",
+            "inherits": "MotorParameterIdentificationTimingDiagnostic",
+            "cacheVariables": { "FOC_IDENT_RS_GAP_ADMISSION_ENABLE": "ON" }
+        },
+        {
+            "name": "MotorParameterIdentificationTimingDiagnostic",
+            "inherits": "MotorParameterIdentificationNoTravelDiagnostic",
+            "cacheVariables": { "FOC_IDENT_TIMING_TRACE_ENABLE": "ON" }
+        },
+        {
+            "name": "MotorParameterIdentificationNoTravelDiagnostic",
+            "inherits": "MotorParameterIdentificationRejectDiagnostic",
+            "cacheVariables": { "FOC_IDENT_TRAVEL_EXIT_ENABLE": "OFF" }
+        },
+        {
+            "name": "MotorParameterIdentificationRejectDiagnostic",
+            "inherits": "MotorParameterIdentificationDiagnostic",
+            "cacheVariables": { "FOC_IDENT_CURRENT_REJECT_ENABLE": "ON" }
+        },
+        {
+            "name": "MotorParameterIdentificationDiagnostic",
+            "inherits": "Tightening240rpmFriction105OnCandidate",
+            "cacheVariables": { "FOC_MOTOR_IDENTIFICATION_DIAG": "ON" }
+        },
+        {
+            "name": "Tightening240rpmFriction105OnCandidate",
+            "inherits": "Tightening240rpmFrictionOnCandidate",
+            "cacheVariables": { "FOC_FRICTION_I_A": "0.105", "FOC_FRICTION_DEADBAND_RPM": "2.0" }
+        },
+        {
+            "name": "Tightening240rpmFriction105OffCandidate",
+            "inherits": "Tightening240rpmFriction105OnCandidate",
+            "cacheVariables": { "FOC_FRICTION_ENABLED_DEFAULT": "OFF" }
+        },
+        {
+            "name": "FrictionCalibrationHighSpeedDiagnostic",
+            "inherits": "FrictionCalibrationDiagnostic",
+            "cacheVariables": { "FOC_FRICTION_HIGH_SPEED_GRID": "ON" }
+        },
+        {
+            "name": "FrictionCalibrationDiagnostic",
+            "inherits": "Tightening240rpmFrictionOffCandidate",
+            "cacheVariables": { "FOC_FRICTION_CALIBRATION_DIAG": "ON" }
+        },
+        {
+            "name": "Tightening240rpmFrictionOnCandidate",
+            "inherits": "Tightening240rpmAccelFfOnCandidate",
+            "cacheVariables": { "FOC_SPEED_FRICTION_CANDIDATE": "ON", "FOC_FRICTION_ENABLED_DEFAULT": "ON" }
+        },
+        {
+            "name": "Tightening240rpmFrictionOffCandidate",
+            "inherits": "Tightening240rpmFrictionOnCandidate",
+            "cacheVariables": { "FOC_FRICTION_ENABLED_DEFAULT": "OFF" }
+        },
+        {
+            "name": "Tightening240rpmAccelFfOnCandidate",
+            "inherits": "Tightening240rpmScurveTokenizedCandidate",
+            "cacheVariables": { "FOC_ACCEL_FEEDFORWARD_CANDIDATE": "ON", "FOC_ACCEL_FF_ENABLED_DEFAULT": "ON" }
+        },
+        {
+            "name": "Tightening240rpmAccelFfOffCandidate",
+            "inherits": "Tightening240rpmAccelFfOnCandidate",
+            "cacheVariables": { "FOC_ACCEL_FF_ENABLED_DEFAULT": "OFF" }
+        },
+        {
+            "name": "Tightening240rpmScurveTokenizedCandidate",
+            "inherits": "Tightening240rpmScurveCandidate",
+            "cacheVariables": { "PW_LOG_TOKENIZED_DEFAULT": "ON" }
+        },
+        {
+            "name": "Tightening240rpmScurveCandidate",
+            "inherits": "Tightening240rpmAwNoSb3Candidate",
+            "cacheVariables": { "FOC_SPEED_SCURVE_CANDIDATE": "ON" }
+        },
+        {
+            "name": "Tightening240rpmLegacyAwNoSb3Candidate",
+            "inherits": "Tightening240rpmAwNoSb3Candidate",
+            "cacheVariables": { "FOC_SPEED_PI_ANTI_WINDUP": "OFF", "FOC_SPEED_LEGACY_AW_COMPARE": "ON" }
+        },
+        {
+            "name": "Tightening240rpmAwNoSb3Candidate",
+            "inherits": "Tightening240rpmSpeedAntiWindupCandidate",
+            "cacheVariables": { "FOC_SPEED_SB3_DISABLE_CANDIDATE": "ON" }
+        },
+        {
+            "name": "Tightening240rpmSpeedAntiWindupCandidate",
+            "inherits": "Tightening240rpmAdc100Return40Candidate",
+            "cacheVariables": { "FOC_SPEED_PI_ANTI_WINDUP": "ON" }
+        },
+        {
+            "name": "Tightening240rpmAdc100Return40Candidate",
+            "inherits": "Tightening240rpmTravel20000Candidate",
+            "cacheVariables": { "FOC_ADC_COUNTS_100_40_CANDIDATE": "ON" }
+        },
+        {
+            "name": "Tightening240rpmTravel20000Candidate",
+            "inherits": "Tightening240rpmCandidate",
+            "cacheVariables": { "FOC_RUNDOWN240_TRAVEL20000": "ON" }
+        },
+        {
+            "name": "Tightening240rpmCandidate",
+            "inherits": "TighteningCommonModeCandidate",
+            "cacheVariables": { "FOC_RUNDOWN240_CANDIDATE": "ON" }
+        },
+        {
+            "name": "TighteningCommonModeCandidate",
+            "inherits": "TighteningIntentCandidate",
+            "cacheVariables": { "FOC_PWM_COMMON_MODE_ENABLE": "ON" }
+        },
+        {
+            "name": "TighteningIntentCandidate",
+            "inherits": "RundownGuardTrial",
+            "cacheVariables": {
+                "FOC_INTENT_FSM_CANDIDATE": "ON",
+                "UART_LOG_BAUD": "115200",
+                "FOC_TORQUE_CHAIN_DIAG": "OFF",
+                "FOC_TORQUE450_FIVE_SECOND": "OFF",
+                "FOC_TORQUE450_150RPM": "OFF",
+                "FOC_SPEED_DYNAMIC_DIAG": "OFF",
+                "FOC_ANGLE_CHAIN_DIAG": "OFF"
+            }
+        },
+        {
+            "name": "Torque450mA150rpmFiveSecondDiagnostic",
+            "inherits": "Torque450mAFiveSecondDiagnostic",
+            "cacheVariables": { "FOC_TORQUE450_150RPM": "ON" }
+        },
+        {
+            "name": "Torque450mAFiveSecondDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_TORQUE450_FIVE_SECOND": "ON", "FOC_TORQUE_CHAIN_IQ_MA": "450", "FOC_TORQUE350_FIVE_SECOND": "OFF", "FOC_ANGLE_CHAIN_DIAG": "OFF", "FOC_ANGLE_HAND_ONLY": "OFF", "FOC_SPEED_DYNAMIC_DIAG": "OFF", "FOC_BREAKAWAY_CURRENT_TEST": "OFF", "FOC_BREAKAWAY_FIVE_SECOND": "OFF", "UART_LOG_BAUD": "115200" }
+        },
+        {
+            "name": "ElectricalAngleHandDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_ANGLE_CHAIN_DIAG": "ON", "FOC_ANGLE_HAND_ONLY": "ON" }
+        },
+        {
+            "name": "ElectricalZeroOffsetDiagnostic",
+            "inherits": "ElectricalAngleHandDiagnostic",
+            "cacheVariables": { "FOC_ANGLE_HAND_ONLY": "OFF", "FOC_TORQUE_CHAIN_IQ_MA": "350" }
+        },
+        {
+            "name": "Torque350mAFiveSecondDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_TORQUE350_FIVE_SECOND": "ON", "FOC_TORQUE_CHAIN_IQ_MA": "350", "FOC_SPEED_DYNAMIC_DIAG": "OFF", "FOC_BREAKAWAY_CURRENT_TEST": "OFF", "FOC_BREAKAWAY_FIVE_SECOND": "OFF" }
+        },
+        {
+            "name": "Speed500mADynamicDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_SPEED_DYNAMIC_DIAG": "ON", "FOC_BREAKAWAY_CURRENT_TEST": "OFF", "FOC_BREAKAWAY_FIVE_SECOND": "OFF" }
+        },
+        {
+            "name": "BreakawayFiveSecondDiagnostic",
+            "inherits": "BreakawayCurrentDiagnostic",
+            "cacheVariables": { "FOC_BREAKAWAY_FIVE_SECOND": "ON" }
+        },
+        {
+            "name": "BreakawayCurrentDiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_BREAKAWAY_CURRENT_TEST": "ON" }
+        },
+        {
+            "name": "Rundown200mADirectLimitTrial",
+            "inherits": "RundownDiagnosticTrial",
+            "cacheVariables": { "FOC_TORQUE_CHAIN_DIAG": "OFF" }
+        },
+        {
+            "name": "TorqueChain200mADirectLimitDiagnostic",
+            "inherits": "TorqueChain200mADiagnostic"
+        },
+        {
+            "name": "TorqueChain200mADiagnostic",
+            "inherits": "TorqueChain100mADiagnostic",
+            "cacheVariables": { "FOC_TORQUE_CHAIN_IQ_MA": "200" }
+        },
+        {
+            "name": "TorqueChain100mADiagnostic",
+            "inherits": "TorqueChainDiagnostic",
+            "cacheVariables": { "FOC_TORQUE_CHAIN_IQ_MA": "100" }
+        },
+        {
+            "name": "TorqueChainDiagnostic",
+            "inherits": "RundownDiagnosticTrial",
+            "cacheVariables": { "FOC_TORQUE_CHAIN_DIAG": "ON", "FOC_TORQUE_CHAIN_IQ_MA": "50" }
+        },
+        {
+            "name": "RundownDiagnosticTrial",
+            "inherits": "RundownGuardTrial",
+            "cacheVariables": { "FOC_RUNDOWN_DIAGNOSTIC": "ON" }
+        },
+        {
+            "name": "RundownGuardTrial",
+            "inherits": "SpeedBrakeTrackTrial"
+        },
+        {
+            "name": "SpeedBrakeTrackTrial",
+            "inherits": "VoltageX2Trial",
+            "cacheVariables": { "FOC_SPEED_BRAKE_TRACK": "ON" }
+        },
+        {
+            "name": "VoltageX2Trial",
+            "inherits": "SpeedBumplessTrial",
+            "cacheVariables": { "FOC_VOLTAGE_X2_TRIAL": "ON" }
+        },
+        {
+            "name": "SpeedBumplessTrial",
+            "inherits": "ZeroValidAdmissionTrial",
+            "cacheVariables": { "FOC_SPEED_BUMPLESS": "ON" }
+        },
+        {
+            "name": "ZeroValidAdmissionTrial",
+            "inherits": "SpeedStartupBrakeTrial",
+            "cacheVariables": { "FOC_ZERO_VALID_ADMISSION": "ON" }
+        },
+        {
+            "name": "SpeedStartupBrakeTrial",
+            "inherits": "LoadedFsmTrial",
+            "cacheVariables": { "FOC_SPEED_STARTUP_BRAKE": "ON" }
+        },
+        {
+            "name": "LoadedFsmTrial",
+            "inherits": "ProtectedPipelineClosedLoop",
+            "cacheVariables": { "FOC_LOADED_FSM_TRIAL": "ON" }
+        },
+        {
+            "name": "CurrentPolarityComputeOnly",
+            "inherits": "EncoderFocFirst",
+            "cacheVariables": {
+                "FOC_CURRENT_FEEDBACK_SIGN": "1",
+                "FOC_HEAVY_PROFILE_ENABLE": "OFF"
+            }
+        },
+        {
+            "name": "CurrentFaultTrace",
+            "inherits": "ProtectedPipelineClosedLoop",
+            "cacheVariables": { "FOC_CURRENT_FAULT_TRACE_ENABLE": "ON" }
+        },
+        {
+            "name": "ProtectedPipelineClosedLoop",
+            "inherits": "FastCurrentReject",
+            "cacheVariables": {
+                "FOC_CURRENT_FAULT_TRACE_ENABLE": "OFF",
+                "FOC_PWM_PIPELINE_CLOSED_LOOP": "ON",
+                "FOC_ONE_CYCLE_PWM_PIPELINE": "ON",
+                "FOC_PREEMPT_COMMIT_PROBE": "ON",
+                "AS5047P_DMA_FOC_FIRST": "ON",
+                "FOC_FAST_REJECT_COMPUTE_ONLY": "OFF",
+                "FOC_HEAVY_PROFILE_ENABLE": "OFF"
+            }
+        },
+        {
+            "name": "EncoderFocFirst",
+            "inherits": "OneCyclePwmPipeline",
+            "cacheVariables": { "AS5047P_DMA_FOC_FIRST": "ON" }
+        },
+        {
+            "name": "OneCyclePwmPipeline",
+            "inherits": "PreemptCommitProbe",
+            "cacheVariables": { "FOC_ONE_CYCLE_PWM_PIPELINE": "ON" }
+        },
+        {
+            "name": "PreemptCommitProbe",
+            "inherits": "FastCurrentRejectComputeOnly",
+            "cacheVariables": { "FOC_PREEMPT_COMMIT_PROBE": "ON" }
+        },
+        {
+            "name": "FastPathTiming",
+            "inherits": "FastCurrentRejectComputeOnly",
+            "cacheVariables": { "FOC_FAST_PATH_PROFILE": "ON" }
+        },
+        {
+            "name": "FastCurrentReject",
+            "inherits": "RcSamplingOptimizedCandidate",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "FOC_ENABLE_LEGACY_CURRENT_REPAIR": "OFF"
+            }
+        },
+        {
+            "name": "FastCurrentRejectComputeOnly",
+            "inherits": "FastCurrentReject",
+            "cacheVariables": { "FOC_FAST_REJECT_COMPUTE_ONLY": "ON" }
+        },
+        {
+            "name": "RcDeferredShadow",
+            "inherits": "RcBoundaryLite",
+            "cacheVariables": { "FOC_RC_DEFERRED_SHADOW": "ON" }
+        },
+        {
+            "name": "RcBoundaryLite",
+            "inherits": "RcSamplingOptimizedCandidate",
+            "cacheVariables": { "FOC_PWM_BOUNDARY_LITE": "ON" }
+        },
+        {
+            "name": "RcBoundaryAttribution",
+            "inherits": "RcSamplingOptimizedCandidate",
+            "cacheVariables": { "FOC_PWM_BOUNDARY_TRACE": "ON" }
+        },
+        {
+            "name": "RcSamplingOptimizedCandidate",
+            "inherits": "RcSamplingProtectedCandidate"
+        },
+        {
+            "name": "RcSamplingProtectedCandidate",
+            "inherits": "LatestOriginalStartupEvidence",
+            "cacheVariables": {
+                "FOC_ADC_RC_PROTECTED_CANDIDATE": "ON",
+                "FOC_ADC_RC_MIN_LOW_ON_TICKS": "1700"
+            }
+        },
+        {
+            "name": "RcSamplingComputeOnly",
+            "inherits": "ProtectedIrqCompact",
+            "cacheVariables": {
+                "FOC_ADC_RC_DIAGNOSTIC": "ON",
+                "FOC_ADC_RC_MIN_LOW_ON_TICKS": "1700"
+            }
+        },
+        {
+            "name": "RepairWindowDiagnostic",
+            "inherits": "ZeroAllRejectedCompact",
+            "cacheVariables": { "FOC_REPAIR_WINDOW_TRACE": "ON" }
+        },
+        {
+            "name": "ZeroAllRejectedCompact",
+            "inherits": "ZeroAllRejectedDiagnostic",
+            "cacheVariables": { "FOC_IRQ_COMPACT": "ON" }
+        },
+        {
+            "name": "ZeroAllRejectedDiagnostic",
+            "inherits": "ProtectedAdaptiveRam",
+            "cacheVariables": { "FOC_ZERO_ALL_REJECTED_DIAG": "ON" }
+        },
+        {
+            "name": "LatestOriginalStartupEvidence",
+            "inherits": "LatestFeedbackOriginalFsmCountOnly",
+            "cacheVariables": { "FOC_STARTUP_TRACE": "ON" }
+        },
+        {
+            "name": "LatestFeedbackOriginalFsmCountOnly",
+            "inherits": "LatestFeedbackOriginalFsm",
+            "cacheVariables": { "FOC_LATEST_ZERO_COUNT_ONLY": "ON" }
+        },
+        {
+            "name": "LatestFeedbackOriginalFsm",
+            "inherits": "ProtectedGateReuse",
+            "cacheVariables": {
+                "FOC_LATEST_ORIGINAL_FSM": "ON",
+                "FOC_RAM_HOT_PATH": "ON",
+                "FOC_IRQ_COMPACT": "ON"
+            }
+        },
+        {
+            "name": "default",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+		    "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake",
+            "cacheVariables": {
+            }
+        },
+        {
+            "name": "Debug",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "Release",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "CanProbe",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CAN_LINK_PROBE_ONLY": "ON"
+            }
+        },
+        {
+            "name": "CanRpcReadOnly",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CAN_RPC_READ_ONLY": "ON",
+                "CAN_STATUS_TELEMETRY": "ON",
+                "CAN_CONTROL_REJECT_ONLY": "ON",
+                "CAN_LOG_STREAM": "ON",
+                "ESP_NETWORK_OBSERVER": "ON",
+                "CAN_LINK_PROBE_ONLY": "OFF",
+                "CAN_SHADOW_DIAG": "OFF",
+                "SAFETY_LOCKED_BOOT": "OFF",
+                "UART_LOG_BAUD": "115200"
+            }
+        },
+        {
+            "name": "RouterNetworkReadOnly",
+            "inherits": "CanRpcReadOnly",
+            "cacheVariables": { "ROUTER_READ_ONLY_NETWORK": "ON" }
+        },
+        {
+            "name": "MotorRpcAdmissionLocked",
+            "inherits": "CanRpcReadOnly",
+            "cacheVariables": { "CAN_MOTOR_CONTROL_SERVICE": "ON" }
+        },
+        {
+            "name": "RouterRpcReadOnly",
+            "inherits": "RouterNetworkReadOnly",
+            "cacheVariables": { "ROUTER_READ_ONLY_RPC": "ON" }
+        },
+        {
+            "name": "RouterTransferReadOnly",
+            "inherits": "EncoderDmaReadOnly",
+            "cacheVariables": { "ROUTER_READ_ONLY_TRANSFER": "ON" }
+        },
+        {
+            "name": "RouterTransferSamplingReadOnly",
+            "inherits": "FocSamplingReadOnly",
+            "cacheVariables": { "ROUTER_READ_ONLY_TRANSFER": "ON" }
+        },
+        {
+            "name": "RouterTransferIsolated",
+            "inherits": "RouterTransferSamplingReadOnly",
+            "cacheVariables": { "FOC_ISOLATED_CONCURRENCY": "ON" }
+        },
+        {
+            "name": "CanFdReadOnly",
+            "inherits": "RouterTransferIsolated",
+            "cacheVariables": { "CAN_FD_EXPERIMENT": "ON", "CAN_FD_BIT_RATE_SWITCH": "OFF", "CAN_FD_ECHO_ONLY": "OFF" }
+        },
+        {
+            "name": "MedianControlComputeOnly",
+            "inherits": "RouterTransferIsolated",
+            "cacheVariables": { "FOC_ZERO_MEDIAN_COMPUTE_ONLY": "ON", "PW_ALLOCATOR_HYBRID": "OFF" }
+        },
+        {
+            "name": "ControlChainReconnect",
+            "inherits": "MedianControlComputeOnly",
+            "cacheVariables": {
+                "FOC_CURRENT_SPIKE_ONLY": "ON",
+                "FOC_CURRENT_TREND4": "ON",
+                "FOC_FEEDBACK_SAFETY_BINDING": "ON",
+                "FOC_CONTROL_CHAIN_RECONNECT": "ON"
+            }
+        },
+        {
+            "name": "ProtectedIrqOptimized",
+            "inherits": "ProtectedClosedLoop"
+        },
+        {
+            "name": "ProtectedIrqDmaTrace",
+            "inherits": "ProtectedIrqOptimized"
+        },
+        {
+            "name": "ProtectedIrqPriorityFix",
+            "inherits": "ProtectedIrqDmaTrace",
+            "cacheVariables": { "AS5047P_DMA_IRQ_PREEMPT_ADC": "ON" }
+        },
+        {
+            "name": "ProtectedFastMath",
+            "inherits": "ProtectedIrqPriorityFix",
+            "cacheVariables": { "FOC_FAST_MATH": "ON" }
+        },
+        {
+            "name": "ProtectedPairFast",
+            "inherits": "ProtectedFastMath",
+            "cacheVariables": { "FOC_PAIR_FAST_PATH": "ON" }
+        },
+        {
+            "name": "ProtectedGuardFast",
+            "inherits": "ProtectedPairFast",
+            "cacheVariables": { "FOC_GUARD_FAST_PATH": "ON" }
+        },
+        {
+            "name": "ProtectedFeedbackFast",
+            "inherits": "ProtectedGuardFast",
+            "cacheVariables": { "FOC_FEEDBACK_FAST_PATH": "ON" }
+        },
+        {
+            "name": "ProtectedGateReuse",
+            "inherits": "ProtectedFeedbackFast",
+            "cacheVariables": { "FOC_GATE_REUSE": "ON" }
+        },
+        {
+            "name": "ProtectedIrqSourceTrace",
+            "inherits": "ProtectedGateReuse",
+            "cacheVariables": { "FOC_IRQ_SOURCE_TRACE": "ON" }
+        },
+        {
+            "name": "ProtectedAdaptiveFilter",
+            "inherits": "ProtectedGateReuse",
+            "cacheVariables": { "FOC_ADAPTIVE_FILTER_EXPERIMENT": "ON" }
+        },
+        {
+            "name": "ProtectedAdaptiveNoZeroQuota",
+            "inherits": "ProtectedAdaptiveFilter",
+            "cacheVariables": { "FOC_ZERO_TOTAL_BUDGET_OFF": "ON" }
+        },
+        {
+            "name": "ProtectedAdaptiveRam",
+            "inherits": "ProtectedAdaptiveNoZeroQuota",
+            "cacheVariables": { "FOC_RAM_HOT_PATH": "ON" }
+        },
+        {
+            "name": "ProtectedIrqCompact",
+            "inherits": "ProtectedAdaptiveRam",
+            "cacheVariables": { "FOC_IRQ_COMPACT": "ON" }
+        },
+        {
+            "name": "OriginalClosedLoopUpdated",
+            "inherits": "RouterTransferReadOnly",
+            "cacheVariables": {
+                "FOC_ORIGINAL_CLOSED_LOOP_UPDATED": "ON",
+                "PW_ALLOCATOR_HYBRID": "OFF",
+                "FOC_ADC_WINDOW": "OFF",
+                "FOC_ISOLATED_CONCURRENCY": "OFF",
+                "FOC_PROTECTED_CLOSED_LOOP": "OFF",
+                "FOC_CURRENT_SPIKE_ONLY": "OFF",
+                "FOC_CURRENT_TREND4": "OFF"
+            }
+        },
+        {
+            "name": "ProtectedCompactClosedLoop",
+            "inherits": "ProtectedGateReuse",
+            "cacheVariables": {
+                "FOC_COMPACT_CLOSED_LOOP": "ON",
+                "FOC_RAM_HOT_PATH": "ON",
+                "FOC_IRQ_COMPACT": "ON"
+            }
+        },
+        {
+            "name": "ProtectedClosedLoop",
+            "inherits": "RouterTransferReadOnly",
+            "cacheVariables": {
+                "FOC_PROTECTED_CLOSED_LOOP": "ON",
+                "FOC_ENABLE_LEGACY_CURRENT_REPAIR": "ON",
+                "FOC_ADC_WINDOW": "ON",
+                "FOC_ADC_SENSE_TOPOLOGY": "LOW_SIDE_UV",
+                "FOC_CURRENT_SPIKE_ONLY": "ON",
+                "FOC_CURRENT_TREND4": "ON",
+                "PW_ALLOCATOR_HYBRID": "OFF"
+            }
+        },
+        {
+            "name": "TightenSyntheticIsolated",
+            "inherits": "RouterTransferIsolated",
+            "cacheVariables": { "TIGHTEN_SYNTHETIC_BENCH": "ON", "PW_ALLOCATOR_HYBRID": "OFF" }
+        },
+        {
+            "name": "RundownSpeedX2Offline",
+            "inherits": "TightenSyntheticIsolated",
+            "cacheVariables": { "TIGHTEN_SPEED_X2_OFFLINE": "ON" }
+        },
+        {
+            "name": "CanFdEchoOnly",
+            "inherits": "CanFdReadOnly",
+            "cacheVariables": { "CAN_FD_ECHO_ONLY": "ON" }
+        },
+        {
+            "name": "CanFdBrsReadOnly",
+            "inherits": "CanFdReadOnly",
+            "cacheVariables": { "CAN_FD_BIT_RATE_SWITCH": "ON" }
+        },
+        {
+            "name": "SafetyLocked",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "SAFETY_LOCKED_BOOT": "ON",
+                "CAN_STATUS_TELEMETRY": "ON",
+                "CAN_LINK_PROBE_ONLY": "OFF",
+                "CAN_LOG_STREAM": "OFF",
+                "CAN_SHADOW_DIAG": "OFF",
+                "CAN_CONTROL_REJECT_ONLY": "ON"
+            }
+        },
+        {
+            "name": "FocSamplingReadOnly",
+            "inherits": "EncoderDmaReadOnly",
+            "cacheVariables": {
+                "FOC_ADC_WINDOW": "ON",
+                "FOC_ADC_SENSE_TOPOLOGY": "UNCONFIRMED",
+                "FOC_ADC_SETTLE_TICKS": "85"
+            }
+        },
+        {
+            "name": "EncoderDmaReadOnly",
+            "inherits": "RouterRpcReadOnly",
+            "cacheVariables": { "AS5047P_SPI_DMA": "ON" }
+        }
+    ],
+    "buildPresets": [
+        { "name": "DobLoadSpeedContactHoldCandidate", "configurePreset": "DobLoadSpeedContactHoldCandidate" },
+        { "name": "DobLoadSpeedCandidate", "configurePreset": "DobLoadSpeedCandidate" },
+        { "name": "DobLowRecoveryAuditCandidate", "configurePreset": "DobLowRecoveryAuditCandidate" },
+        { "name": "DobShortLowRecoveryCandidate", "configurePreset": "DobShortLowRecoveryCandidate" },
+        { "name": "DobRecoveryBreakdownCandidate", "configurePreset": "DobRecoveryBreakdownCandidate" },
+        { "name": "DobWindow75Warmup3Candidate", "configurePreset": "DobWindow75Warmup3Candidate" },
+        { "name": "DobWarmup3Candidate", "configurePreset": "DobWarmup3Candidate" },
+        { "name": "DobWarmupAbCandidate", "configurePreset": "DobWarmupAbCandidate" },
+        { "name": "DobSaturationContinuousCandidate", "configurePreset": "DobSaturationContinuousCandidate" },
+        { "name": "DobTrendContinuousTrip500Candidate", "configurePreset": "DobTrendContinuousTrip500Candidate" },
+        { "name": "DobTrendShadowTrip500Candidate", "configurePreset": "DobTrendShadowTrip500Candidate" },
+        { "name": "TighteningDob025Trip500", "configurePreset": "TighteningDob025Trip500" },
+        { "name": "DobTrendShadowCandidate", "configurePreset": "DobTrendShadowCandidate" },
+        { "name": "DobRealTraceCandidate", "configurePreset": "DobRealTraceCandidate" },
+        { "name": "TighteningDob025Contact20Observe10Candidate", "configurePreset": "TighteningDob025Contact20Observe10Candidate" },
+        { "name": "TighteningDob025", "configurePreset": "TighteningDob025" },
+        { "name": "MechanicalDobFeedbackGain015Candidate", "configurePreset": "MechanicalDobFeedbackGain015Candidate" },
+        { "name": "MechanicalDobFeedbackGainHalfCandidate", "configurePreset": "MechanicalDobFeedbackGainHalfCandidate" },
+        { "name": "MechanicalDobFeedbackGain1Candidate", "configurePreset": "MechanicalDobFeedbackGain1Candidate" },
+        { "name": "MechanicalDobFeedbackCandidate", "configurePreset": "MechanicalDobFeedbackCandidate" },
+        { "name": "MechanicalDobPreLpf200Candidate", "configurePreset": "MechanicalDobPreLpf200Candidate" },
+        { "name": "MechanicalDobPreLpfCandidate", "configurePreset": "MechanicalDobPreLpfCandidate" },
+        { "name": "MechanicalDobPersistentCandidate", "configurePreset": "MechanicalDobPersistentCandidate" },
+        { "name": "MechanicalDobRecoverableCandidate", "configurePreset": "MechanicalDobRecoverableCandidate" },
+        { "name": "MechanicalDobDirect100Candidate", "configurePreset": "MechanicalDobDirect100Candidate" },
+        { "name": "MechanicalDobAdmissionStartGuardCandidate", "configurePreset": "MechanicalDobAdmissionStartGuardCandidate" },
+        { "name": "MechanicalDobSpikeAdmissionCandidate", "configurePreset": "MechanicalDobSpikeAdmissionCandidate" },
+        { "name": "MechanicalDobIdTraceCandidate", "configurePreset": "MechanicalDobIdTraceCandidate" },
+        { "name": "MechanicalIdSteadyCandidate", "configurePreset": "MechanicalIdSteadyCandidate" },
+        { "name": "MechanicalDobShadowCandidate", "configurePreset": "MechanicalDobShadowCandidate" },
+        { "name": "MechanicalReverseIdentificationCandidate", "configurePreset": "MechanicalReverseIdentificationCandidate" },
+        { "name": "MechanicalReadinessSnapshotCandidate", "configurePreset": "MechanicalReadinessSnapshotCandidate" },
+        { "name": "MechanicalOuterCompletionCandidate", "configurePreset": "MechanicalOuterCompletionCandidate" },
+        { "name": "MechanicalHighSpeedEncoderFixCandidate", "configurePreset": "MechanicalHighSpeedEncoderFixCandidate" },
+        { "name": "MechanicalIdentificationHighSpeedCandidate", "configurePreset": "MechanicalIdentificationHighSpeedCandidate" },
+        { "name": "MechanicalIdentificationMotionCandidate", "configurePreset": "MechanicalIdentificationMotionCandidate" },
+        { "name": "TighteningBemfHalfCandidate", "configurePreset": "TighteningBemfHalfCandidate" },
+        { "name": "MechanicalIdentificationCandidate", "configurePreset": "MechanicalIdentificationCandidate" },
+        { "name": "BemfFluxGainDiagnostic", "configurePreset": "BemfFluxGainDiagnostic" },
+        { "name": "TighteningKa025Candidate", "configurePreset": "TighteningKa025Candidate" },
+        { "name": "TighteningKa025BemfOnCandidate", "configurePreset": "TighteningKa025BemfOnCandidate" },
+        { "name": "Ka279ManualTrial", "configurePreset": "Ka279ManualTrial" },
+        { "name": "KaFullAccelerationDiagnostic", "configurePreset": "KaFullAccelerationDiagnostic" },
+        { "name": "KaSynchronizedMemoryDiagnostic", "configurePreset": "KaSynchronizedMemoryDiagnostic" },
+        { "name": "BemfFittedMemoryCandidate", "configurePreset": "BemfFittedMemoryCandidate" },
+        { "name": "StartupTimestampsDiagnostic", "configurePreset": "StartupTimestampsDiagnostic" },
+        { "name": "AccelFfAuditGain0", "configurePreset": "AccelFfAuditGain0" },
+        { "name": "AccelFfAuditGain025", "configurePreset": "AccelFfAuditGain025" },
+        { "name": "AccelFfAuditGain050", "configurePreset": "AccelFfAuditGain050" },
+        { "name": "AccelFfAuditGain100", "configurePreset": "AccelFfAuditGain100" },
+        { "name": "BemfFittedFluxCandidate", "configurePreset": "BemfFittedFluxCandidate" },
+        { "name": "PsiKeHighSpeedDiagnostic", "configurePreset": "PsiKeHighSpeedDiagnostic" },
+        { "name": "PsiKe500rpmTripDiagnostic", "configurePreset": "PsiKe500rpmTripDiagnostic" },
+        { "name": "PsiKeIdentificationDiagnostic", "configurePreset": "PsiKeIdentificationDiagnostic" },
+        { "name": "BemfFeedforwardCandidate", "configurePreset": "BemfFeedforwardCandidate" },
+        { "name": "DqOriginalRuntime", "configurePreset": "DqOriginalRuntime" },
+        { "name": "DqAuditCurrent", "configurePreset": "DqAuditCurrent" },
+        { "name": "DqAuditReverseD", "configurePreset": "DqAuditReverseD" },
+        { "name": "DqAuditReverseQ", "configurePreset": "DqAuditReverseQ" },
+        { "name": "DqAuditReverseBoth", "configurePreset": "DqAuditReverseBoth" },
+        { "name": "DqDecouplingWireCandidate", "configurePreset": "DqDecouplingWireCandidate" },
+        { "name": "DqDecouplingWireOffCandidate", "configurePreset": "DqDecouplingWireOffCandidate" },
+        { "name": "DqDecouplingCandidate", "configurePreset": "DqDecouplingCandidate" },
+        { "name": "DqDecouplingOffCandidate", "configurePreset": "DqDecouplingOffCandidate" },
+        { "name": "CurrentStepAbIdentPolicy", "configurePreset": "CurrentStepAbIdentPolicy" },
+        { "name": "CurrentStepAbGateEvidence", "configurePreset": "CurrentStepAbGateEvidence" },
+        { "name": "CurrentStepAbDiagnostic", "configurePreset": "CurrentStepAbDiagnostic" },
+        { "name": "CurrentPiIdentifiedCandidate", "configurePreset": "CurrentPiIdentifiedCandidate" },
+        { "name": "CurrentPiLegacyCompare", "configurePreset": "CurrentPiLegacyCompare" },
+        { "name": "CurrentPiIdentifiedComputeOnly", "configurePreset": "CurrentPiIdentifiedComputeOnly" },
+        { "name": "MotorParameterIdentificationVoltageStepDiagnostic", "configurePreset": "MotorParameterIdentificationVoltageStepDiagnostic" },
+        { "name": "MotorParameterIdentificationLAdmissionDiagnostic", "configurePreset": "MotorParameterIdentificationLAdmissionDiagnostic" },
+        { "name": "MotorParameterIdentificationRsRejectCountDiagnostic", "configurePreset": "MotorParameterIdentificationRsRejectCountDiagnostic" },
+        { "name": "MotorParameterIdentificationRsGapCountDiagnostic", "configurePreset": "MotorParameterIdentificationRsGapCountDiagnostic" },
+        { "name": "MotorParameterIdentificationEncoderTimingDiagnostic", "configurePreset": "MotorParameterIdentificationEncoderTimingDiagnostic" },
+        { "name": "MotorParameterIdentificationEncoderTerminalDiagnostic", "configurePreset": "MotorParameterIdentificationEncoderTerminalDiagnostic" },
+        { "name": "MotorParameterIdentificationRsRejectOnlyDiagnostic", "configurePreset": "MotorParameterIdentificationRsRejectOnlyDiagnostic" },
+        { "name": "MotorParameterIdentificationRs100usDiagnostic", "configurePreset": "MotorParameterIdentificationRs100usDiagnostic" },
+        { "name": "MotorParameterIdentificationRsGapDiagnostic", "configurePreset": "MotorParameterIdentificationRsGapDiagnostic" },
+        { "name": "MotorParameterIdentificationTimingDiagnostic", "configurePreset": "MotorParameterIdentificationTimingDiagnostic" },
+        { "name": "MotorParameterIdentificationNoTravelDiagnostic", "configurePreset": "MotorParameterIdentificationNoTravelDiagnostic" },
+        { "name": "MotorParameterIdentificationRejectDiagnostic", "configurePreset": "MotorParameterIdentificationRejectDiagnostic" },
+        { "name": "MotorParameterIdentificationDiagnostic", "configurePreset": "MotorParameterIdentificationDiagnostic" },
+        { "name": "Tightening240rpmFriction105OnCandidate", "configurePreset": "Tightening240rpmFriction105OnCandidate" },
+        { "name": "Tightening240rpmFriction105OffCandidate", "configurePreset": "Tightening240rpmFriction105OffCandidate" },
+        { "name": "FrictionCalibrationHighSpeedDiagnostic", "configurePreset": "FrictionCalibrationHighSpeedDiagnostic" },
+        { "name": "FrictionCalibrationDiagnostic", "configurePreset": "FrictionCalibrationDiagnostic" },
+        { "name": "Tightening240rpmFrictionOnCandidate", "configurePreset": "Tightening240rpmFrictionOnCandidate" },
+        { "name": "Tightening240rpmFrictionOffCandidate", "configurePreset": "Tightening240rpmFrictionOffCandidate" },
+        { "name": "Tightening240rpmAccelFfOnCandidate", "configurePreset": "Tightening240rpmAccelFfOnCandidate" },
+        { "name": "Tightening240rpmAccelFfOffCandidate", "configurePreset": "Tightening240rpmAccelFfOffCandidate" },
+        { "name": "Tightening240rpmScurveTokenizedCandidate", "configurePreset": "Tightening240rpmScurveTokenizedCandidate" },
+        { "name": "Tightening240rpmScurveCandidate", "configurePreset": "Tightening240rpmScurveCandidate" },
+        { "name": "Tightening240rpmLegacyAwNoSb3Candidate", "configurePreset": "Tightening240rpmLegacyAwNoSb3Candidate" },
+        { "name": "Tightening240rpmAwNoSb3Candidate", "configurePreset": "Tightening240rpmAwNoSb3Candidate" },
+        { "name": "Tightening240rpmSpeedAntiWindupCandidate", "configurePreset": "Tightening240rpmSpeedAntiWindupCandidate" },
+        { "name": "Tightening240rpmAdc100Return40Candidate", "configurePreset": "Tightening240rpmAdc100Return40Candidate" },
+        { "name": "Tightening240rpmTravel20000Candidate", "configurePreset": "Tightening240rpmTravel20000Candidate" },
+        { "name": "Tightening240rpmCandidate", "configurePreset": "Tightening240rpmCandidate" },
+        { "name": "TighteningCommonModeCandidate", "configurePreset": "TighteningCommonModeCandidate" },
+        { "name": "TighteningIntentCandidate", "configurePreset": "TighteningIntentCandidate" },
+        { "name": "Torque450mA150rpmFiveSecondDiagnostic", "configurePreset": "Torque450mA150rpmFiveSecondDiagnostic" },
+        { "name": "Torque450mAFiveSecondDiagnostic", "configurePreset": "Torque450mAFiveSecondDiagnostic" },
+        { "name": "ElectricalAngleHandDiagnostic", "configurePreset": "ElectricalAngleHandDiagnostic" },
+        { "name": "ElectricalZeroOffsetDiagnostic", "configurePreset": "ElectricalZeroOffsetDiagnostic" },
+        { "name": "Torque350mAFiveSecondDiagnostic", "configurePreset": "Torque350mAFiveSecondDiagnostic" },
+        { "name": "Speed500mADynamicDiagnostic", "configurePreset": "Speed500mADynamicDiagnostic" },
+        { "name": "BreakawayFiveSecondDiagnostic", "configurePreset": "BreakawayFiveSecondDiagnostic" },
+        { "name": "BreakawayCurrentDiagnostic", "configurePreset": "BreakawayCurrentDiagnostic" },
+        { "name": "Rundown200mADirectLimitTrial", "configurePreset": "Rundown200mADirectLimitTrial" },
+        { "name": "TorqueChain200mADirectLimitDiagnostic", "configurePreset": "TorqueChain200mADirectLimitDiagnostic" },
+        { "name": "TorqueChain200mADiagnostic", "configurePreset": "TorqueChain200mADiagnostic" },
+        { "name": "TorqueChain100mADiagnostic", "configurePreset": "TorqueChain100mADiagnostic" },
+        { "name": "TorqueChainDiagnostic", "configurePreset": "TorqueChainDiagnostic" },
+        { "name": "RundownGuardTrial", "configurePreset": "RundownGuardTrial" },
+        { "name": "RundownDiagnosticTrial", "configurePreset": "RundownDiagnosticTrial" },
+        { "name": "SpeedBrakeTrackTrial", "configurePreset": "SpeedBrakeTrackTrial" },
+        { "name": "VoltageX2Trial", "configurePreset": "VoltageX2Trial" },
+        { "name": "CurrentPolarityComputeOnly", "configurePreset": "CurrentPolarityComputeOnly" },
+        { "name": "CurrentFaultTrace", "configurePreset": "CurrentFaultTrace" },
+        { "name": "ProtectedPipelineClosedLoop", "configurePreset": "ProtectedPipelineClosedLoop" },
+        { "name": "LoadedFsmTrial", "configurePreset": "LoadedFsmTrial" },
+        { "name": "SpeedStartupBrakeTrial", "configurePreset": "SpeedStartupBrakeTrial" },
+        { "name": "ZeroValidAdmissionTrial", "configurePreset": "ZeroValidAdmissionTrial" },
+        { "name": "SpeedBumplessTrial", "configurePreset": "SpeedBumplessTrial" },
+        { "name": "EncoderFocFirst", "configurePreset": "EncoderFocFirst" },
+        { "name": "OneCyclePwmPipeline", "configurePreset": "OneCyclePwmPipeline" },
+        { "name": "PreemptCommitProbe", "configurePreset": "PreemptCommitProbe" },
+        { "name": "FastPathTiming", "configurePreset": "FastPathTiming" },
+        { "name": "FastCurrentReject", "configurePreset": "FastCurrentReject" },
+        { "name": "FastCurrentRejectComputeOnly", "configurePreset": "FastCurrentRejectComputeOnly" },
+        { "name": "RcDeferredShadow", "configurePreset": "RcDeferredShadow" },
+        { "name": "RcBoundaryLite", "configurePreset": "RcBoundaryLite" },
+        { "name": "RcBoundaryAttribution", "configurePreset": "RcBoundaryAttribution" },
+        { "name": "RcSamplingOptimizedCandidate", "configurePreset": "RcSamplingOptimizedCandidate" },
+        { "name": "RcSamplingComputeOnly", "configurePreset": "RcSamplingComputeOnly" },
+        { "name": "RcSamplingProtectedCandidate", "configurePreset": "RcSamplingProtectedCandidate" },
+        { "name": "RepairWindowDiagnostic", "configurePreset": "RepairWindowDiagnostic" },
+        { "name": "ZeroAllRejectedCompact", "configurePreset": "ZeroAllRejectedCompact" },
+        { "name": "ZeroAllRejectedDiagnostic", "configurePreset": "ZeroAllRejectedDiagnostic" },
+        { "name": "LatestOriginalStartupEvidence", "configurePreset": "LatestOriginalStartupEvidence" },
+        { "name": "LatestFeedbackOriginalFsmCountOnly", "configurePreset": "LatestFeedbackOriginalFsmCountOnly" },
+        { "name": "LatestFeedbackOriginalFsm", "configurePreset": "LatestFeedbackOriginalFsm" },
+        { "name": "OriginalClosedLoopUpdated", "configurePreset": "OriginalClosedLoopUpdated" },
+        { "name": "ProtectedIrqCompact", "configurePreset": "ProtectedIrqCompact" },
+        { "name": "ProtectedCompactClosedLoop", "configurePreset": "ProtectedCompactClosedLoop" },
+        { "name": "ProtectedAdaptiveRam", "configurePreset": "ProtectedAdaptiveRam" },
+        { "name": "ProtectedAdaptiveNoZeroQuota", "configurePreset": "ProtectedAdaptiveNoZeroQuota" },
+        { "name": "ProtectedAdaptiveFilter", "configurePreset": "ProtectedAdaptiveFilter" },
+        { "name": "ProtectedGateReuse", "configurePreset": "ProtectedGateReuse" },
+        { "name": "ProtectedIrqSourceTrace", "configurePreset": "ProtectedIrqSourceTrace" },
+        { "name": "ProtectedGuardFast", "configurePreset": "ProtectedGuardFast" },
+        { "name": "ProtectedFeedbackFast", "configurePreset": "ProtectedFeedbackFast" },
+        { "name": "ProtectedPairFast", "configurePreset": "ProtectedPairFast" },
+        { "name": "ProtectedFastMath", "configurePreset": "ProtectedFastMath" },
+        { "name": "ProtectedIrqPriorityFix", "configurePreset": "ProtectedIrqPriorityFix" },
+        { "name": "ProtectedIrqDmaTrace", "configurePreset": "ProtectedIrqDmaTrace" },
+        { "name": "ProtectedIrqOptimized", "configurePreset": "ProtectedIrqOptimized" },
+        { "name": "ProtectedClosedLoop", "configurePreset": "ProtectedClosedLoop" },
+        { "name": "ControlChainReconnect", "configurePreset": "ControlChainReconnect" },
+        { "name": "MedianControlComputeOnly", "configurePreset": "MedianControlComputeOnly" },
+        { "name": "RundownSpeedX2Offline", "configurePreset": "RundownSpeedX2Offline" },
+        { "name": "TightenSyntheticIsolated", "configurePreset": "TightenSyntheticIsolated" },
+        { "name": "MotorRpcAdmissionLocked", "configurePreset": "MotorRpcAdmissionLocked" },
+        { "name": "CanFdEchoOnly", "configurePreset": "CanFdEchoOnly" },
+        { "name": "CanFdReadOnly", "configurePreset": "CanFdReadOnly" },
+        { "name": "CanFdBrsReadOnly", "configurePreset": "CanFdBrsReadOnly" },
+        {
+            "name": "RouterTransferIsolated",
+            "configurePreset": "RouterTransferIsolated"
+        },
+        {
+            "name": "RouterTransferSamplingReadOnly",
+            "configurePreset": "RouterTransferSamplingReadOnly"
+        },
+        {
+            "name": "RouterTransferReadOnly",
+            "configurePreset": "RouterTransferReadOnly"
+        },
+        {
+            "name": "FocSamplingReadOnly",
+            "configurePreset": "FocSamplingReadOnly"
+        },
+        {
+            "name": "EncoderDmaReadOnly",
+            "configurePreset": "EncoderDmaReadOnly"
+        },
+        {
+            "name": "Debug",
+            "configurePreset": "Debug"
+        },
+        {
+            "name": "Release",
+            "configurePreset": "Release"
+        },
+        {
+            "name": "CanProbe",
+            "configurePreset": "CanProbe"
+        },
+        {
+            "name": "CanRpcReadOnly",
+            "configurePreset": "CanRpcReadOnly"
+        },
+        {
+            "name": "RouterNetworkReadOnly",
+            "configurePreset": "RouterNetworkReadOnly"
+        },
+        {
+            "name": "RouterRpcReadOnly",
+            "configurePreset": "RouterRpcReadOnly"
+        },
+        {
+            "name": "SafetyLocked",
+            "configurePreset": "SafetyLocked"
+        }
+    ]
+}

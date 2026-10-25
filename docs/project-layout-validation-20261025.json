@@ -1,0 +1,399 @@
+{
+  "date": "2026-10-25",
+  "main_lines_before": 13406,
+  "main_lines_after": 188,
+  "private_bindings": 22,
+  "board_c_lines": 446,
+  "preserved_sources": {
+    "foc2_app_b/Core/Src/main.c": true,
+    "foc2_app_b/CMakeLists.txt": true,
+    "foc2_app_a/CMakePresets.json": true
+  },
+  "preserved_historical_images": {
+    "bin_unchanged": true,
+    "elf_unchanged": true
+  },
+  "builds": {
+    "A": {
+      "directory": "foc2_app_a/build/AppLayoutCandidate",
+      "bin_bytes": 229000,
+      "ram_used_bytes": 130968,
+      "bin_sha256": "c8fff1537814ab0054ce57ce792467270808f2a8eea7efc8e5e6ebcc3f671abf",
+      "elf_sha256": "0f0004b7a59a45ed74af635fab10e681733cd89b7886b5a7feb4900462a65c2b"
+    },
+    "B": {
+      "directory": "foc2_app_b/build/AppLayoutBVerify",
+      "bin_bytes": 210540,
+      "ram_used_bytes": 128792,
+      "bin_sha256": "174ebaa1dd2580222cf5a48bb331b03eb06c1247cb2cd44c0e40b7cef57bfe5b",
+      "elf_sha256": "f85016f2f08a7280423181284502b47ad456ceb9ca94a25a5ed2cd2648e4075f"
+    }
+  },
+  "source_and_object_audit": {
+    "logical_source_equal": true,
+    "profiles": [
+      {
+        "profile": "DobLoadSpeedContactHoldCandidate",
+        "main_preprocessed": true,
+        "board_syntax": true,
+        "board_errors": "",
+        "functions": {
+          "FOC_EncoderSpeedUpdate": true,
+          "HAL_ADCEx_InjectedConvCpltCallback": true,
+          "HAL_ADC_ErrorCallback": true,
+          "EncoderDma_FaultFromISR": true,
+          "PowerStage_Disable": true,
+          "PWM_SetDuty": true,
+          "FOC_ResetController": true,
+          "OuterObservation_Flush": true,
+          "MotorControlTask": true
+        }
+      },
+      {
+        "profile": "TighteningDob025Trip500",
+        "main_preprocessed": true,
+        "board_syntax": true,
+        "board_errors": "",
+        "functions": {
+          "FOC_EncoderSpeedUpdate": true,
+          "HAL_ADCEx_InjectedConvCpltCallback": true,
+          "HAL_ADC_ErrorCallback": true,
+          "EncoderDma_FaultFromISR": true,
+          "PowerStage_Disable": true,
+          "PWM_SetDuty": true,
+          "FOC_ResetController": true,
+          "OuterObservation_Flush": true,
+          "MotorControlTask": true
+        }
+      },
+      {
+        "profile": "FastCurrentRejectComputeOnly",
+        "main_preprocessed": true,
+        "board_syntax": true,
+        "board_errors": "",
+        "functions": {
+          "FOC_EncoderSpeedUpdate": true,
+          "HAL_ADCEx_InjectedConvCpltCallback": true,
+          "HAL_ADC_ErrorCallback": true,
+          "EncoderDma_FaultFromISR": true,
+          "PowerStage_Disable": true,
+          "PWM_SetDuty": true,
+          "FOC_ResetController": true,
+          "MotorControlTask": true
+        }
+      }
+    ],
+    "object_code": {
+      "compared": 111,
+      "identical": 110,
+      "changed": [
+        ".text.startup.main"
+      ],
+      "moved": [
+        ".text.SystemClock_Config"
+      ],
+      "passed": true,
+      "scope": "Unlinked instruction/literal bytes only; not linked addresses or measured WCET"
+    },
+    "hardware_access": false,
+    "passed": true
+  },
+  "focused_regression": {
+    "modules": [
+      {
+        "module": "test_app_source_layout",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_tightening_intent_fsm",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_current_pi_identified_candidate",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_current_protection_layers",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_foc_adc_clock",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_foc_timeout_diagnostics",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_speed_pi_anti_windup",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_speed_accel_feedforward",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_speed_friction_compensation",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_speed_scurve",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_foc_dq_decoupling",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_load_speed_contact_hold",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_load_speed_scheduler",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_load_speed_host",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_load_speed_contact_port",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_load_gain",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_load_gain_opt",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_dob_saturation_continue",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "module": "test_dob_source_gap",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      }
+    ],
+    "tests": 123,
+    "failures": 0,
+    "errors": 0,
+    "passed": true,
+    "seconds": 124.97384786605835
+  },
+  "additional_regressions": {
+    "test_adc_control_pins_low": 9,
+    "test_foc_pwm_pipeline": 9,
+    "test_isolated_spike": 5
+  },
+  "focused_total": 146,
+  "legacy_before": {
+    "mode": "before",
+    "tests": 5,
+    "failures": [
+      "test_feedback_safety_binding.FeedbackBindingTests.test_ab_interrupt_lifecycle_and_default_protection_contracts",
+      "test_foc_fast_math.FastMathTests.test_separate_candidate_and_fault_policy"
+    ],
+    "errors": [
+      "test_control_chain_reconnect.ReconnectAdapterTests.test_actual_ab_current_pi_uses_filtered_frame_and_original_limits"
+    ]
+  },
+  "legacy_after": {
+    "mode": "after",
+    "tests": 5,
+    "failures": [
+      "test_feedback_safety_binding.FeedbackBindingTests.test_ab_interrupt_lifecycle_and_default_protection_contracts",
+      "test_foc_fast_math.FastMathTests.test_separate_candidate_and_fault_policy"
+    ],
+    "errors": [
+      "test_control_chain_reconnect.ReconnectAdapterTests.test_actual_ab_current_pi_uses_filtered_frame_and_original_limits"
+    ]
+  },
+  "full_repository_suite_passed": false,
+  "hardware_access": false,
+  "physical_runtime_validated": false,
+  "new_source_pins": [
+    {
+      "path": "foc2_app_a/Core/Src/main.c",
+      "sha256": "5f1709e35868b684e12af50276490db632e21367d02d073c0d110d65382575cd"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/application/tightening_results.inc",
+      "sha256": "135aa25306a29a33b7e460fae7e4a05368793d2ac0f3d38d16c6dc1fb0c1cadd"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/application/tightening_task.inc",
+      "sha256": "771696a9327d1661c772bdbce2d5964ed4177e6cd72a3303470e8e0ae1ae1c65"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/config/app_config.inc",
+      "sha256": "afbe73ec83ae941bd0323144d45a1101208f6caea8bf9f7a735e2ac204e71ee9"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/config/app_includes.inc",
+      "sha256": "998ca5429a2e0642cc47f1dd310a5d2ff09f33d682feb181a3bdf1ae2f13dbdb"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/config/app_types.inc",
+      "sha256": "33d61c7b21116ad383a5aa554716f98dc1b31330bb8b165b954b38c99bddc0f7"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/control/motor_service.inc",
+      "sha256": "04e513c8725c9135e065100215aed7df519351dce15ddbd3b88a87641204b66e"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/control/outer_loop.inc",
+      "sha256": "0459380bb1b5b88c21b0cd8b9fccec2164ab5a4f72cb12e047a0d613d807f23a"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/control/power_current_loop.inc",
+      "sha256": "ee9f65ee50e7178ac92befa6e72480da6967084c3e6394c58451fb743444d0d7"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/diagnostics/health_monitor_tasks.inc",
+      "sha256": "1fee4a42b48ef2d93ecfff04783c4869163258757f280085704da1909f37a724"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/diagnostics/value_format.inc",
+      "sha256": "f64d156d2725ff486255fff34b48c4ef7f5391cfed95c7e46e1aca8b2d12082e"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/internal/app_declarations.inc",
+      "sha256": "a6f5db196097fc60dce432a3d64c004a1e3b0a00293ea458bdd86d41b4b7838d"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/protocol/command_dispatch.inc",
+      "sha256": "9f6dbfc6658120664f91340515443edf03453ed43b136b598775ec42a34f80a7"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/protocol/router_protocol_tasks.inc",
+      "sha256": "9ed609b4d54f7a6597a13b5356adbc0e58aa58b9368f8376a12232b7c3b7d506"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/protocol/session_events.inc",
+      "sha256": "dc8af6989dd0d6c18a053ce4adc8ff61a8156c7601cb5da5adfeaaa917ca3281"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/protocol/uart_transport.inc",
+      "sha256": "9c711cc734b229aeee7e44244edddcf7d3f9ee8971fa142ccdedbb4f4ae281cc"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/sensing/adc_irq_binding.inc",
+      "sha256": "cdd7a58ea07fd448d7113992642366e901d80c3b2ffed061d1db05506efa48cd"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/sensing/encoder_service.inc",
+      "sha256": "4085127201ba2a4cfbf5704321b2657747f2aaa165274f480c38fdeab3df78c0"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/sensing/pwm_adc_service.inc",
+      "sha256": "d82f5fcba31bd50a95d742dab551b933fd7cd754106dde29815fe4dc13ef6886"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/startup/startup_task.inc",
+      "sha256": "757a92ae1ac231685ee6c0b032c15053786851d1b7cecb947d4fce6492dcb91d"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/state/app_state.inc",
+      "sha256": "ea533b11df81d62f32505f61e6eaeb5dc4a988aaa99c95be55d905151fc228a7"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/storage/boot_update.inc",
+      "sha256": "f8c94191a68436b13c6c6d6186a4a9edacbfad3e4a2166857c68ed8ddd78c4e7"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/storage/recipe_storage.inc",
+      "sha256": "77726814ab8f39647fb5c4a5cb4f1f77be5482a6d397159082acaf61a3715fbb"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/board/app_board.c",
+      "sha256": "0211fbd63cc5b58d86bfa88fae3d936093baf2c7c2ea6ee8e00ef064eb513f13"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/board/app_board.h",
+      "sha256": "ef7b0cf2bc9b1285f37675ec2d6179656085598fea63f408a82fbcd210efe745"
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/layout.json",
+      "sha256": "87346677f0f5e66e6b5104bef60a95f47ee387930d7a58513c3ceba640f50a52"
+    }
+  ]
+}

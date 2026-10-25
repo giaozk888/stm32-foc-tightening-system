@@ -1,3 +1,5 @@
+
+from app_source_view import read_app_source
 import json
 from pathlib import Path
 import subprocess
@@ -20,7 +22,7 @@ class FastMathTests(unittest.TestCase):
             fast=next(p for p in presets['configurePresets'] if p['name']=='ProtectedFastMath')
             self.assertEqual(fast['inherits'],'ProtectedIrqPriorityFix')
             self.assertEqual(fast['cacheVariables'],{'FOC_FAST_MATH':'ON'})
-            main=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            main=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             begin=main.index('static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,\n')
             branch=main[begin:main.index('static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)\n{',begin)]
             self.assertEqual(branch.count('FocFast_SinCos('),2)

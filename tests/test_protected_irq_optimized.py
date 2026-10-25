@@ -1,3 +1,5 @@
+
+from app_source_view import read_app_source
 from pathlib import Path
 import json
 import subprocess
@@ -39,7 +41,7 @@ class OptimizedIrqTests(unittest.TestCase):
             protected=branch[branch.index('#if defined(FOC_PROTECTED_CLOSED_LOOP)'):branch.index('#else')]
             self.assertIn('ProtectedLoop_AdcIrq();',protected)
             self.assertNotIn('HAL_ADC_IRQHandler',protected)
-            main=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            main=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             self.assertEqual(main.count('#include "protected_adc_irq.inc"'),1)
 
     def test_planning_precedes_mask_and_hot_guard_has_no_frequency_walk(self):

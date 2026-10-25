@@ -1,4 +1,6 @@
 """Offline checks only; never accesses serial, debugger or a power output."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import json
 import math
@@ -92,7 +94,7 @@ class IsolatedSpikeTests(unittest.TestCase):
 
     def test_both_slots_and_locked_default(self):
         for slot in 'ab':
-            src = (ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text(encoding='utf-8')
+            src = read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c',encoding='utf-8')
             self.assertIn('#include "foc_current_spike_runtime.inc"', src)
             self.assertIn('FocCurrentMedian_Begin(&current_spike_filter)', src)
             cmake = (ROOT/f'foc2_app_{slot}/CMakeLists.txt').read_text()

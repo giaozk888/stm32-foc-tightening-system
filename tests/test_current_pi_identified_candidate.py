@@ -1,3 +1,5 @@
+
+from app_source_view import read_app_source
 import ctypes
 import hashlib
 from pathlib import Path
@@ -66,7 +68,7 @@ class CurrentPiCandidateTests(unittest.TestCase):
                 self.assertAlmostEqual(pos['peak_abs_current_a'],neg['peak_abs_current_a'],places=7)
 
     def test_formal_b_no_candidate_binding_and_stable_image_hash(self):
-        self.assertNotIn('current_pi_identified_candidate', (ROOT/'foc2_app_b/Core/Src/main.c').read_text())
+        self.assertNotIn('current_pi_identified_candidate', read_app_source(ROOT/'foc2_app_b/Core/Src/main.c'))
         # The previously confirmed B BIN must stay byte-for-byte unchanged.
         stable=ROOT/'foc2_app_b/build/FrictionBUnchanged/foc2.bin'
         self.assertEqual(hashlib.sha256(stable.read_bytes()).hexdigest(),

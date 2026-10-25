@@ -1,0 +1,47 @@
+{
+  "mode": "full",
+  "scenarios": [
+    "no_load",
+    "step",
+    "ramp",
+    "unload",
+    "spike",
+    "id_anomaly",
+    "source_gap",
+    "noise",
+    "replay",
+    "negative_load",
+    "contact_early",
+    "contact_late",
+    "stop",
+    "fault"
+  ],
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    61,
+    62,
+    63,
+    64,
+    65
+  ],
+  "repeats": 10,
+  "hardware_access": false,
+  "policy_fixed_before_runs": true,
+  "physical_performance_validated": false,
+  "feedback_gain": 0.25,
+  "iq_limit": 0.5,
+  "workspace_source_time_shift_s": -1E-9,
+  "acceptance": {
+    "false_contact": 0,
+    "command_limit_a": 0.500001,
+    "target_floor_rpm": 120,
+    "max_accel_rpm_s": 200.01,
+    "max_jerk_rpm_s2": 1000.2,
+    "no_new_faults": true,
+    "missed_contact": 0
+  }
+}

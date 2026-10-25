@@ -1,0 +1,249 @@
+{
+  "mode": "full",
+  "scan": {
+    "ids": [
+      "tau100_dwell80",
+      "tau100_dwell40",
+      "tau50_dwell80",
+      "tau50_dwell40"
+    ],
+    "tau_ms": [
+      100,
+      100,
+      50,
+      50
+    ],
+    "dwell_ms": [
+      80,
+      40,
+      80,
+      40
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      61,
+      62,
+      63,
+      64,
+      65
+    ],
+    "eval_s": [
+      2.3,
+      6.9
+    ],
+    "event_match_max_s": 0.8,
+    "baseline_results": "20261024_114423",
+    "accept": {
+      "real_transition_ratio_max": 1.25,
+      "extra_unmatched_events_max": 0,
+      "minimum_event_hits_ratio": 1
+    },
+    "selection": "first5 train, last5 held-out; no fallback retuning on held-out"
+  },
+  "base": {
+    "root": "D:\\new project\\simulation\\dob_simulink",
+    "repo": "D:\\new project",
+    "build": "D:\\new project\\simulation\\dob_simulink\\build",
+    "results": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413",
+    "model": "dob_load_phase1",
+    "dt": 0.001,
+    "pwm_dt": 5E-5,
+    "stop_s": 7,
+    "target_rpm": 240,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105
+    ],
+    "plant_vector": [
+      0.000386049,
+      0.00155158,
+      0.11945168237076952,
+      0.00054966003251495415,
+      0.001
+    ],
+    "gains": [
+      0,
+      0.15,
+      0.25,
+      0.5,
+      1
+    ],
+    "caps_a": [
+      0.0125,
+      0.025
+    ],
+    "noise_speed_rpm": 0.4,
+    "noise_current_a": 0.002,
+    "noise_id_a": 0.003,
+    "id_baseline_a": 0.005,
+    "id_spike_a": 0.7,
+    "id_persistent_a": 0.09,
+    "load_a": 0.04,
+    "event_s": 3,
+    "unload_s": 4.6,
+    "accept": {
+      "rmse_a": 0.012,
+      "bias_a": 0.008,
+      "valid_rate": 0.9,
+      "delay_s": 0.5,
+      "recovery_s": 0.8
+    },
+    "hardware_access": false,
+    "physical_performance_validated": false,
+    "model_dir": "D:\\new project\\simulation\\dob_simulink\\build\\load_phase1",
+    "fixed_dll": "D:\\new project\\simulation\\dob_simulink\\build\\load_phase1\\dob_host_fixed.dll"
+  },
+  "classification": {
+    "model": "dob_load_phase1",
+    "seeds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      61,
+      62,
+      63,
+      64,
+      65
+    ],
+    "scenarios": [
+      "no_load",
+      "step",
+      "ramp",
+      "unload",
+      "spike",
+      "persistent_id",
+      "short_gap",
+      "long_gap",
+      "voltage_sat",
+      "noise",
+      "negative_step",
+      "real_measurement",
+      "real_torque"
+    ],
+    "features": [
+      0.01,
+      0.025,
+      0.005,
+      0.02,
+      0.03,
+      0.06,
+      0.6,
+      0.02,
+      0.1,
+      0.08,
+      0.5
+    ],
+    "feature_names": [
+      "load_state",
+      "load_label_valid",
+      "load_mean_a",
+      "load_trend_a_s",
+      "load_coverage",
+      "load_feature_updated",
+      "load_reason",
+      "load_accepted",
+      "load_rejected",
+      "load_quality_resets",
+      "load_dwell_ms",
+      "load_window_good",
+      "load_directional_raw_a",
+      "load_source_age_ms",
+      "load_transitions",
+      "load_proposal",
+      "load_trend_state",
+      "load_trend_valid",
+      "load_trend_filtered_a_s",
+      "load_trend_transitions",
+      "load_trend_dwell_ms",
+      "load_trend_proposal"
+    ],
+    "state_names": [
+      "UNKNOWN",
+      "LIGHT",
+      "MEDIUM",
+      "RISING",
+      "HIGH",
+      "RELEASING"
+    ],
+    "trend_names": [
+      "UNKNOWN",
+      "STEADY",
+      "RISING",
+      "FALLING"
+    ],
+    "accept": {
+      "false_high_max": 0.01,
+      "high_detect_max_s": 0.8
+    },
+    "legacy_model": "dob_load_repair_legacy",
+    "fixed_model": "dob_load_repair_fixed"
+  },
+  "profiles": [
+    [
+      0.01,
+      0.025,
+      0.005,
+      0.02,
+      0.03,
+      0.06,
+      0.6,
+      0.02,
+      0.1,
+      0.08,
+      0.5
+    ],
+    [
+      0.01,
+      0.025,
+      0.005,
+      0.02,
+      0.03,
+      0.06,
+      0.6,
+      0.02,
+      0.1,
+      0.04,
+      0.5
+    ],
+    [
+      0.01,
+      0.025,
+      0.005,
+      0.02,
+      0.03,
+      0.06,
+      0.6,
+      0.02,
+      0.05,
+      0.08,
+      0.5
+    ],
+    [
+      0.01,
+      0.025,
+      0.005,
+      0.02,
+      0.03,
+      0.06,
+      0.6,
+      0.02,
+      0.05,
+      0.04,
+      0.5
+    ]
+  ],
+  "repeats": 10,
+  "hardware_access": false,
+  "control_adaptation": false,
+  "physical_performance_validated": false,
+  "compensation_enabled": false
+}

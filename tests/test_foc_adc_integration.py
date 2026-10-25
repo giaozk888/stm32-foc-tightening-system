@@ -1,4 +1,6 @@
 """Source-contract audit, not a hardware test."""
+
+from app_source_view import read_app_source
 import json
 from pathlib import Path
 import re
@@ -10,7 +12,7 @@ class IntegrationTest(unittest.TestCase):
     def test_default_paths_unchanged(self):
         for slot in "ab":
             root = ROOT / f"foc2_app_{slot}"
-            source = (root / "Core/Src/main.c").read_text(encoding="utf-8")
+            source = read_app_source(root / "Core/Src/main.c",encoding="utf-8")
             self.assertRegex(source, r"#define\s+FOC_VOLTAGE_LIMIT_V\s+0\.80f")
             self.assertIn("HAL_ADCEx_InjectedStart(&hadc2)", source)
             self.assertNotIn("HAL_ADCEx_InjectedStart_IT(&hadc2)", source)
@@ -45,7 +47,7 @@ class IntegrationTest(unittest.TestCase):
 
     def test_fail_closed_and_no_isr_busy_wait(self):
         for slot in "ab":
-            source = (ROOT / f"foc2_app_{slot}/Core/Src/main.c").read_text(encoding="utf-8")
+            source = read_app_source(ROOT / f"foc2_app_{slot}/Core/Src/main.c",encoding="utf-8")
             callback = re.search(r"void HAL_ADCEx_InjectedConvCpltCallback.*?\n}\n", source, re.S)[0]
             self.assertLess(callback.index("FocAdcTiming_PairReady"), callback.index("HAL_ADCEx_InjectedGetValue"))
             self.assertIn("__HAL_ADC_DISABLE_IT(&hadc1, ADC_IT_JEOS | ADC_IT_JEOC)", callback)
@@ -65,7 +67,7 @@ class IntegrationTest(unittest.TestCase):
         self.assertIn("FocRawSpread_Push", process)
         self.assertIn("FocRawBuffer_Release", process)
         for slot in "ab":
-            main = (ROOT / f"foc2_app_{slot}/Core/Src/main.c").read_text(encoding="utf-8")
+            main = read_app_source(ROOT / f"foc2_app_{slot}/Core/Src/main.c",encoding="utf-8")
             self.assertLess(main.index("FocAdcStatisticsTask_Start()"), main.index("HAL_ADCEx_InjectedStart(&hadc2)"))
             self.assertIn('strcmp(cmd, "ADC BUFFER")', main)
             callback = re.search(r"void HAL_ADCEx_InjectedConvCpltCallback.*?\n}\n", main, re.S)[0]

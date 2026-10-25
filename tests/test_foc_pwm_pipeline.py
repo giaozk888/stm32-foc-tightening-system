@@ -1,4 +1,6 @@
 """One-cycle hard-off preparation only: no device or boot access."""
+
+from app_source_view import read_app_source
 import json
 import re
 import struct
@@ -65,7 +67,7 @@ class PwmPipelineTests(unittest.TestCase):
             adc=src.split('void ADC1_2_IRQHandler(void)',1)[1].split('void LPUART1_IRQHandler',1)[0]
             self.assertLess(adc.index('ProtectedLoop_PwmEntry'),adc.index('FocAdcTiming_IrqEnter'))
             self.assertLess(adc.index('ProtectedLoop_PwmEntry'),adc.index('ProtectedLoop_AdcIrq'))
-            src=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            src=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             for mode in ('Idle','Speed','Position','Iq'):
                 fn=src.split('static void MotorControl_Set'+mode+'(',2)[-1].split('\n}',1)[0]
                 self.assertIn('ProtectedLoop_PwmInvalidate',fn)

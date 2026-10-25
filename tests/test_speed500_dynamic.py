@@ -1,4 +1,6 @@
 """SPEED-only owner, unchanged control/protection except the explicit Iq cap."""
+
+from app_source_view import read_app_source
 import hashlib
 import json
 from pathlib import Path
@@ -55,7 +57,7 @@ class Speed500Tests(unittest.TestCase):
         for slot in 'ab':
             cm=(ROOT/f'foc2_app_{slot}/CMakeLists.txt').read_text()
             self.assertRegex(cm,r'option\(FOC_SPEED_DYNAMIC_DIAG [^\n]+ OFF\)')
-            text=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text()
+            text=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c')
             self.assertIn('#define MOTOR_DIRECT_IQ_LIMIT_A          0.20f',text)
             task=function(text,'TighteningTask')
             block=task.split('#if defined(FOC_SPEED_DYNAMIC_DIAG)',1)[1].split('#endif',1)[0]

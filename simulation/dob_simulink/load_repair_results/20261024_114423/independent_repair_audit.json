@@ -1,0 +1,3203 @@
+{
+  "audit_pass": true,
+  "pairs": 130,
+  "rows_compared": 910130,
+  "pair_repeats": 10,
+  "acceptance": {
+    "real_level_transition_ratio_max": 0.5,
+    "short_gap_unavailable_max_ms": 8,
+    "no_load_false_high_max": 0.01,
+    "high_detect_max_s": 0.8
+  },
+  "gates": {
+    "real_measurement_level_switches_halved": true,
+    "real_torque_level_switches_halved": true,
+    "short_gap_recovers_without_dob_reset": true,
+    "long_gap_invalidates_and_resets_once": true,
+    "no_load_no_false_high": true,
+    "spike_no_false_high": true,
+    "step_high_detect_within_bound": true,
+    "unload_high_detect_within_bound": true,
+    "negative_step_high_detect_within_bound": true
+  },
+  "all_declared_gates_pass": true,
+  "groups": {
+    "no_load:0": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "rise_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "high_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "release_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "no_load:1": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "rise_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "high_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "release_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "step:0": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 3.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.9057435897435898,
+        "std": 0.0014912019478676296
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.05350000000000016,
+        "std": 0.0010801234497347153
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.3676,
+        "std": 0.005815687596683842
+      },
+      "release_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "step:1": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 3.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 10,
+        "mean": 3.0,
+        "std": 0.0
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.951846153846154,
+        "std": 0.00020225913788353666
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.13390000000000002,
+        "std": 0.0007378647873726225
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.1878,
+        "std": 0.0007888106377466162
+      },
+      "release_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "ramp:0": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.4513846153846151,
+        "std": 0.007387305619498308
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.01642571516456473,
+        "std": 0.00025938912418074425
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.03210000000000019,
+        "std": 0.009182713227702522
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 1.0339,
+        "std": 0.007202622979011058
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.053399999999999705,
+        "std": 0.0008432740427114627
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.3629999999999997,
+        "std": 0.005962847939999426
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "ramp:1": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.8043076923076922,
+        "std": 0.0038618861528731895
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.04896954783143647,
+        "std": 0.00019454184313555235
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.1754,
+        "std": 0.005680375574437539
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.6898,
+        "std": 0.0037653389990514132
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.13389999999999952,
+        "std": 0.0007378647873725472
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.2159999999999998,
+        "std": 0.0014907119849998612
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "unload:0": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.77025,
+        "std": 0.0036348047479273955
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.01780000000000001,
+        "std": 0.0002810913475705125
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.05350000000000016,
+        "std": 0.0010801234497347153
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.3676,
+        "std": 0.005815687596683842
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.053399999999999705,
+        "std": 0.0008432740427114627
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.3629999999999997,
+        "std": 0.005962847939999426
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "unload:1": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.882625,
+        "std": 0.0004930066485916742
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.05306666666666666,
+        "std": 0.00021081851067787167
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.13390000000000002,
+        "std": 0.0007378647873726225
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.1878,
+        "std": 0.0007888106377466162
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.1334999999999995,
+        "std": 0.0005270462766942038
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.2159999999999998,
+        "std": 0.0014907119849998612
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "spike:0": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.999565217391304,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 2.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "rise_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "high_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "release_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "spike:1": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.999565217391304,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 2.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "rise_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "high_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "release_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "persistent_id:0": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.8358043478260866,
+        "std": 0.00010500997642172098
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 6.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 755.3,
+        "std": 0.48304589153964794
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.2981875,
+        "std": 0.003661573166762557
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.01780000000000001,
+        "std": 0.0002810913475705125
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.05350000000000016,
+        "std": 0.0010801234497347153
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.3676,
+        "std": 0.005815687596683842
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.053399999999999705,
+        "std": 0.0008432740427114627
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.3629999999999997,
+        "std": 0.005962847939999426
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "persistent_id:1": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.8358043478260866,
+        "std": 0.00010500997642172098
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 6.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 10,
+        "mean": 6.0,
+        "std": 0.0
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 755.3,
+        "std": 0.48304589153964794
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.4105625,
+        "std": 0.0004611654921079014
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.05306666666666666,
+        "std": 0.00021081851067787167
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.13390000000000002,
+        "std": 0.0007378647873726225
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.1878,
+        "std": 0.0007888106377466162
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.1332999999999998,
+        "std": 0.0008232726023483766
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.2159999999999998,
+        "std": 0.0014907119849998612
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "short_gap:0": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.892826086956522,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 6.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 493.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 3.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.462125,
+        "std": 0.003634804747927389
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.01780000000000001,
+        "std": 0.0002810913475705125
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.05350000000000016,
+        "std": 0.0010801234497347153
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.3676,
+        "std": 0.005815687596683842
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.053399999999999705,
+        "std": 0.0008432740427114627
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.3629999999999997,
+        "std": 0.005962847939999426
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "short_gap:1": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.998913043478261,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.8795000000000001,
+        "std": 0.0004930066485916241
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.05306666666666666,
+        "std": 0.00021081851067787167
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.13390000000000002,
+        "std": 0.0007378647873726225
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.1878,
+        "std": 0.0007888106377466162
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.1334999999999995,
+        "std": 0.0005270462766942038
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.2159999999999998,
+        "std": 0.0014907119849998612
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "long_gap:0": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.88695652173913,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 6.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 520.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 30.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.44525,
+        "std": 0.003634804747927402
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.01780000000000001,
+        "std": 0.0002810913475705125
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.05350000000000016,
+        "std": 0.0010801234497347153
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.3676,
+        "std": 0.005815687596683842
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.053399999999999705,
+        "std": 0.0008432740427114627
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.3629999999999997,
+        "std": 0.005962847939999426
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "long_gap:1": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.88695652173913,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 6.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 10,
+        "mean": 6.0,
+        "std": 0.0
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 520.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.557625,
+        "std": 0.0004930066485916241
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.05306666666666666,
+        "std": 0.00021081851067787167
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.13390000000000002,
+        "std": 0.0007378647873726225
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.1878,
+        "std": 0.0007888106377466162
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.1334999999999995,
+        "std": 0.0005270462766942038
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.2159999999999998,
+        "std": 0.0014907119849998612
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "voltage_sat:0": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.88695652173913,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 6.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 520.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 30.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.44525,
+        "std": 0.003634804747927402
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.01780000000000001,
+        "std": 0.0002810913475705125
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.05350000000000016,
+        "std": 0.0010801234497347153
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.3676,
+        "std": 0.005815687596683842
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.053399999999999705,
+        "std": 0.0008432740427114627
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.3629999999999997,
+        "std": 0.005962847939999426
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "voltage_sat:1": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.88695652173913,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 6.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 10,
+        "mean": 6.0,
+        "std": 0.0
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 520.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 30.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.557625,
+        "std": 0.0004930066485916241
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.05306666666666666,
+        "std": 0.00021081851067787167
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.13390000000000002,
+        "std": 0.0007378647873726225
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.1878,
+        "std": 0.0007888106377466162
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.1334999999999995,
+        "std": 0.0005270462766942038
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.2159999999999998,
+        "std": 0.0014907119849998612
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "noise:0": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 10.2,
+        "std": 3.1552425509864617
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.7414375,
+        "std": 0.03811082386715529
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.0178,
+        "std": 0.0013626408637116283
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.05370000000000007,
+        "std": 0.005056349144063057
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.3777,
+        "std": 0.024097256644227735
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.05339999999999946,
+        "std": 0.0040879225911348875
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.3586999999999998,
+        "std": 0.03666075709953494
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "noise:1": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.8825625,
+        "std": 0.002346872919439844
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.05356666666666667,
+        "std": 0.0011972189997378673
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.13470000000000001,
+        "std": 0.00283039062871384
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.1879,
+        "std": 0.003754996671103721
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.13459999999999972,
+        "std": 0.002756809750418079
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.2168999999999996,
+        "std": 0.0066407830863536126
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "negative_step:0": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.776,
+        "std": 0.003007513738769756
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.017666666666666678,
+        "std": 0.00022222222222223245
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.05300000000000005,
+        "std": 0.0010540925533895661
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.3584,
+        "std": 0.0048120219820316276
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.05299999999999974,
+        "std": 0.0006666666666666002
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.3648999999999995,
+        "std": 0.005152130088074656
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "negative_step:1": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "trend_transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 10,
+        "mean": 0.8826875,
+        "std": 0.00042184284856913045
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.05290000000000001,
+        "std": 0.00016101529717986492
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.1333,
+        "std": 0.0006749485577105535
+      },
+      "high_delay_s": {
+        "n_available": 10,
+        "mean": 0.1877,
+        "std": 0.0006749485577105535
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.1329999999999998,
+        "std": 0.0006666666666663342
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.2152999999999994,
+        "std": 0.0014944341180974613
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "real_measurement:0": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.9434347826086957,
+        "std": 0.0059814879300716176
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 25.5,
+        "std": 4.949747468305833
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 3.9,
+        "std": 1.9119507199599983
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 9,
+        "mean": 0.5505702069522793,
+        "std": 0.10776614792595925
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.01698584516053331,
+        "std": 0.006187090774063988
+      },
+      "rise_delay_s": {
+        "n_available": 8,
+        "mean": 0.04512500000000001,
+        "std": 0.018011405116917276
+      },
+      "high_delay_s": {
+        "n_available": 9,
+        "mean": 0.43366666666666664,
+        "std": 0.12488995155736109
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.06119999999999948,
+        "std": 0.006033241251599268
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.3812999999999998,
+        "std": 0.05241087673374684
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.2,
+        "std": 0.4216370213557839
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "real_measurement:1": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.9434347826086957,
+        "std": 0.0059814879300716176
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 4.5,
+        "std": 0.7071067811865476
+      },
+      "trend_transitions": {
+        "n_available": 10,
+        "mean": 5.0,
+        "std": 0.0
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 3.9,
+        "std": 1.9119507199599983
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 9,
+        "mean": 0.7971946535957537,
+        "std": 0.09068430287208902
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.04657203026283818,
+        "std": 0.017188205824447342
+      },
+      "rise_delay_s": {
+        "n_available": 10,
+        "mean": 0.1511,
+        "std": 0.01990784323381672
+      },
+      "high_delay_s": {
+        "n_available": 9,
+        "mean": 0.2748888888888889,
+        "std": 0.17055530220755702
+      },
+      "release_delay_s": {
+        "n_available": 10,
+        "mean": 0.1493999999999997,
+        "std": 0.01218560170401475
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.2176999999999997,
+        "std": 0.02098703303365065
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "real_torque:0": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.9432173913043478,
+        "std": 0.005757838050241954
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 37.2,
+        "std": 9.354737361952559
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 3.7,
+        "std": 1.888562063228706
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 9,
+        "mean": 0.22523543987989456,
+        "std": 0.16626624428775172
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.0046,
+        "std": 0.007408370307785913
+      },
+      "rise_delay_s": {
+        "n_available": 8,
+        "mean": 0.0500000000000001,
+        "std": 0.020535683229790217
+      },
+      "high_delay_s": {
+        "n_available": 8,
+        "mean": 0.45975,
+        "std": 0.08919120712587886
+      },
+      "release_delay_s": {
+        "n_available": 8,
+        "mean": 0.06337499999999963,
+        "std": 0.009941794893996141
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.6747999999999997,
+        "std": 0.5373798160209098
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.2,
+        "std": 0.4216370213557839
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.2,
+        "std": 0.4216370213557839
+      }
+    },
+    "real_torque:1": {
+      "valid_rate": {
+        "n_available": 10,
+        "mean": 0.9432173913043478,
+        "std": 0.005757838050241954
+      },
+      "transitions": {
+        "n_available": 10,
+        "mean": 4.6,
+        "std": 0.699205898780101
+      },
+      "trend_transitions": {
+        "n_available": 10,
+        "mean": 10.3,
+        "std": 2.0027758514399734
+      },
+      "max_unavailable_ms": {
+        "n_available": 10,
+        "mean": 3.7,
+        "std": 1.888562063228706
+      },
+      "event_dob_resets": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high_recall": {
+        "n_available": 9,
+        "mean": 0.7884787596394875,
+        "std": 0.08885781547798234
+      },
+      "false_high_rate": {
+        "n_available": 10,
+        "mean": 0.04316774893528712,
+        "std": 0.016792305313532097
+      },
+      "rise_delay_s": {
+        "n_available": 8,
+        "mean": 0.146375,
+        "std": 0.043206935620502936
+      },
+      "high_delay_s": {
+        "n_available": 9,
+        "mean": 0.28888888888888886,
+        "std": 0.16764504499421123
+      },
+      "release_delay_s": {
+        "n_available": 9,
+        "mean": 0.1505555555555549,
+        "std": 0.01339879762433081
+      },
+      "return_light_delay_s": {
+        "n_available": 10,
+        "mean": 0.1882999999999994,
+        "std": 0.03317981313992007
+      },
+      "pre_event_rising": {
+        "n_available": 10,
+        "mean": 0.2,
+        "std": 0.4216370213557839
+      },
+      "pre_event_high": {
+        "n_available": 10,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "pre_unload_falling": {
+        "n_available": 10,
+        "mean": 0.1,
+        "std": 0.31622776601683794
+      }
+    }
+  },
+  "pairs_audit": [
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "no_load",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "no_load",
+      "seed": 2
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "no_load",
+      "seed": 3
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "no_load",
+      "seed": 4
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "no_load",
+      "seed": 5
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "no_load",
+      "seed": 61
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "no_load",
+      "seed": 62
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "no_load",
+      "seed": 63
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "no_load",
+      "seed": 64
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "no_load",
+      "seed": 65
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "step",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "step",
+      "seed": 2
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "step",
+      "seed": 3
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "step",
+      "seed": 4
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "step",
+      "seed": 5
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "step",
+      "seed": 61
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "step",
+      "seed": 62
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "step",
+      "seed": 63
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "step",
+      "seed": 64
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "step",
+      "seed": 65
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "ramp",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "ramp",
+      "seed": 2
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "ramp",
+      "seed": 3
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "ramp",
+      "seed": 4
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "ramp",
+      "seed": 5
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "ramp",
+      "seed": 61
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "ramp",
+      "seed": 62
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "ramp",
+      "seed": 63
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "ramp",
+      "seed": 64
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "ramp",
+      "seed": 65
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "unload",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "unload",
+      "seed": 2
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "unload",
+      "seed": 3
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "unload",
+      "seed": 4
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "unload",
+      "seed": 5
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "unload",
+      "seed": 61
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "unload",
+      "seed": 62
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "unload",
+      "seed": 63
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "unload",
+      "seed": 64
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "unload",
+      "seed": 65
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 810,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "spike",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 810,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "spike",
+      "seed": 2
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 810,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "spike",
+      "seed": 3
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 811,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "spike",
+      "seed": 4
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 811,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "spike",
+      "seed": 5
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 811,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "spike",
+      "seed": 61
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 810,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "spike",
+      "seed": 62
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 810,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "spike",
+      "seed": 63
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 810,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "spike",
+      "seed": 64
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "spike",
+      "seed": 65
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1474,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "persistent_id",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1474,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "persistent_id",
+      "seed": 2
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1474,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "persistent_id",
+      "seed": 3
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1474,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "persistent_id",
+      "seed": 4
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1474,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "persistent_id",
+      "seed": 5
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1474,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "persistent_id",
+      "seed": 61
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1473,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "persistent_id",
+      "seed": 62
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1473,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "persistent_id",
+      "seed": 63
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1473,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "persistent_id",
+      "seed": 64
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1472,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "persistent_id",
+      "seed": 65
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 3,
+      "recovery_endpoints": 2,
+      "invalid_feature_epochs": 813,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "short_gap",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 3,
+      "recovery_endpoints": 2,
+      "invalid_feature_epochs": 813,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "short_gap",
+      "seed": 2
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 3,
+      "recovery_endpoints": 2,
+      "invalid_feature_epochs": 813,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "short_gap",
+      "seed": 3
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 3,
+      "recovery_endpoints": 2,
+      "invalid_feature_epochs": 814,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "short_gap",
+      "seed": 4
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 3,
+      "recovery_endpoints": 2,
+      "invalid_feature_epochs": 814,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "short_gap",
+      "seed": 5
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 3,
+      "recovery_endpoints": 2,
+      "invalid_feature_epochs": 814,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "short_gap",
+      "seed": 61
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 3,
+      "recovery_endpoints": 2,
+      "invalid_feature_epochs": 813,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "short_gap",
+      "seed": 62
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 3,
+      "recovery_endpoints": 2,
+      "invalid_feature_epochs": 813,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "short_gap",
+      "seed": 63
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 3,
+      "recovery_endpoints": 2,
+      "invalid_feature_epochs": 813,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "short_gap",
+      "seed": 64
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 3,
+      "recovery_endpoints": 2,
+      "invalid_feature_epochs": 812,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "short_gap",
+      "seed": 65
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 5,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1238,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "long_gap",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 5,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1238,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "long_gap",
+      "seed": 2
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 5,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1238,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "long_gap",
+      "seed": 3
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 5,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1239,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "long_gap",
+      "seed": 4
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 5,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1239,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "long_gap",
+      "seed": 5
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 5,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1239,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "long_gap",
+      "seed": 61
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 5,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1238,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "long_gap",
+      "seed": 62
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 5,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1238,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "long_gap",
+      "seed": 63
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 5,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1238,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "long_gap",
+      "seed": 64
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 5,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1237,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "long_gap",
+      "seed": 65
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1238,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "voltage_sat",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1238,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "voltage_sat",
+      "seed": 2
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1238,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "voltage_sat",
+      "seed": 3
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1239,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "voltage_sat",
+      "seed": 4
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1239,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "voltage_sat",
+      "seed": 5
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1239,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "voltage_sat",
+      "seed": 61
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1238,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "voltage_sat",
+      "seed": 62
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1238,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "voltage_sat",
+      "seed": 63
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1238,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "voltage_sat",
+      "seed": 64
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1237,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "voltage_sat",
+      "seed": 65
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 806,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "noise",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "noise",
+      "seed": 2
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "noise",
+      "seed": 3
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 810,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "noise",
+      "seed": 4
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 810,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "noise",
+      "seed": 5
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 809,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "noise",
+      "seed": 61
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "noise",
+      "seed": 62
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "noise",
+      "seed": 63
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "noise",
+      "seed": 64
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 805,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "noise",
+      "seed": 65
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "negative_step",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "negative_step",
+      "seed": 2
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "negative_step",
+      "seed": 3
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 806,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "negative_step",
+      "seed": 4
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "negative_step",
+      "seed": 5
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 806,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "negative_step",
+      "seed": 61
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "negative_step",
+      "seed": 62
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "negative_step",
+      "seed": 63
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 807,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "negative_step",
+      "seed": 64
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "negative_step",
+      "seed": 65
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1096,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_measurement",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1099,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_measurement",
+      "seed": 2
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1089,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_measurement",
+      "seed": 3
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1097,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_measurement",
+      "seed": 4
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1091,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_measurement",
+      "seed": 5
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1043,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_measurement",
+      "seed": 61
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1038,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_measurement",
+      "seed": 62
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1040,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_measurement",
+      "seed": 63
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1050,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_measurement",
+      "seed": 64
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1041,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_measurement",
+      "seed": 65
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1097,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_torque",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1097,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_torque",
+      "seed": 2
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1088,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_torque",
+      "seed": 3
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1098,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_torque",
+      "seed": 4
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1092,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_torque",
+      "seed": 5
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1049,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_torque",
+      "seed": 61
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1038,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_torque",
+      "seed": 62
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1044,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_torque",
+      "seed": 63
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1050,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_torque",
+      "seed": 64
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1041,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_torque",
+      "seed": 65
+    }
+  ],
+  "control_adaptation": false,
+  "physical_performance_validated": false,
+  "audit_source_sha256": "7137012a9dd5c6c93622a3d5e16c4df9d2f1ee3941c44cb3d5de9f6e2ca787f4"
+}

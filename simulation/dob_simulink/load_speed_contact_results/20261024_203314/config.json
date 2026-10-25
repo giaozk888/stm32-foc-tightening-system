@@ -1,0 +1,14 @@
+{
+  "scenarios": [
+    "contact_early",
+    "contact_cancel"
+  ],
+  "seeds": 1,
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "fixture_release_after_contact_s": 0.08,
+  "workspace_source_time_shift_s": -1E-9,
+  "pi_and_protections_unchanged": true,
+  "fast_restart": false,
+  "actual_plant_parameters_logged": true
+}

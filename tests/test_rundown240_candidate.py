@@ -1,4 +1,6 @@
 """240rpm A-only configuration; compiled real FSM/storage, no board access."""
+
+from app_source_view import read_app_source
 import ast
 import hashlib
 import json
@@ -21,7 +23,7 @@ class Rundown240Tests(unittest.TestCase):
     def test_compiled_ram_recipe_storage_guard_and_240_fsm(self):
         out=ROOT/'tests/rundown240_build'; out.mkdir(exist_ok=True)
         gxx=str(Path(GCC).with_name('g++.exe'))
-        main=(ROOT/'foc2_app_a/Core/Src/main.c').read_text()
+        main=read_app_source(ROOT/'foc2_app_a/Core/Src/main.c')
         helper='static void '+function(main,'TightenParams_ApplyRundown240Candidate')
         template=(ROOT/'tests/rundown240_candidate_host.cpp').read_text()
         for candidate,travel in ((False,False),(True,False),(True,True)):

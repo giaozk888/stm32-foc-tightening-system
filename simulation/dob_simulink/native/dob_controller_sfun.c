@@ -1,4 +1,7 @@
-#define S_FUNCTION_NAME dob_controller_sfun
+#ifndef DOB_CONTROLLER_SFUN_NAME
+#define DOB_CONTROLLER_SFUN_NAME dob_controller_sfun
+#endif
+#define S_FUNCTION_NAME DOB_CONTROLLER_SFUN_NAME
 #define S_FUNCTION_LEVEL 2
 #include "simstruc.h"
 #include "dob_loader.h"

@@ -1,4 +1,6 @@
 """Offline source contracts; never accesses a serial port or probe."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import re
 import unittest
@@ -61,7 +63,7 @@ class StableZeroIntegration(unittest.TestCase):
 
     def test_raw_unfiltered_calibration_precedes_controller(self):
         for slot in "ab":
-            source = (ROOT / f"foc2_app_{slot}/Core/Src/main.c").read_text(encoding="utf-8")
+            source = read_app_source(ROOT / f"foc2_app_{slot}/Core/Src/main.c",encoding="utf-8")
             self.assertNotIn("IsolatedBench_DigitalBaseline", source)
             callback = re.search(r"void HAL_ADCEx_InjectedConvCpltCallback.*?\n}\n", source, re.S)[0]
             self.assertLess(callback.index("IsolatedZero_Feed(u, v)"), callback.index("current_filter_enable != 0U"))

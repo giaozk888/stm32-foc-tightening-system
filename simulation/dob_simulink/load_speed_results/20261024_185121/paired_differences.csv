@@ -1,0 +1,4 @@
+scenario,seed,saturation_ms_on_minus_off,iq_peak_a_on_minus_off,speed_mae_to_shaped_ref_on_minus_off,recipe_speed_deficit_rpm_on_minus_off,final_travel_deg_on_minus_off,done_s_on_minus_off,contact_entry_speed_rpm_on_minus_off
+no_load,1,0,0.0,0.0,0.0,0.0,,
+step,1,0,0.0,0.06990916697060656,90.28689546318368,-3385.181303480349,,
+contact_early,1,-21,0.0,-23.437523547966684,63.09784283440264,0.015345916429851059,0.6970000000000001,-120.08946176189414

@@ -1,4 +1,6 @@
 """Offline integration only. No debugger, serial, flashing, or motor commands."""
+
+from app_source_view import read_app_source
 import hashlib
 import json
 import re
@@ -53,7 +55,7 @@ class LatestOriginalTests(unittest.TestCase):
     def test_old_fsm_switch_identical_in_both_slots_and_not_reimplemented(self):
         blocks=[]
         for slot in 'ab':
-            source=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            source=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             task=source[source.index('static void TighteningTask(void *argument)\n{'):]
             start=task.index('switch (tightening_test_stage)')
             end=task.index('LatestOriginal_FsmService();',start)

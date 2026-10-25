@@ -1,0 +1,33 @@
+{
+  "completed": true,
+  "pairs": 4,
+  "runs": 8,
+  "results": "D:\\new project\\simulation\\dob_simulink\\load_repair_results\\20261024_114056",
+  "control_truth_inputs_identical": true,
+  "source_pins_unchanged": true,
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "control_adaptation": false,
+  "pairs_audit": [
+    {
+      "scenario": "unload",
+      "seed": 1,
+      "control_truth_input_diff": 0
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 1,
+      "control_truth_input_diff": 0
+    },
+    {
+      "scenario": "long_gap",
+      "seed": 1,
+      "control_truth_input_diff": 0
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 1,
+      "control_truth_input_diff": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "completed": true,
+  "runs": 140,
+  "paired_estimator_evaluations": 420,
+  "repeats": 10,
+  "consumed_input_verified": true,
+  "hardware_access": false,
+  "feedback_applied_to_plant": false,
+  "physical_performance_validated": false,
+  "results": "D:\\new project\\simulation\\dob_simulink\\low_recovery_results\\20261024_171018"
+}

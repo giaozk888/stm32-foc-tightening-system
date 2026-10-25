@@ -1,4 +1,6 @@
 """Offline FOC-first IRQ/deferred acquisition regressions; no devices."""
+
+from app_source_view import read_app_source
 import hashlib
 import json
 import os
@@ -87,7 +89,7 @@ class EncoderFocFirstTests(unittest.TestCase):
             data=(COMMON/name).read_bytes()
             self.assertEqual(hashlib.sha256(data).hexdigest(),expected,name)
         for slot in 'ab':
-            main=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            main=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             self.assertIn('sample_age_us > AS_DMA_SAMPLE_MAX_AGE_US',main)
             self.assertIn('theta_e + encoder_omega_e_rad_s * (float)sample_age_us',main)
         header=(COMMON/'as5047p_timing_policy.h').read_text('utf-8')

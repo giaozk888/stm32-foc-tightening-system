@@ -9,6 +9,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+from app_a_source_layout import read_app_source
 import re
 import statistics
 import struct
@@ -39,7 +40,7 @@ def policy(five_second=False):
 def direct_limit_ma():
     values=[]
     for slot in 'ab':
-        source=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+        source=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c',encoding='utf-8')
         values.append(round(float(re.search(r'^#define MOTOR_DIRECT_IQ_LIMIT_A\s+([0-9.]+)f',source,re.M)[1])*1000))
     if values[0]!=values[1]: raise ValueError('A/B direct limits differ')
     return values[0]

@@ -1,4 +1,6 @@
 """Torque chain consistency / real compiled owner / offline binary regressions."""
+
+from app_source_view import read_app_source
 import hashlib
 import json
 import math
@@ -37,7 +39,7 @@ class TorqueChainTests(unittest.TestCase):
 
     def test_phase_clarke_inverse_chain_and_defaults(self):
         for slot in 'ab':
-            text=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text()
+            text=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c')
             self.assertIn('#define POLE_PAIRS 10U',text)
             self.assertIn('#define ENCODER_DIRECTION (-1)',text)
             self.assertIn('#define ELECTRICAL_ZERO_RAW 10507U',text)

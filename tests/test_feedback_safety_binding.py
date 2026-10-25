@@ -1,4 +1,6 @@
 """Actual binding/register mock execution, plus unchanged normal-profile guards."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import subprocess
 import unittest
@@ -50,7 +52,7 @@ class FeedbackBindingTests(unittest.TestCase):
 
     def test_ab_interrupt_lifecycle_and_default_protection_contracts(self):
         for slot in 'ab':
-            src = (ROOT / f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            src = read_app_source(ROOT / f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             self.assertIn('FOC_FEEDBACK_SAFETY_BINDING', src)
             self.assertIn('FocFeedbackBinding_PhysicalSeen(u, v)', src)
             self.assertIn('FocFeedbackBinding_Control(u, v)', src)

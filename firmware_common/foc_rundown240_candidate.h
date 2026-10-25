@@ -26,6 +26,13 @@
 #endif
 #define FOC_RUNDOWN240_TRIP_RPM 500U
 #define FOC_RUNDOWN240_TRIP_TEXT "500"
+#elif defined(FOC_NORMAL_RUN_TRIP500)
+#if FOC_NORMAL_RUN_TRIP500 != 1 || !defined(FOC_DOB_NORMAL_CONTROL)
+#error Normal500 trip requires the normal protected DOB run configuration
+#endif
+/* User-selected normal runtime limit, independent of PSI identification. */
+#define FOC_RUNDOWN240_TRIP_RPM 500U
+#define FOC_RUNDOWN240_TRIP_TEXT "500"
 #else
 #define FOC_RUNDOWN240_TRIP_RPM 300U
 #define FOC_RUNDOWN240_TRIP_TEXT "300"
@@ -36,6 +43,11 @@
 
 #if defined(FOC_PSI_IDENT_TRIP500) && !defined(FOC_RUNDOWN240_CANDIDATE)
 #error 500rpm trip requires the protected rundown candidate
+#endif
+#if defined(FOC_NORMAL_RUN_TRIP500) && (!defined(FOC_RUNDOWN240_CANDIDATE) || \
+    !defined(FOC_DOB_NORMAL_CONTROL) || defined(FOC_PSI_IDENT_DIAG) || \
+    defined(FOC_MECHANICAL_HIGH_SPEED_DIAG))
+#error Normal500 trip must not masquerade as a parameter identification mode
 #endif
 
 #if defined(FOC_RUNDOWN240_TRAVEL20000)

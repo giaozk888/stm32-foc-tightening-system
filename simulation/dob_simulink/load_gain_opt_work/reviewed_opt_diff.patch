@@ -1,0 +1,78 @@
+--- frozen/load_gain_policy.h
+
++++ generated/load_gain_opt_policy.h
+
+@@ -1,5 +1,5 @@
+
+-#ifndef OFFLINE_LOAD_GAIN_POLICY_H
+-#define OFFLINE_LOAD_GAIN_POLICY_H
++#ifndef OFFLINE_LOAD_GAIN_OPT_POLICY_H
++#define OFFLINE_LOAD_GAIN_OPT_POLICY_H
+ #include <math.h>
+ #include <stdint.h>
+ /* SOFTWARE ONLY. Dimensionless gain; no Iq, observer, PI, FSM or PWM writes.
+@@ -19,11 +19,13 @@
+
+ static inline float LoadGain_Move(float a,float b,float step){
+     return a<b?fminf(a+step,b):fmaxf(a-step,b);
+ }
+-static inline float LoadGain_Step(LoadGainScheduler *s,LoadGainEvidence e){
++static inline float LoadGainOpt_Step(LoadGainScheduler *s,LoadGainEvidence e,uint32_t profile){
+     uint32_t dt=s->have_step?e.now_us-s->last_step_us:0;
+     if(s->have_step && !dt)return s->selected;
+     s->have_step=1;s->last_step_us=e.now_us;++s->updates;s->credit_us=0;
+     float cap=isfinite(e.max_gain)?fminf(.25f,fmaxf(0,e.max_gain)):0;
++    float floor=fminf(cap,(profile==3U||profile==4U)?.10f:0.f);
++    float rise=(profile==2U||profile==4U)?5.f:1.f;
+     if(!e.feedback_enabled||!cap){
+         s->selected=s->requested=0;s->active=s->previous_good=s->high_us=s->release_us=0;s->reason=LG_OFF;return 0;
+     }
+@@ -46,7 +48,7 @@
+
+                 s->active=0;s->high_us=s->release_us=0;++s->transitions;s->reason=LG_WAIT;
+             }
+         }
+-        s->requested=s->active?cap:0;
++        s->requested=s->active?cap:floor;
+     }else{
+         s->previous_good=0;s->reason=LG_SHORT_GAP;
+         uint32_t age=s->last_good_us?e.now_us-s->last_good_us:UINT32_MAX;
+@@ -58,7 +60,7 @@
+
+     }
+     /* Missing wall time earns neither dwell nor a large catch-up gain step. */
+     if(dt && dt<=2000U && (valid||s->reason!=LG_SHORT_GAP)){
+-        float slew=s->requested>s->selected?1.f:2.5f;
++        float slew=s->requested>s->selected?rise:2.5f;
+         s->selected=LoadGain_Move(s->selected,s->requested,slew*(float)dt*1e-6f);
+     }
+     s->selected=fminf(cap,fmaxf(0,s->selected));return s->selected;
+--- frozen/load_gain_host.c
+
++++ generated/load_gain_opt_host.c
+
+@@ -24,11 +24,11 @@
+
+ #include "load_speed_scheduler.h"
+ #define LOAD_SPEED_NY 64
+ #endif
+-#include "load_gain_policy.h"
++#include "load_gain_opt_policy.h"
+ static LoadGainScheduler gains;
+ static uint32_t gain_adaptive;
+ static float gain_cap;
+-static void gain_config(const double *c){gain_adaptive=c[3]!=0;gain_cap=isfinite(c[1])?fminf(.25f,fmaxf(0,(float)c[1])):0;}
++static void gain_config(const double *c){gain_adaptive=isfinite(c[3])&&c[3]>=0&&c[3]<=4?(uint32_t)c[3]:0;gain_cap=isfinite(c[1])?fminf(.25f,fmaxf(0,(float)c[1])):0;}
+ static TighteningFsm process;
+ static DobTrendClassifier classification;
+ static LoadSpeedScheduler scheduling;
+@@ -106,7 +106,7 @@
+
+     uint32_t quality=fresh&&classification.valid&&now-classification.last_call<=2000U;
+     LoadGainEvidence ge={now,process.state,intent.control_mode==CONTROL_SPEED,protection!=TF_REASON_NONE,
+         feedback.enabled,gain_adaptive,quality,classification.state,classification.trend_valid,classification.trend_state,classification.mean,gain_cap};
+-    dob_host_gain=LoadGain_Step(&gains,ge);
++    dob_host_gain=LoadGainOpt_Step(&gains,ge,gain_adaptive);
+     uint32_t consumed_source=monitor.current.sample_us;
+     double v[10];memcpy(v,u,sizeof v);v[0]=target;v[9]=intent.control_mode==CONTROL_SPEED&&u[9]!=0;
+     if(intent.reset_speed_integrator)integral=0;

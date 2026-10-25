@@ -1,4 +1,6 @@
 """Offline RC protected integration; no device, private data or motion I/O."""
+
+from app_source_view import read_app_source
 import hashlib
 import json
 import os
@@ -84,7 +86,7 @@ class RcProtectedTests(unittest.TestCase):
             self.assertEqual(new['cacheVariables']['FOC_ADC_RC_PROTECTED_CANDIDATE'], 'ON')
             for name, sha in pins[slot].items():
                 self.assertEqual(hashlib.sha256((app/f'build/{name}/foc2.bin').read_bytes()).hexdigest(), sha)
-            source = (app/'Core/Src/main.c').read_text('utf-8')
+            source = read_app_source(app/'Core/Src/main.c','utf-8')
             self.assertIn('strcmp(cmd, "ADC COMMIT") == 0', source)
 
     def test_linked_candidate_keeps_protection_and_original_start(self):

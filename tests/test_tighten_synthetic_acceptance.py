@@ -1,4 +1,6 @@
 """Offline guards for the isolated board observer; never opens a serial port."""
+
+from app_source_view import read_app_source
 import sys
 from pathlib import Path
 import unittest
@@ -97,7 +99,7 @@ class SyntheticAcceptanceTests(unittest.TestCase):
             original = ROOT / f"safety_backups/tighten-synthetic-20261008/before_{slot}_main.c"
             if not original.exists():
                 self.skipTest("Local pre-edit source snapshot is not available")
-            current = (ROOT / f"foc2_app_{slot}/Core/Src/main.c").read_text(encoding="utf-8")
+            current = read_app_source(ROOT / f"foc2_app_{slot}/Core/Src/main.c",encoding="utf-8")
             self.assertEqual(without_test_profiles(current),
                              without_test_profiles(original.read_text(encoding="utf-8")))
 

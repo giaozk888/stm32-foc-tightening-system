@@ -1,0 +1,1227 @@
+{
+  "windows_ms": [
+    100,
+    75,
+    50,
+    30
+  ],
+  "min_good": [
+    60,
+    45,
+    30,
+    18
+  ],
+  "min_span_ms": [
+    60,
+    45,
+    30,
+    18
+  ],
+  "trend_tau_ms": 100,
+  "trend_dwell_ms": 80,
+  "level_dwell_ms": 30,
+  "coverage_ratio": 0.6,
+  "repeats": 10,
+  "eval_s": [
+    2.3,
+    6.9
+  ],
+  "event_s": 3,
+  "unload_s": 4.6,
+  "event_match_max_s": 0.8,
+  "input_columns": [
+    "time_s",
+    "dob_estimate_a",
+    "dob_valid",
+    "lpf_updated",
+    "observer_source_us",
+    "simulation_guard_fault",
+    "target_rpm",
+    "load_ground_truth_a"
+  ],
+  "original_c": "D:\\new project\\firmware_common\\dob_trend_shadow.c",
+  "original_c_sha256": "c4ddd7eb1ca30321e390ede093c4f4a13115b4e8a77a7a798e87ebd9a7e3cdb8",
+  "original_h": "D:\\new project\\firmware_common\\dob_trend_shadow.h",
+  "original_h_sha256": "efe9d0a94aa65d1eead11e35d04b60f9d08b86df63bae28f19799090da344781",
+  "generated_c_sha256": "e5277aed9745ad7054f636c6935f219486bab41820dc232871976b658c9fe227",
+  "generated_h_sha256": "b9bceca2c31d8583c04ba7b5c5373c9dda572147865eed8cbeb0e88e471d36ae",
+  "modifications": {
+    "span<60000U": "span<DOB_WINDOW_MIN_SPAN_US",
+    "n<60U": "n<DOB_WINDOW_MIN_GOOD",
+    "(float)n*.01f": "(float)n*(1.f/(float)DTS_WINDOW)"
+  },
+  "runs": [
+    {
+      "scenario": "no_load",
+      "seed": 1,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\no_load_seed001.input.bin",
+      "input_sha256": "e318a0f2e31c94068d03a63ef02b6ffd275eb5a0fa5ecd4c15aad51b0fe9e593",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\no_load_seed001.csv.gz",
+      "original_sha256": "0c7688dde57f207728b02c27fc9a7482d2988fe79f4a4b1086348b2919714968"
+    },
+    {
+      "scenario": "no_load",
+      "seed": 2,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\no_load_seed002.input.bin",
+      "input_sha256": "e230ae134173877975c4125e0863d08dcd49a68222a339c79d795c38a8a42ecf",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\no_load_seed002.csv.gz",
+      "original_sha256": "e6c0e9e7bf7a24b0b7dde2f04cf34209bc21b83b43fc0a24cedb82821bd0fa91"
+    },
+    {
+      "scenario": "no_load",
+      "seed": 3,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\no_load_seed003.input.bin",
+      "input_sha256": "cb5ad4bea2b9f6f33455844213ef4092ec8bd7d4f875b6c2f234ae8d658f8781",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\no_load_seed003.csv.gz",
+      "original_sha256": "2dde7aff12df36016e2ad747e8ba34d4dd89f18cfe846476c4b9b0d640bf0bea"
+    },
+    {
+      "scenario": "no_load",
+      "seed": 4,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\no_load_seed004.input.bin",
+      "input_sha256": "ec7ef4d0c3505aaeffa134eeeb702b3bcdfc51cb0e1d88a1337abef064b180db",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\no_load_seed004.csv.gz",
+      "original_sha256": "87c4e59d7eb9b9b28be05cefd0c1841859a9901bc929fa1b84adc161df9b5d38"
+    },
+    {
+      "scenario": "no_load",
+      "seed": 5,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\no_load_seed005.input.bin",
+      "input_sha256": "dfc71a73fca60864691bd12340e753439280cb38f7a50952473261a41fe4940a",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\no_load_seed005.csv.gz",
+      "original_sha256": "00b38f271075b0ea7a79a5287f54b445a8a8ee9528f41bc900ea83f06d75e0d7"
+    },
+    {
+      "scenario": "no_load",
+      "seed": 61,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\no_load_seed061.input.bin",
+      "input_sha256": "021488de69baecec4b177985a96d361923facbec8b71bc97c286b462f6f4abea",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\no_load_seed061.csv.gz",
+      "original_sha256": "4a272827aa66c13d2b78e19271a1346ea8369db4b2d296af666e20a94797229d"
+    },
+    {
+      "scenario": "no_load",
+      "seed": 62,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\no_load_seed062.input.bin",
+      "input_sha256": "6b0ceec3b9305acdb202526684ee7f6a1fe4e25e336f77966a9e2fc1c817df3f",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\no_load_seed062.csv.gz",
+      "original_sha256": "14387ca8d6f2d37c7a2c92d5a1c9d23b53f112125e8df7286367eb51fd2e9263"
+    },
+    {
+      "scenario": "no_load",
+      "seed": 63,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\no_load_seed063.input.bin",
+      "input_sha256": "e49abbfa7b2ed4413c3735582b4d7f900f181acbe27e53dc79ce7553028d9c5c",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\no_load_seed063.csv.gz",
+      "original_sha256": "8fbf35281da43f7e71e7181216a35ec42ca11312c7b141837277594526af47b7"
+    },
+    {
+      "scenario": "no_load",
+      "seed": 64,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\no_load_seed064.input.bin",
+      "input_sha256": "1734c9b69295f77976138e13c14fc8102109dceac0eb113214799e7151f248c1",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\no_load_seed064.csv.gz",
+      "original_sha256": "be53dcfec0b5d2acf72d3b6ef7e3c4fb8e1ccbbfacae91e50674110ea8ce8d1b"
+    },
+    {
+      "scenario": "no_load",
+      "seed": 65,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\no_load_seed065.input.bin",
+      "input_sha256": "6e37d51172c7a334bc5d613fc8628ec165e33fe792eaa09668a5340dea39472b",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\no_load_seed065.csv.gz",
+      "original_sha256": "8aa0ea60f9ca96ac5d862717dd81130fead9ef680f5a9a550f1033b820071a78"
+    },
+    {
+      "scenario": "step",
+      "seed": 1,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\step_seed001.input.bin",
+      "input_sha256": "bd76b523443e89d469df99d507d828b2c26c9a69fe0e2c0eef921d154931fe4d",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\step_seed001.csv.gz",
+      "original_sha256": "32f2ebc5b4b7395d511459917ff1700cc86a50ba156696dfc09c72ac2d334849"
+    },
+    {
+      "scenario": "step",
+      "seed": 2,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\step_seed002.input.bin",
+      "input_sha256": "54b2e00903337f9b95c6d1bbdc85f46728c4ac5b86799c391204730898d6d937",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\step_seed002.csv.gz",
+      "original_sha256": "002c851aa89091c5f745564fbfdcd0a677259962fc798bb29bf1a30aa2762e74"
+    },
+    {
+      "scenario": "step",
+      "seed": 3,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\step_seed003.input.bin",
+      "input_sha256": "57e0f6c0ab8407de7e94a1aae46d67fe64c129198ea26acdd0e2d70fa118bd21",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\step_seed003.csv.gz",
+      "original_sha256": "fafd14eb84760e8780e832c4779364d5eb1a4463e21b6dd4df580f6b48d1ec0b"
+    },
+    {
+      "scenario": "step",
+      "seed": 4,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\step_seed004.input.bin",
+      "input_sha256": "5c791334960e4392ebea9cc83acc22ce11276d56d98723c21a1cb720f6391414",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\step_seed004.csv.gz",
+      "original_sha256": "ef724b6c67d9c1917f7fcc5966a0e521e047781276fd11b9c119d43903304eb1"
+    },
+    {
+      "scenario": "step",
+      "seed": 5,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\step_seed005.input.bin",
+      "input_sha256": "099bb3d5b70141218e7996eba3de9fc563064cf7a30d48d981dedc44275ee6ce",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\step_seed005.csv.gz",
+      "original_sha256": "daa80cdd155f98410d0c6b73a2a5ccc11ca103ac2b9146f16f9e793b684c610c"
+    },
+    {
+      "scenario": "step",
+      "seed": 61,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\step_seed061.input.bin",
+      "input_sha256": "3729736ee39319b8c0427b5f9b13be94658916b1de4e19d53d266b2868b4f54e",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\step_seed061.csv.gz",
+      "original_sha256": "1175ae54ccb9347bfdc0061ad4e37cf4c43ced1548343c63e526b9934e810865"
+    },
+    {
+      "scenario": "step",
+      "seed": 62,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\step_seed062.input.bin",
+      "input_sha256": "85619dc4e7ad45c59940cadaad502bddb84a6b94cd3e3173d77d16cc9b97c9ae",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\step_seed062.csv.gz",
+      "original_sha256": "c35d25161b740bbabe3e64b5f38b179902576c00fc65dab074a527d6f0bb4a03"
+    },
+    {
+      "scenario": "step",
+      "seed": 63,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\step_seed063.input.bin",
+      "input_sha256": "761051638c2dc943731d223552c2ef099f89e24e5756b03590830013c3975b8d",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\step_seed063.csv.gz",
+      "original_sha256": "3afaf87070973bf9aef063fb3751e38388fe77ccb29cf9ede81e7c3a4d9c67cc"
+    },
+    {
+      "scenario": "step",
+      "seed": 64,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\step_seed064.input.bin",
+      "input_sha256": "c073da4095a97bad3efedf7325117a2d97fa18be6314f18df9f101c5213bc83c",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\step_seed064.csv.gz",
+      "original_sha256": "2a5f8638db2fe188ef054fd43d26bf7bcd8db35ff0f6b06cb8e48c1b33419b4a"
+    },
+    {
+      "scenario": "step",
+      "seed": 65,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\step_seed065.input.bin",
+      "input_sha256": "8ef7a3c864df91163c02ce1bdb253c08ea15b426cd00c24a5741751115054bed",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\step_seed065.csv.gz",
+      "original_sha256": "855fb99be4442e8a25725bc05fa6cb78e7758aa605732d456a2f79c242818a84"
+    },
+    {
+      "scenario": "ramp",
+      "seed": 1,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\ramp_seed001.input.bin",
+      "input_sha256": "eaa78a91a2af354a6f006ec2877c2ddff9597ad13c02289fd173db5ea99c3c39",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\ramp_seed001.csv.gz",
+      "original_sha256": "244151042908f4ce2bb24440f5892c93a1b9e2e0557dd2edb46173d9d97fb76c"
+    },
+    {
+      "scenario": "ramp",
+      "seed": 2,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\ramp_seed002.input.bin",
+      "input_sha256": "52dec868fcf45511e182a88c0c56c62d1b1689e276e0a53e107cb649cd2a5e33",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\ramp_seed002.csv.gz",
+      "original_sha256": "54f6a49f187515a2c23fc25b81f5ef94c5cf5ef08844608db839094b63f0630d"
+    },
+    {
+      "scenario": "ramp",
+      "seed": 3,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\ramp_seed003.input.bin",
+      "input_sha256": "d9943bed961db9e5829f4605f30c6f8d95d312f4cdc8c01eda4afaf9d91751fd",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\ramp_seed003.csv.gz",
+      "original_sha256": "0c680e3c9412a70509fe330ec37c47b3f47cd4f655850169eafc9730256a4f87"
+    },
+    {
+      "scenario": "ramp",
+      "seed": 4,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\ramp_seed004.input.bin",
+      "input_sha256": "843c73baed6845267d09c53d2dc8403f8e64d5c232639e0b4e8d4fa9515fd557",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\ramp_seed004.csv.gz",
+      "original_sha256": "7b51af6c65aabb6de9f95421198efcee5b5d73ee8c5c7084254af13a7e265f66"
+    },
+    {
+      "scenario": "ramp",
+      "seed": 5,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\ramp_seed005.input.bin",
+      "input_sha256": "7bbb80c64b4a330ae8465023504241aa4ab6d5434104ace1f5d1cb8e5410929d",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\ramp_seed005.csv.gz",
+      "original_sha256": "62993ba0d620502689667f50fb256b7dfad8b25a32c3b939c5e5d2b2bc01f537"
+    },
+    {
+      "scenario": "ramp",
+      "seed": 61,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\ramp_seed061.input.bin",
+      "input_sha256": "8d80a679512e0c97f992d2ad0cbbe4eaaa066852d4f9bfa5dda8de634dd2b04b",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\ramp_seed061.csv.gz",
+      "original_sha256": "5f2345ae411197d17c7e90e78db7ea0bcc0bade61dd2c279fa0c6766edf815f7"
+    },
+    {
+      "scenario": "ramp",
+      "seed": 62,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\ramp_seed062.input.bin",
+      "input_sha256": "062cf6df3fc6612bacb89de6bea879d7593eb8f1188b026e140247443bdb3e48",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\ramp_seed062.csv.gz",
+      "original_sha256": "31e5311589ee03f7b1b20cf52f301f70c33c4b93ed04ee2afc2baf16788287c8"
+    },
+    {
+      "scenario": "ramp",
+      "seed": 63,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\ramp_seed063.input.bin",
+      "input_sha256": "0c0800aa6d7ea43b852c27f8fc845d166735702fcf4dd18ffcd5fa908e26f305",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\ramp_seed063.csv.gz",
+      "original_sha256": "f7f2bf9b9f5b746f473070ea822d66d6c7f5d91d1cbafe91d751af7df99e0290"
+    },
+    {
+      "scenario": "ramp",
+      "seed": 64,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\ramp_seed064.input.bin",
+      "input_sha256": "33c85df0c740be5dd138ad636d4e48b530e620f4e773fcdb9d7483e873c7623d",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\ramp_seed064.csv.gz",
+      "original_sha256": "f6bc3770db480c772780fdf74571b02053d2208ce84d8064a2b599ce08704d61"
+    },
+    {
+      "scenario": "ramp",
+      "seed": 65,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\ramp_seed065.input.bin",
+      "input_sha256": "b1793567204efe0ef1c5e318107793e10005522a4e302e1d6dc5445078982638",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\ramp_seed065.csv.gz",
+      "original_sha256": "bd9956bcbe967f9983cf2ba43fbd7833f16f07bffcd77c64455264151116d6ac"
+    },
+    {
+      "scenario": "unload",
+      "seed": 1,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\unload_seed001.input.bin",
+      "input_sha256": "8ea9a99fbb681fd15d08a69cf4dfe72b0c8b892125dbef5a27c1ac7523b79a27",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\unload_seed001.csv.gz",
+      "original_sha256": "6a9edb493e50102199a427438ba98da078ee70b2726cd10c1264e7eb21f07d08"
+    },
+    {
+      "scenario": "unload",
+      "seed": 2,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\unload_seed002.input.bin",
+      "input_sha256": "9e707bc5e37aba724f9420d68171e8dac4bc98d7f3347696e26f5a56c1991979",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\unload_seed002.csv.gz",
+      "original_sha256": "81924cbf888aba553277c16c2ee7bf55509c02f4c3db917c5de2fe649dfffcbb"
+    },
+    {
+      "scenario": "unload",
+      "seed": 3,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\unload_seed003.input.bin",
+      "input_sha256": "7543a492ea907ec7b6a38e6bf0054a6ccdbf875d09e2135f154ff7b916363540",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\unload_seed003.csv.gz",
+      "original_sha256": "db5851f7f9f8860a20b83cbc7f79a4a976df25b541d61f1a1b028a5b49a1895c"
+    },
+    {
+      "scenario": "unload",
+      "seed": 4,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\unload_seed004.input.bin",
+      "input_sha256": "ffbd9bccdc7086d3ba049c7ddbfe12100bbc9be5c43a402a628f47fb6440dccd",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\unload_seed004.csv.gz",
+      "original_sha256": "6b33d207dd3a6d96fe75279ec0b60b2fb24552ffe3a76a2525277c75661c152c"
+    },
+    {
+      "scenario": "unload",
+      "seed": 5,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\unload_seed005.input.bin",
+      "input_sha256": "a2aefa530ac21f41b9422ab092b55d9b1a911ed71dfaf1f0deb2d2b5a2392756",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\unload_seed005.csv.gz",
+      "original_sha256": "ecc2edd5871d7366050844452056f5ac276209a85117d46ae84d58d1178ee277"
+    },
+    {
+      "scenario": "unload",
+      "seed": 61,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\unload_seed061.input.bin",
+      "input_sha256": "b95e57e74bbb20eb9df27e97a8d2bd2b5e86bffbb9b1ed8e4db56c38459b8359",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\unload_seed061.csv.gz",
+      "original_sha256": "10916979295f9886fba98fd2ed40a62c9bcdb3e23f468ac0d760f2317228e6c3"
+    },
+    {
+      "scenario": "unload",
+      "seed": 62,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\unload_seed062.input.bin",
+      "input_sha256": "bc4bb0861d86249954e434606061d1ac702713f5a120a054336f99411e485c68",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\unload_seed062.csv.gz",
+      "original_sha256": "1e39c05ae46bb705aa367a9d8af588b95d3a9318d4b96e5321c77766f8464d1a"
+    },
+    {
+      "scenario": "unload",
+      "seed": 63,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\unload_seed063.input.bin",
+      "input_sha256": "4ffd0f5259849481aff74a3a4cdc5fc02f9bb2646f4925e01fc308a7ce16eefa",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\unload_seed063.csv.gz",
+      "original_sha256": "f85fdac678b49779fecfd8a77794dced7abebdd94b025756d9f816778dc30440"
+    },
+    {
+      "scenario": "unload",
+      "seed": 64,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\unload_seed064.input.bin",
+      "input_sha256": "c8de584afdf6ef0caa46149009f7f94c1978eade5d0b03e3eb935c9cbcc68a1b",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\unload_seed064.csv.gz",
+      "original_sha256": "912ab45f806062b5300b219b349520d926f0aaf0fb43e83b301ab427fce4eab8"
+    },
+    {
+      "scenario": "unload",
+      "seed": 65,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\unload_seed065.input.bin",
+      "input_sha256": "574f9c90643fd9240bea37d3649fbd256eeec99a74de16c2b59d3b13053a5cd5",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\unload_seed065.csv.gz",
+      "original_sha256": "19b8ac1507c16f4ac3e2f489ecc945e00dd30566fad504011bba6bb3e7dc6a25"
+    },
+    {
+      "scenario": "spike",
+      "seed": 1,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\spike_seed001.input.bin",
+      "input_sha256": "2a1647b737c3a51aecfe88cfa4bff20017d93f453a5900241668d74ef4650fe6",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\spike_seed001.csv.gz",
+      "original_sha256": "966927399b65e201c3d7d466f8efd02281f70da3d786cb05252a5308e285a518"
+    },
+    {
+      "scenario": "spike",
+      "seed": 2,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\spike_seed002.input.bin",
+      "input_sha256": "287fcca67ec76ed3b2df1b97ecc7172ead846cbb48cd35045d5e89b90d572d86",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\spike_seed002.csv.gz",
+      "original_sha256": "ea5d0b6b91d08c1e7d34aa645b01d96be6c01a7d158dbe29e18c600c8855bbfe"
+    },
+    {
+      "scenario": "spike",
+      "seed": 3,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\spike_seed003.input.bin",
+      "input_sha256": "0ea8bf3e369964240e4f45e6cd99b9bce2fb6ee92479bef4cb9d60190df44b01",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\spike_seed003.csv.gz",
+      "original_sha256": "ca4cb79b3d3acad7681f43b8821d0754be7e847640158145e7b56f1831eaa6c5"
+    },
+    {
+      "scenario": "spike",
+      "seed": 4,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\spike_seed004.input.bin",
+      "input_sha256": "0856b9600c952f656fc35c6eb23f165509e20c4a9bd77cfc989cdcdaad06ff1d",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\spike_seed004.csv.gz",
+      "original_sha256": "6d0fca7b12ab1a44b52b2bcc62c76cae21649f9f40bf2919fc82f9270bca67ad"
+    },
+    {
+      "scenario": "spike",
+      "seed": 5,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\spike_seed005.input.bin",
+      "input_sha256": "0e54efac15b0d9f82d6ef124cc59cdcd21685d1e637c592998ea5dfe69e89a49",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\spike_seed005.csv.gz",
+      "original_sha256": "1b50033dcdb8f8a108bc9cb9d7aa9a9321679ce010d83169ab2e7a4acf3d386e"
+    },
+    {
+      "scenario": "spike",
+      "seed": 61,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\spike_seed061.input.bin",
+      "input_sha256": "f073fcd0f0656c5749f6c532a6e9f3c84856bb7c3d11f2f9d47c2756e4c7cfd9",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\spike_seed061.csv.gz",
+      "original_sha256": "379b2cf70f1032ddb37eba6d73e05500a8103b179f8cc205753e262f30bd7beb"
+    },
+    {
+      "scenario": "spike",
+      "seed": 62,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\spike_seed062.input.bin",
+      "input_sha256": "e2a448c4294841fd822b01d5b3a379ea1c9069c4d631a65f61811d5382979215",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\spike_seed062.csv.gz",
+      "original_sha256": "0394035e567ced20446513ac2d93762b24142cdaca0236e06ca46481c55f6215"
+    },
+    {
+      "scenario": "spike",
+      "seed": 63,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\spike_seed063.input.bin",
+      "input_sha256": "1a68b85fa7b36dbcda7e9a2c4bebae1363ed5f0b92426ce041d807481fcb02d3",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\spike_seed063.csv.gz",
+      "original_sha256": "c2b2cf90df1ca69e43a226a1fffda9daeff3ece0d39192521c10b4e242f84ac6"
+    },
+    {
+      "scenario": "spike",
+      "seed": 64,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\spike_seed064.input.bin",
+      "input_sha256": "1d66c412eb45ac3edf8a7b87793de2be2552fc12b3cb866571a865b927a18582",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\spike_seed064.csv.gz",
+      "original_sha256": "723dd961d05ee35f0a32020d152a21f92279162961cc75ae84fd7f80fc2cdbeb"
+    },
+    {
+      "scenario": "spike",
+      "seed": 65,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\spike_seed065.input.bin",
+      "input_sha256": "38dd02ef91727ef275d72824aaec40a1063ed1fa1358985eae57bdf2b074b997",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\spike_seed065.csv.gz",
+      "original_sha256": "ebb1f25e066008f258137992e9f7b5d549c9b1661fdd14c912ea7ab804f0a8cf"
+    },
+    {
+      "scenario": "persistent_id",
+      "seed": 1,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\persistent_id_seed001.input.bin",
+      "input_sha256": "30139387c6aa1586faca1ea7bd73f0715a9de439c9caf987bc4161e15ce98459",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\persistent_id_seed001.csv.gz",
+      "original_sha256": "ff209050d8ce3055656bfccd5e188ffa2b4e969593b6eae4d4aa0267f85ea96c"
+    },
+    {
+      "scenario": "persistent_id",
+      "seed": 2,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\persistent_id_seed002.input.bin",
+      "input_sha256": "0e5e69f52ccd3c3d89c9fa2db8c81cf2e7578309c49337f0205c4d912fe07dc6",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\persistent_id_seed002.csv.gz",
+      "original_sha256": "ab8336c1bc97cc45d87830b0b58dae823d1d2c42a0c712c8b8e4b8b0e9f3b83b"
+    },
+    {
+      "scenario": "persistent_id",
+      "seed": 3,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\persistent_id_seed003.input.bin",
+      "input_sha256": "c8d4b75ab9cf3b4f3af224b7a2e3a0619108e5ba38c4242839d20ecd65e39738",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\persistent_id_seed003.csv.gz",
+      "original_sha256": "eb73a94ad0d18b28a6c8cb11f6e27189a2a52de1cfead0f0893df682f980960e"
+    },
+    {
+      "scenario": "persistent_id",
+      "seed": 4,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\persistent_id_seed004.input.bin",
+      "input_sha256": "58e205a9dbaff81b59192c96f552ddd8141e2cd147091eb91f4d3bc8e73b7047",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\persistent_id_seed004.csv.gz",
+      "original_sha256": "e61c19ae13b0e3a8b7bab813718abdf3cbc5f2eacc0bc71de59c7e4df3754917"
+    },
+    {
+      "scenario": "persistent_id",
+      "seed": 5,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\persistent_id_seed005.input.bin",
+      "input_sha256": "de9c47335c85d301c7ff24eb8677682a4c15c681492ff8ec50541f171ff6e97e",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\persistent_id_seed005.csv.gz",
+      "original_sha256": "568fa7212842f461f95ec1b59fab1fe41e7e97b482462cecb305a651889bc376"
+    },
+    {
+      "scenario": "persistent_id",
+      "seed": 61,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\persistent_id_seed061.input.bin",
+      "input_sha256": "85dec709df9295380a39021718e34299e209bf127fd04886439fd6f8c4acd09f",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\persistent_id_seed061.csv.gz",
+      "original_sha256": "57596d320a917bd6c11f48e522a525d1dcc3f9df6113022363e382803b9cfa9a"
+    },
+    {
+      "scenario": "persistent_id",
+      "seed": 62,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\persistent_id_seed062.input.bin",
+      "input_sha256": "60a0deb7c9de0457b7b54ea907e7e64936c8a8b04c68780a29f88517795b5d7d",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\persistent_id_seed062.csv.gz",
+      "original_sha256": "d11fd3606b5152d74913b22195c5c389fb82fa8ab6f8af1d660944d2c05ca5b4"
+    },
+    {
+      "scenario": "persistent_id",
+      "seed": 63,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\persistent_id_seed063.input.bin",
+      "input_sha256": "831458a509e3ec6724994db4827c9cf9209ce41f6fa03953872ba4ef16115655",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\persistent_id_seed063.csv.gz",
+      "original_sha256": "20c4436cd7fbb32eacf8df23372291720ed250d4d631a121555a47597ff1b2c1"
+    },
+    {
+      "scenario": "persistent_id",
+      "seed": 64,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\persistent_id_seed064.input.bin",
+      "input_sha256": "8a808f153a3fa23a0b3cdeaedb0752b640fa8744e20e718dbe322ec462b22e78",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\persistent_id_seed064.csv.gz",
+      "original_sha256": "2d0c6e3437fac8d5f1ce9002ae4bfabffb2c808bc9585e98f356a6298b11c656"
+    },
+    {
+      "scenario": "persistent_id",
+      "seed": 65,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\persistent_id_seed065.input.bin",
+      "input_sha256": "6bdf3eed46bcf9c004fe1438b4302f0f2dd4c96a9492eb1b0461d868506b044d",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\persistent_id_seed065.csv.gz",
+      "original_sha256": "810390d1f06de4120ced870c4faa37cd20a1f659df9607c717ca5a91796e3c53"
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 1,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\short_gap_seed001.input.bin",
+      "input_sha256": "25bb4f4d675767c8017d3e8d056fe2cb4f72b34a891994ecd94b71d57519a222",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\short_gap_seed001.csv.gz",
+      "original_sha256": "5443897743764dec9c049914fe26a111fcec37addccf743032fedd8c5eff7537"
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 2,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\short_gap_seed002.input.bin",
+      "input_sha256": "9fc1038280379435e006c947b47ca1dc2dbcea720ab937e3f060abf3b16a446c",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\short_gap_seed002.csv.gz",
+      "original_sha256": "c7b6a95120b5e734be76f0d386d7e0d7b509a0ba4669a15c6240880e28d3be89"
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 3,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\short_gap_seed003.input.bin",
+      "input_sha256": "043155c6f18b6ea0903ef9cbcf30746837104baa5010dcbec0168ba97bc9ec74",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\short_gap_seed003.csv.gz",
+      "original_sha256": "a21c11f885c8be4e1388b83da2cbb439019faae5171b39a66b61b5b42eb35fa2"
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 4,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\short_gap_seed004.input.bin",
+      "input_sha256": "7f2b1d43deaa53e34bec076848db10b24216130cffc2a55c43741cabcbe95956",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\short_gap_seed004.csv.gz",
+      "original_sha256": "98ee5191b1dac025957661147bbfa0f161cddf22b25696cee5ac1c326eeaaa62"
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 5,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\short_gap_seed005.input.bin",
+      "input_sha256": "6c78591bc4233806e577f0d593532231f3501d04f404543ab9bd6e378bb255cf",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\short_gap_seed005.csv.gz",
+      "original_sha256": "a53977291c6d86b4e6795774d8f4d4c0b3233f0330425d198d84e287c08d781b"
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 61,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\short_gap_seed061.input.bin",
+      "input_sha256": "253138d6f4e63aaba446d6006cba9c026f7e7c417ebc41b30da18579009dfcfd",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\short_gap_seed061.csv.gz",
+      "original_sha256": "6abb1810e6af12f1d8fa9107c2f9bb4c34d74d29ddecde356eb472a79d76381d"
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 62,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\short_gap_seed062.input.bin",
+      "input_sha256": "5909c945b4a976f2e98f870bfe286868717cdca3e3fec5c5e44227c625a1f913",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\short_gap_seed062.csv.gz",
+      "original_sha256": "0e760b205757de5a58b2f8f4e28f48087e35a77decc88e904bded3ed8957037f"
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 63,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\short_gap_seed063.input.bin",
+      "input_sha256": "09f407c18be7973689c15a501491c9fa11e9f1b51798737d180af1f12cb51cae",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\short_gap_seed063.csv.gz",
+      "original_sha256": "98e97db2b3bdcf349fb893d1faa0a9746c244910998161bf0a5f108db86cc82b"
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 64,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\short_gap_seed064.input.bin",
+      "input_sha256": "99f5761b3ba6276dd2420b0aff8f0435090783ac32f1c106ccdbae980b3fbd7a",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\short_gap_seed064.csv.gz",
+      "original_sha256": "d46f7e8dd61abced7ab1675d414d0d7190cd9c360fe1b98fe792259504d4c141"
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 65,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\short_gap_seed065.input.bin",
+      "input_sha256": "2e3080f4debf8a784b78885d8e2ac7d912e2e641a56addf04d86ead30c7a4700",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\short_gap_seed065.csv.gz",
+      "original_sha256": "9653f6657c3a17b5211cf4414fe55540d7460cb603984cc4ff86aa49663e1fb5"
+    },
+    {
+      "scenario": "long_gap",
+      "seed": 1,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\long_gap_seed001.input.bin",
+      "input_sha256": "79fc2dab130db92e4a97a2070e2e4dd9ab0b2e2fb9e6096decf7177f32b780bf",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\long_gap_seed001.csv.gz",
+      "original_sha256": "08e35683291a65d12cd5891bf99fb606469ec02e389eceb2a8418dc7ec1426e5"
+    },
+    {
+      "scenario": "long_gap",
+      "seed": 2,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\long_gap_seed002.input.bin",
+      "input_sha256": "58683411f98b8c8f8e682c02f8bebd22f1544bcb934f689a28a27124de9464e3",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\long_gap_seed002.csv.gz",
+      "original_sha256": "b038a612ab8cd0139ecf42e251eb478a563404d4a29558badff69275e1a39c9f"
+    },
+    {
+      "scenario": "long_gap",
+      "seed": 3,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\long_gap_seed003.input.bin",
+      "input_sha256": "afd7a5d43caedddf174284c60afff9973c9371bb92acf559703b84ee3a47df64",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\long_gap_seed003.csv.gz",
+      "original_sha256": "99e7bf1248db1cb7f0cffc658ee2a548ce49cde1fc90ebec6a6bc8ce675fd048"
+    },
+    {
+      "scenario": "long_gap",
+      "seed": 4,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\long_gap_seed004.input.bin",
+      "input_sha256": "b212caa4eeefb1ffef7ebf0e39783fbe1cb0bcc93cd16dc765dc24345fdfbd15",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\long_gap_seed004.csv.gz",
+      "original_sha256": "b9b5dc6ab39bff2d3fdc901ae2d22548f0bf79450fe3a96ccec0ca407a7aa5e1"
+    },
+    {
+      "scenario": "long_gap",
+      "seed": 5,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\long_gap_seed005.input.bin",
+      "input_sha256": "06b20d8aa76787f7e58c7a556f0dc843b8872011c3cff01b2bd1e6d62f076426",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\long_gap_seed005.csv.gz",
+      "original_sha256": "3de5b1ad6fe9bfc7859d1dcd4e7f01ccdb08855402ed00c2a8fcaf76f257a7fb"
+    },
+    {
+      "scenario": "long_gap",
+      "seed": 61,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\long_gap_seed061.input.bin",
+      "input_sha256": "ea6f5fbb667ca0cc0f630ee91c2f42781c7935e0062e1de527f51a797b417f2f",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\long_gap_seed061.csv.gz",
+      "original_sha256": "a2bf4f5e154c65e45585498508db191a007a1241f8458af78fd30867c7116651"
+    },
+    {
+      "scenario": "long_gap",
+      "seed": 62,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\long_gap_seed062.input.bin",
+      "input_sha256": "4e79c9e7dcc9488ee9e373aab165d403b3cf47fe379d6bf4403893c3a6352915",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\long_gap_seed062.csv.gz",
+      "original_sha256": "461846035fd507e2176d24c2ce90402d2a79555d45227664c0fd83377eb35e48"
+    },
+    {
+      "scenario": "long_gap",
+      "seed": 63,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\long_gap_seed063.input.bin",
+      "input_sha256": "7e33207b9a2d2eabc1f9bac131533c0e703cbc31f520e1a33572222970060a89",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\long_gap_seed063.csv.gz",
+      "original_sha256": "f89860c23f1ad50c360223114e6bdf5e77bf9e952bf8dc14a19096436a17d9f8"
+    },
+    {
+      "scenario": "long_gap",
+      "seed": 64,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\long_gap_seed064.input.bin",
+      "input_sha256": "bdbbb3f620dfb0772d29286c2aade8595cb96439a2017e5f9d91b073ed0d3786",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\long_gap_seed064.csv.gz",
+      "original_sha256": "6f154c4fb87ef71dc300080b26dce0cc6e9eecbc8ea9149c827cd1beef7073e5"
+    },
+    {
+      "scenario": "long_gap",
+      "seed": 65,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\long_gap_seed065.input.bin",
+      "input_sha256": "6b2c0f46050a2cf8262ea8d820f90f3b42e7f95de9064bf491757937a078f954",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\long_gap_seed065.csv.gz",
+      "original_sha256": "1ae5b2e15aeffbaa21a0218f29d6b502ac69ff7cbdfa6b2336b73a86afb3fb15"
+    },
+    {
+      "scenario": "voltage_sat",
+      "seed": 1,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\voltage_sat_seed001.input.bin",
+      "input_sha256": "aed7e3db6256541fdc20ccb573600d48b0f88fbb60cc75bafd697c6bc95f308b",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\voltage_sat_seed001.csv.gz",
+      "original_sha256": "a9aa2d9fd8e0ac055be6c211b158398557d72f46eb140f42135787be24878331"
+    },
+    {
+      "scenario": "voltage_sat",
+      "seed": 2,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\voltage_sat_seed002.input.bin",
+      "input_sha256": "563ca72260825d65ace9c85b33f1a087e4467c3af5d551f1247cbde2a7836f0b",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\voltage_sat_seed002.csv.gz",
+      "original_sha256": "d755143aebdde4c0a13a95f39d80f1b88abe28b6c2740a830b4f1948833e3da8"
+    },
+    {
+      "scenario": "voltage_sat",
+      "seed": 3,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\voltage_sat_seed003.input.bin",
+      "input_sha256": "911734796daef66df2115ac132d81daa8a0db59fdc40ff46a233299e3937909c",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\voltage_sat_seed003.csv.gz",
+      "original_sha256": "fd7fbce91281070166ae87b4daacaf61f77f92c5c62869890253ab9e06ba61ce"
+    },
+    {
+      "scenario": "voltage_sat",
+      "seed": 4,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\voltage_sat_seed004.input.bin",
+      "input_sha256": "956048be501835d0374e0049496a4051dd7560922652815514d376ccc2ec4949",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\voltage_sat_seed004.csv.gz",
+      "original_sha256": "332af064c3c26ac0203e6a5791e2f6f85533aabbd0cdfbd9f9e7233e99754e61"
+    },
+    {
+      "scenario": "voltage_sat",
+      "seed": 5,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\voltage_sat_seed005.input.bin",
+      "input_sha256": "33f14e6a3df35b24d8d33e1764e20fe03b52434b24602b946104d6146fdee259",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\voltage_sat_seed005.csv.gz",
+      "original_sha256": "111a5f663b15ea69771b1aa97e247c3a59fa7a47502d7327024bd18a0b7fafa7"
+    },
+    {
+      "scenario": "voltage_sat",
+      "seed": 61,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\voltage_sat_seed061.input.bin",
+      "input_sha256": "c5a49332635226a6fff299c0cf2ee3c7b6dffe8f92f1c1275e3359b6cb595b4f",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\voltage_sat_seed061.csv.gz",
+      "original_sha256": "8b861bbfdc68068af8c6de5b885fb649056f08bb5ebb6562ccc3c610ddb26274"
+    },
+    {
+      "scenario": "voltage_sat",
+      "seed": 62,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\voltage_sat_seed062.input.bin",
+      "input_sha256": "bf704c0381521f788286961c7af3e820b34dbee44849db35f8b2b20bad8ec366",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\voltage_sat_seed062.csv.gz",
+      "original_sha256": "44b1e5372e55470e7ac974fcf6b8d3d6a6aa1989415a7d04dd234828e35846b5"
+    },
+    {
+      "scenario": "voltage_sat",
+      "seed": 63,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\voltage_sat_seed063.input.bin",
+      "input_sha256": "d1267e535fe083e035e9aab6cb43bc5837ba239959368f92259e96b389c38337",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\voltage_sat_seed063.csv.gz",
+      "original_sha256": "f78ebd8366b5f9707daca6ae38bdd850fb2b6a752cc0c471f09d60af7686eb8f"
+    },
+    {
+      "scenario": "voltage_sat",
+      "seed": 64,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\voltage_sat_seed064.input.bin",
+      "input_sha256": "f83581c69e15f48637daef884c2702f07b95851c56d9d2bc1decd46ec8c72205",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\voltage_sat_seed064.csv.gz",
+      "original_sha256": "f731846cbfc093e632bad0c6784aa51465ed3a1a8bf5761aa4937b039ab347b9"
+    },
+    {
+      "scenario": "voltage_sat",
+      "seed": 65,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\voltage_sat_seed065.input.bin",
+      "input_sha256": "54412a2ddff92b94ba2491e5432a839554ab6f2bd19b5f41d054549764ef45f5",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\voltage_sat_seed065.csv.gz",
+      "original_sha256": "0e4ff34ad322835fd4cc38f0c77ca3d1fe3bb5c82c6d670a34e3ae87392cc975"
+    },
+    {
+      "scenario": "noise",
+      "seed": 1,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\noise_seed001.input.bin",
+      "input_sha256": "8f13faaa7a30b461e296c7adcbc4f369664d02830315849f599e18bec6587e09",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\noise_seed001.csv.gz",
+      "original_sha256": "68ab29a410268d65dedb42a9ac57a761c55cc8d8b88ec36c4673691cba9f05e1"
+    },
+    {
+      "scenario": "noise",
+      "seed": 2,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\noise_seed002.input.bin",
+      "input_sha256": "049c3fbdaad6a30a722c22987f292c003954775d7bdcf116a2f2b9ac029d1b72",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\noise_seed002.csv.gz",
+      "original_sha256": "8b30ac3a3fa7961313d044b8626a2d8106e396c67797ba3f824e44551fe274a4"
+    },
+    {
+      "scenario": "noise",
+      "seed": 3,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\noise_seed003.input.bin",
+      "input_sha256": "c12d93c2d177bf83b700c33123c0636fff824c9b43d9f7416cc5ce561ec9e3d2",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\noise_seed003.csv.gz",
+      "original_sha256": "7c4fe20bd4a39e51ba5e04903e60f553af7ec9a70daf858a16ff972737a03f65"
+    },
+    {
+      "scenario": "noise",
+      "seed": 4,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\noise_seed004.input.bin",
+      "input_sha256": "a24d11f09ee88bd62ca2bb504a73dfe22a0dfddc2721d32d74e2066c862bd09e",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\noise_seed004.csv.gz",
+      "original_sha256": "a47d3de39c21f6f8bcf0b582c17f50211d270b94fef67b0df49f66d1fb7b1a10"
+    },
+    {
+      "scenario": "noise",
+      "seed": 5,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\noise_seed005.input.bin",
+      "input_sha256": "ef7e5e749b5139b36ba9f0c106adf35a44807410299c4ad145c91692b1110d68",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\noise_seed005.csv.gz",
+      "original_sha256": "800e1e8d6abfe899b56380d4bf9615b11bc9aa03d19a224efae4433227a108cf"
+    },
+    {
+      "scenario": "noise",
+      "seed": 61,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\noise_seed061.input.bin",
+      "input_sha256": "3ef09188108a972a021604a08df602c7d72545ac6987fcf4a389c074d0a14f16",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\noise_seed061.csv.gz",
+      "original_sha256": "87aa72dfdba778139c587ba90af180161ef284bc3f55c2f7de2d2d3cd13b3657"
+    },
+    {
+      "scenario": "noise",
+      "seed": 62,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\noise_seed062.input.bin",
+      "input_sha256": "f888087549866a876789e085f08899e9c57c717ba7fd3fd1f0fd3104337cb604",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\noise_seed062.csv.gz",
+      "original_sha256": "97a8746edb0b6c49c147fa61d4775d2ba353b5ba0c844780572ce925c29bc397"
+    },
+    {
+      "scenario": "noise",
+      "seed": 63,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\noise_seed063.input.bin",
+      "input_sha256": "271ba683351c9d6cf330c7a4c9ba72381640fdf2e2672f990845ce5445cb9adb",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\noise_seed063.csv.gz",
+      "original_sha256": "8eae0134623f61fde1a730b4529758ee344e77c5f73e2dc22c8a0b64a5b8959f"
+    },
+    {
+      "scenario": "noise",
+      "seed": 64,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\noise_seed064.input.bin",
+      "input_sha256": "ab502590faf5b7eb5619142a5ba87af1f2f7c4328003785d9abae22cae415d8a",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\noise_seed064.csv.gz",
+      "original_sha256": "d607cd35f6e634967618c71efa2d183d8109d5c730fb8d8addf1b533cc817a62"
+    },
+    {
+      "scenario": "noise",
+      "seed": 65,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\noise_seed065.input.bin",
+      "input_sha256": "3d203c9d55701569557961c22c85869d3743d2ada2aa6e8964fb5670aac6d5d9",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\noise_seed065.csv.gz",
+      "original_sha256": "7869acf8a04352c032328b26db4c48da5c1517410d26fb4c7b0b905eacac1650"
+    },
+    {
+      "scenario": "negative_step",
+      "seed": 1,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\negative_step_seed001.input.bin",
+      "input_sha256": "7f9cd21024cc5ab9cfdcd2d7778dddaf5cb6b55fe444a49464a2758995d3c233",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\negative_step_seed001.csv.gz",
+      "original_sha256": "c6250362dc790e4bae02b2f1fd7ba8f89b6abc0e62dd6365586a324733c1c209"
+    },
+    {
+      "scenario": "negative_step",
+      "seed": 2,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\negative_step_seed002.input.bin",
+      "input_sha256": "33070d695623e9f58c0a71f942f2510f91cad2d6c3a65b51ce32a49760f6ca7a",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\negative_step_seed002.csv.gz",
+      "original_sha256": "de609feb2816df93c70dcedc87f91be8de04e789b45b72c99fe6bd14f95bff14"
+    },
+    {
+      "scenario": "negative_step",
+      "seed": 3,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\negative_step_seed003.input.bin",
+      "input_sha256": "66fec2c122f1edae071966d8f5ad4e74f183da4211e1d3996b7a3fb323d110e1",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\negative_step_seed003.csv.gz",
+      "original_sha256": "903edb7060a9eac67f598a001de739c28d93d55817effed8e6ff3f32d2c9ac9f"
+    },
+    {
+      "scenario": "negative_step",
+      "seed": 4,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\negative_step_seed004.input.bin",
+      "input_sha256": "75f837429bc04c876342dc793e4b48368c50f740a3e2a4da140bf669225aa3e1",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\negative_step_seed004.csv.gz",
+      "original_sha256": "69f791eed327bb1a61a296d39f1a104ff89f941dbb9e453be30f591406b618a7"
+    },
+    {
+      "scenario": "negative_step",
+      "seed": 5,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\negative_step_seed005.input.bin",
+      "input_sha256": "84121df86fa792cc60b85ae7fd6746b71744a93657d37ca4458fe175b2c03543",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\negative_step_seed005.csv.gz",
+      "original_sha256": "190ce5e788e2b2253d325173c8e380dec6562ad101c272a360353711fd591b78"
+    },
+    {
+      "scenario": "negative_step",
+      "seed": 61,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\negative_step_seed061.input.bin",
+      "input_sha256": "9686957921440a79242bb73d5d16e5da0c54e255a82c7803900b652b464dbb24",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\negative_step_seed061.csv.gz",
+      "original_sha256": "c05c9cc9aff17a4c9df70915491d868529bbf90292af731376b55867d90eaad8"
+    },
+    {
+      "scenario": "negative_step",
+      "seed": 62,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\negative_step_seed062.input.bin",
+      "input_sha256": "2846579012fac18d4214a5d4cd21c81ce56e6e6ea7d7c75a42d942361a562e81",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\negative_step_seed062.csv.gz",
+      "original_sha256": "9320c5888312abbc6b4fa56b841e0ab9f3225038b7a66410ac97f71f3a879c47"
+    },
+    {
+      "scenario": "negative_step",
+      "seed": 63,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\negative_step_seed063.input.bin",
+      "input_sha256": "12e01327007c294f2305ff7892fb0ef4ec7c01032d1a19c5bb693fa514fbc4cc",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\negative_step_seed063.csv.gz",
+      "original_sha256": "94fee5e4ca2dbb2abe9f5c3db391905b1bdf228a86b92ec66eadea1f1048e018"
+    },
+    {
+      "scenario": "negative_step",
+      "seed": 64,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\negative_step_seed064.input.bin",
+      "input_sha256": "3605f093877dea55f34badd1a3ab0f704bce64019a064b7d11c123c42e7a7573",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\negative_step_seed064.csv.gz",
+      "original_sha256": "502c7252830c2ee5bd8f9a706786858529d5764a9a5503ddbea5f0825f3e7d29"
+    },
+    {
+      "scenario": "negative_step",
+      "seed": 65,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\negative_step_seed065.input.bin",
+      "input_sha256": "4211f3b0c6688ce693fbda3fde81b4dfa7bdb743326e1c118b2f514a5360c91d",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\negative_step_seed065.csv.gz",
+      "original_sha256": "ac2683498b450359c8f8d18e3984190810ada44cfa3b77e0b7590dab5b3c812c"
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 1,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_measurement_seed001.input.bin",
+      "input_sha256": "c52f81fa87f243b4ebf796e2594a296f08539284a0c3aeb8a6c7968d35f3a33b",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_measurement_seed001.csv.gz",
+      "original_sha256": "95db8db2efd96387aeae2c139273ba89f003d2fd8fbf8a4a16d3d84b425989e0"
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 2,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_measurement_seed002.input.bin",
+      "input_sha256": "7aeba527af3719ae5d330d1a006a99f1eba2a1d72da96be7e1d12169e986b88a",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_measurement_seed002.csv.gz",
+      "original_sha256": "2ca5bff22bb8e987ce10a93d1dbd4965dcce7d2a7009f260289c002913883f01"
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 3,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_measurement_seed003.input.bin",
+      "input_sha256": "8fcd5190383446d56bba9845f9ed9dac28220e78a8c32cfffa56eea427e8a1f4",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_measurement_seed003.csv.gz",
+      "original_sha256": "a8c0c442f269b306ea90a2bdb17d63e4b469089cfeecb3e51a2a25c786b1a20d"
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 4,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_measurement_seed004.input.bin",
+      "input_sha256": "feb9d3f81a6040aee8904407a14ca35ca509e617697bb1b5e30be712f159f423",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_measurement_seed004.csv.gz",
+      "original_sha256": "052975fe42028e7725457d5f3a3e8e1387850942951664ef1bef8c27b642ee6c"
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 5,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_measurement_seed005.input.bin",
+      "input_sha256": "a1266b914c6a6c6007ad92bc1d8f9e977538cbda51978877dd9d36b2b600fe84",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_measurement_seed005.csv.gz",
+      "original_sha256": "d1453c219195193caffb1c0ec4b986b6d214fb6e7beb65816695f55a64126c33"
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 61,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_measurement_seed061.input.bin",
+      "input_sha256": "317dc77cc61b0497bddcc21bd8e8e2ab4dfe1b49956073a9c1acd25ede3c7f81",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_measurement_seed061.csv.gz",
+      "original_sha256": "fd859257aab111f37d6212ed927ab61274f372ad8575a097bf4ec850c5b8e617"
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 62,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_measurement_seed062.input.bin",
+      "input_sha256": "13b9b9f7c85a71b402b5a92e688d3bd87a78fb7a8abf2619cfa98a059ed37359",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_measurement_seed062.csv.gz",
+      "original_sha256": "9d36767558e12655f183a78026c95d14f3e234cac20d96b33af362e017b8e894"
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 63,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_measurement_seed063.input.bin",
+      "input_sha256": "493e7b622f18ed7c3907df3df6a7cb759246ebb713c30b2f032f76e492fbd457",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_measurement_seed063.csv.gz",
+      "original_sha256": "105980ec535ad1a40e75f9f23cbdc5b8f54e7098e0e6d89060ad9e294bc9b54e"
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 64,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_measurement_seed064.input.bin",
+      "input_sha256": "a290f03ca3f160a9f6706e04397456a65370e2041303573d05342fc6ce255953",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_measurement_seed064.csv.gz",
+      "original_sha256": "5a2ed2fe681c2dc04af42a44e480d1519003a15767d648b57ae5e5ad4d471bc5"
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 65,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_measurement_seed065.input.bin",
+      "input_sha256": "75ba48a7c1883013d962de6e7cc262f1d9b129470b80ffba13196f8eb9140782",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_measurement_seed065.csv.gz",
+      "original_sha256": "31a584d3b4428ed53baa42d2babdfcc34fff9a2547b27065420395600e5dd01b"
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 1,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_torque_seed001.input.bin",
+      "input_sha256": "6e7cdda10603c11c6d3b01cb563f64c02b0db77565c4fd46bc7b096bd6ca8200",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_torque_seed001.csv.gz",
+      "original_sha256": "9c9d2dcd1a2f4724e2ef639cfd364e4360d7d07f93cac2f757ae7f75991a2d7f"
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 2,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_torque_seed002.input.bin",
+      "input_sha256": "16f2c8348b2070b227815161506184536d605d11674665d9a2e267d1e89ada11",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_torque_seed002.csv.gz",
+      "original_sha256": "4203f518d1d97ca435c12fd993303843c7b53443c48449fdfea34c1c9a203ebd"
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 3,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_torque_seed003.input.bin",
+      "input_sha256": "3dfb5d1b2e17271e91fcf1988819611a15d32c926a39759ecbe29ea1bb1dac5a",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_torque_seed003.csv.gz",
+      "original_sha256": "471c808988039531291762069a5283849547bcbb867a729772dc110a3b00f693"
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 4,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_torque_seed004.input.bin",
+      "input_sha256": "c6304814e63f3eb92a9e6b71423d5d4a4c7f46630575d0478b148b99bd0e7b5e",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_torque_seed004.csv.gz",
+      "original_sha256": "bbffdb959456f7b0eb42a53b7752c991f03f86a298224465c41d0d85f695f87a"
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 5,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_torque_seed005.input.bin",
+      "input_sha256": "89b4d6bf5e34f62b778d2e22918817827abb73faa910eeb1b8f84cef401c6f2f",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_torque_seed005.csv.gz",
+      "original_sha256": "5e99e1afdec49668a9da7a2c23ad4acb2f5e398c2235acd1c657202890217d92"
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 61,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_torque_seed061.input.bin",
+      "input_sha256": "8aa363ce5838eefe725c4117890c83f8b6b189d63907c347f5b1599d5ed6d89e",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_torque_seed061.csv.gz",
+      "original_sha256": "d344b8540bf09854cc5dbbd50157e891eb67ba556b618527c557b54a82b3f50d"
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 62,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_torque_seed062.input.bin",
+      "input_sha256": "c4630bc01c45787a303a921f30acc0e2b20f20d75c6e8133e93827a1e098e79a",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_torque_seed062.csv.gz",
+      "original_sha256": "73fa680aa220ae8440b45a434dfb2486091852820ec0acca51b50888a3dfb7f7"
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 63,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_torque_seed063.input.bin",
+      "input_sha256": "b7be296fc777cf66871a9f41602f7c0dab25cdac270d94e180aadfde506f4cc4",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_torque_seed063.csv.gz",
+      "original_sha256": "d6e4bb6647fd2570f8222fbcca10417532b40549a317aee1f94fa743c9e260fe"
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 64,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_torque_seed064.input.bin",
+      "input_sha256": "0bc1f2bc94c3c1fc22dd5f71820c4fef3be06d706694df633a8aa40a410fe63b",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_torque_seed064.csv.gz",
+      "original_sha256": "a77731eac35fbc2271cdd0f9483084e3268b248f1301af45e097fc871c519929"
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 65,
+      "rows": 7001,
+      "input": "D:\\new project\\simulation\\dob_simulink\\window_scan_work\\real_torque_seed065.input.bin",
+      "input_sha256": "d1cb64f8897a67a2d056cdc6ce6e547e96948ae8c49eab1ea00f7aff4f097c8f",
+      "original": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122413\\real_torque_seed065.csv.gz",
+      "original_sha256": "f598fdecf94d3e573210872bd69db81e293bec3b9f01cd4df517efc5047774e5"
+    }
+  ],
+  "hardware_access": false,
+  "data_semantics": "1 ms software logs, including measured-noise/physical-current hypotheses. Not full-rate replay of recent 60 ms board telemetry. Upstream DOB and its original warmup are frozen; isolates downstream classifier window only."
+}

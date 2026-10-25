@@ -1,0 +1,853 @@
+{
+  "output_names": [
+    "speed_ref_rpm",
+    "speed_meas_rpm",
+    "accel_ref_rpm_s",
+    "iq_pi_a",
+    "iq_acc_ff_a",
+    "iq_friction_a",
+    "iq_raw_a",
+    "iq_cmd_a",
+    "speed_integrator_a",
+    "iq_dob_a",
+    "dob_estimate_a",
+    "dob_valid",
+    "dob_status",
+    "abs_id_lpf_a",
+    "id_lpf_before_a",
+    "lpf_updated",
+    "quality_reason",
+    "admission_decision",
+    "reset_count",
+    "epoch_resets",
+    "reset_reason",
+    "warmup_s",
+    "id_bad_us",
+    "observer_age_us",
+    "observer_source_us",
+    "feedback_state",
+    "adc_seq",
+    "id_raw_a",
+    "iq_meas_a",
+    "simulation_guard_fault",
+    "travel_deg",
+    "observer_omega_rad_s",
+    "iq_matched_a",
+    "base_target_rpm",
+    "selected_target_rpm",
+    "schedule_slow",
+    "schedule_reason",
+    "schedule_transitions",
+    "schedule_high_us",
+    "schedule_release_us",
+    "load_level",
+    "load_valid",
+    "load_mean_a",
+    "load_trend_state",
+    "load_trend_valid",
+    "load_trend_a_s",
+    "fsm_state",
+    "fsm_reason",
+    "contact_pending",
+    "contact_confirmed",
+    "fsm_outcome",
+    "rundown_armed",
+    "rundown_peak_rpm",
+    "contact_pending_ms",
+    "control_mode",
+    "iq_limit_a",
+    "dob_gain",
+    "schedule_enabled",
+    "schedule_last_good_us",
+    "reset_integrator",
+    "contact_rpm",
+    "contact_iq_ma",
+    "contact_dwell_ms",
+    "fsm_transitions",
+    "contact_held",
+    "contact_reacquire_us"
+  ],
+  "legacy_output_names": [
+    "speed_ref_rpm",
+    "speed_meas_rpm",
+    "accel_ref_rpm_s",
+    "iq_pi_a",
+    "iq_acc_ff_a",
+    "iq_friction_a",
+    "iq_raw_a",
+    "iq_cmd_a",
+    "speed_integrator_a",
+    "iq_dob_a",
+    "dob_estimate_a",
+    "dob_valid",
+    "dob_status",
+    "abs_id_lpf_a",
+    "id_lpf_before_a",
+    "lpf_updated",
+    "quality_reason",
+    "admission_decision",
+    "reset_count",
+    "epoch_resets",
+    "reset_reason",
+    "warmup_s",
+    "id_bad_us",
+    "observer_age_us",
+    "observer_source_us",
+    "feedback_state",
+    "adc_seq",
+    "id_raw_a",
+    "iq_meas_a",
+    "simulation_guard_fault",
+    "travel_deg",
+    "observer_omega_rad_s",
+    "iq_matched_a",
+    "base_target_rpm",
+    "selected_target_rpm",
+    "schedule_slow",
+    "schedule_reason",
+    "schedule_transitions",
+    "schedule_high_us",
+    "schedule_release_us",
+    "load_level",
+    "load_valid",
+    "load_mean_a",
+    "load_trend_state",
+    "load_trend_valid",
+    "load_trend_a_s",
+    "fsm_state",
+    "fsm_reason",
+    "contact_pending",
+    "contact_confirmed",
+    "fsm_outcome",
+    "rundown_armed",
+    "rundown_peak_rpm",
+    "contact_pending_ms",
+    "control_mode",
+    "iq_limit_a",
+    "dob_gain",
+    "schedule_enabled",
+    "schedule_last_good_us",
+    "reset_integrator",
+    "contact_rpm",
+    "contact_iq_ma",
+    "contact_dwell_ms",
+    "fsm_transitions"
+  ],
+  "input_names": [
+    "target_rpm",
+    "omega_true_rad_s",
+    "iq_true_a",
+    "speed_noise_rpm",
+    "iq_noise_a",
+    "id_meas_a",
+    "current_valid",
+    "voltage_sat",
+    "encoder_age_us",
+    "running",
+    "schedule_enable",
+    "position_deg",
+    "direction",
+    "fixture_truth",
+    "stop",
+    "protection_fault"
+  ],
+  "dll": "D:\\new project\\simulation\\dob_simulink\\load_speed_contact_work\\contact_host.dll",
+  "legacy_dll": "D:\\new project\\simulation\\dob_simulink\\load_speed_contact_work\\legacy_host.dll",
+  "legacy_dll_sha256": "b999d89492df9cdaae33b18f34ebd544b09d306f87c4d4609d70993e990d6759",
+  "flags": [
+    "FOC_DOB_SPIKE_ADMISSION=1",
+    "FOC_DOB_ADMISSION_START_GUARD=1",
+    "FOC_DOB_DIRECT_JUMP_REJECT=1",
+    "FOC_DOB_RECOVERABLE_ADMISSION=1",
+    "FOC_DOB_PERSISTENT_QUALITY=1",
+    "FOC_DOB_ID_PRE_LPF_QUALITY=1",
+    "FOC_DOB_NORMAL_CONTROL=1",
+    "FOC_DOB_CONTACT20_OBSERVE10=1",
+    "FOC_DOB_FEEDBACK_CANDIDATE=1",
+    "FOC_DOB_ID_TRACE=1",
+    "FOC_DOB_SATURATION_CONTINUE=1",
+    "FOC_DOB_WARMUP_AB=1",
+    "DOB_WARMUP_DEFAULT_TAU=3U",
+    "DOB_ADMIT_JUMP_A=.200f",
+    "DOB_FB_GAIN=dob_host_gain",
+    "FOC_DOB_TREND_WINDOW75=1",
+    "FOC_RUNDOWN240_CANDIDATE=1",
+    "FOC_INTENT_FSM_CANDIDATE=1",
+    "FOC_PWM_COMMON_MODE_ENABLE=1",
+    "FOC_LOADED_FSM_TRIAL=1",
+    "FOC_PWM_PIPELINE_CLOSED_LOOP=1",
+    "FOC_RUNDOWN240_TRAVEL20000=1",
+    "DOB_LOAD_SPEED_CONTACT_HOLD=1"
+  ],
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    61,
+    62,
+    63,
+    64,
+    65
+  ],
+  "plant": [
+    0.000386049,
+    0.00155158,
+    0.11945168237076952,
+    0.0005496600325149542,
+    0.001
+  ],
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "sources": [
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\native\\load_speed_host.c",
+      "sha256": "36227963f779c55a050bd5f7458aabb9b303f398d1a86ecfff8e2bb2571ae183"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\mechanical_dob_monitor.c",
+      "sha256": "a3c3f56929c1771d7927db1b58bac3139567dff97bcd26ee123d951ad1054fe6"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\speed_scurve.c",
+      "sha256": "382ed2fd970901cbe53408a72d7e32f8e31114845c6261c52610a3345f6c6c47"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\speed_accel_feedforward.c",
+      "sha256": "e308051f75bdd7b38678b913df99fa007aefa1d20b5cf41acb987bedb874156f"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\speed_friction_compensation.c",
+      "sha256": "35fd3e90ccad2770e3feae6064fd8c7cdf2234dda091661a10fd69a86cf86d40"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\tightening_intent_fsm.c",
+      "sha256": "6f611830f6cc3857b843ca76c3524670540dfd7700f30fce4934f6c13ff40a2a"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_trend_shadow.c",
+      "sha256": "2e302f2faf1357fb1f5f4b3c2832c01738b5786928434eee7f6783832a5667d5"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\tighten_params.cpp",
+      "sha256": "c5bf0461be3adbd3d4b0f605da764be8bac54d7b1a533d773615800fd562af03"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\adc_control_pins_low.h",
+      "sha256": "549d08e3ef035f9c9c9d19cb0dfc8efa7ccb52bfada22b6a1229ce3f949e8c48"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\adc_dma_diag.h",
+      "sha256": "26089a86545dff591d7f742d9a6312beeb655cc2c75dfd8032070a7586865f17"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\adc_raw_report.h",
+      "sha256": "80f6aab4b5f36bace8298ce63e50cd9324b7fa1cbbf35759c5a680eb7f806041"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\as5047p_dma_engine.h",
+      "sha256": "4ba16c0c661555015225b68beff43591515885e4801fe3905e2d8ddee3ae0b96"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\as5047p_dma_publication.h",
+      "sha256": "73e9816858f2c41445245f6e3535685a863e00e2361d95c8d80a7064a2e67208"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\as5047p_dma_stm32.h",
+      "sha256": "4e39c94258af6c6f4addefdcb8a063da6b2dc7e93007d28ecb5359989739057c"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\as5047p_timing_policy.h",
+      "sha256": "d8dbf3ef779b9508ba7961f5739b77b68429b3f9cd377e690aa895f62078ecbf"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\bridge_feedback_filter_core.h",
+      "sha256": "a9a10ded3fef2c396b1c4d77903b451b3df87c959d2066ae6f82b73e48bd8d02"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\can_control_v0.h",
+      "sha256": "c533d4f37591a03ec8bdbbf82aba18108c26aabe29a2ffbbce6a9c4ab88ac655"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\can_fd_probe.h",
+      "sha256": "609f0046c6e67be007abfc8f761970e875a7a6ecb96350665db7a9e63a336b8d"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\can_log_v1.h",
+      "sha256": "5f81e4ebec0af69f6e026365a70fdaa7f35a75121b93570e81622955611f437c"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\can_rpc_transport.h",
+      "sha256": "e97939322e319b5d58068bfd97f5465546da61d7460dd6e40a9a059942b1b2e5"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\can_shadow_diag.h",
+      "sha256": "2e664c5f493a45bf4149617cbf543b98b4b1dd69df3a3bcd45312abff6a3791c"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\can_status_tx.h",
+      "sha256": "84233153879b60ca3f350b95c5314ab4cf06ad800380e21228356a0a984c1916"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\can_wire_profile.h",
+      "sha256": "c2e61f598839029b28a9cf1d9db00ee86d8d0288d830634aeca3beb2289bd330"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\control_intent.h",
+      "sha256": "ff62409662a3c401d7a65a3bcd5d0276ad1e5351f2832133b418bcac27b70dd3"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\control_intent_port.h",
+      "sha256": "baf7fc83eef343e5a937a590045076e7c74c23719362af6a00cc0c728fecc280"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\current_pi_identified_candidate.h",
+      "sha256": "3c345143b94b2661bd6fe9fc3bcaf59b809f85ee75fe57e118efabb07e035d78"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\current_step_ab.h",
+      "sha256": "a1a460a34ef658df3ad1c4cffd777400a841ba6eb57551f23800ead32c8d432a"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_contact20_observe10.h",
+      "sha256": "bb9b72efae33f8c6c515e789d5885afe77d538b768eb9dd1284ef7c35fafee47"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_current_admission.h",
+      "sha256": "70386f2a3e5565bac3e58b60b76c685ee6ec892910bff702c80b43b0a46a4a3d"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_feedback_candidate.h",
+      "sha256": "b7b930b7bbf7f065d03b0209c06ccd8fc6a1fe75b82d25d229f8714c47ba0e12"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_id_pre_lpf_quality.h",
+      "sha256": "006f9816056d9cf996bef8adc7b1e8f9569065a49757ca1eacdd5b9eb96140cd"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_id_trace.h",
+      "sha256": "9be8c6437a665d10eddf2dfbf5259571f3afd80b25db8a7bd2048d52fc8a44fc"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_load_speed_candidate.h",
+      "sha256": "4950bdc56e5b4094603cd8f7f456e30b639f08ffd2a0def86225b8fee42d2f48"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_low_recovery_audit.h",
+      "sha256": "bb8fe0895528da65637a2f488ffea2dd831346bcf1976232a8d8305499ffc9e3"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_normal_control.h",
+      "sha256": "c24000a860c5da274adbbe9b427f5e040f022ec107cce22cabb0282ca53f790b"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_real_trace.h",
+      "sha256": "c8f89edcd9bc4413320f12661da9c3c94abfdaed9e18289187ab8895d57b8920"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_recovery_timing.h",
+      "sha256": "ad01e679a03f65c574c8e67292f1b811a2f233219d94e107c285b3b574b1a105"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_short_low_recovery.h",
+      "sha256": "8b110f3f03464b32eb63e5409fb303466f562a138fde264f6af7c95e77c3123c"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_trend_continuous.h",
+      "sha256": "7cea9f0667e12599b9f1b86a7ee0f44ae4c18a7d8f5ce8734582c381b985fd7a"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\dob_trend_shadow.h",
+      "sha256": "efe9d0a94aa65d1eead11e35d04b60f9d08b86df63bae28f19799090da344781"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_adc_clock_stm32.h",
+      "sha256": "b52b5e1311cfe9249edc887d786227cd44af4ee4afac456cfff6a8b2c3678472"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_adc_raw_buffer.h",
+      "sha256": "ea7d5647b33333ffade5edc91d3db0b91f3b36f5e992156fd371e477ea47e4ec"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_adc_statistics_task.h",
+      "sha256": "31729eca7057aa56c7a09e892e0f071f642cb9e2ee3a1b1586a4656f7d6a8b38"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_adc_timing_stm32.h",
+      "sha256": "57b82c6a38fd1aee0c662dfe66d393455abd8919e64cfb60bd475eedd2c47630"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_adc_window.h",
+      "sha256": "3983616f55dcbc546bb3f1c5fe587226f48cb48a027b6e1b270e72704abdecf7"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_angle_chain_diag.h",
+      "sha256": "736ec61683c39a8369f54a7ff4ceb0c9d54eca8e9467fc23fd878f288d934740"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_bemf_feedforward.h",
+      "sha256": "b3380b114ecd5d44a421e93ffde509e5101516fb97fc79cb349a2533892a5eeb"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_breakaway_current_test.h",
+      "sha256": "680aa10748d86ad162609a2aa30cb6af6fff522a4daa73a4286a4bf20fc52237"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_current_adaptive.h",
+      "sha256": "f29976865084423cf0da561e0f01e7404ed1d4d26b73ed3187a2c4dbabd3d86d"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_current_fast_reject.h",
+      "sha256": "a77bf47b2fb3082bf331b0c54782488e253b644cb0f289f4c94b47150288275d"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_current_fault_trace.h",
+      "sha256": "d15f281c7e6e7fc40111d73d512d96a5e09874006e15a14e3c4948a9a51757c7"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_current_feedback_polarity.h",
+      "sha256": "1f241117e5950ce3cca9243b9f69c99828e27305f9f32e92b4a536fb59941a1f"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_current_median.h",
+      "sha256": "46b6722a3e17056742314481196794945e381789c2b84e2be9c40b1ed25fe799"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_current_protection_layers.h",
+      "sha256": "15a90792ddc5b16ea3125eef1f3d387e7444063bd23323594274964ffd0e7319"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_current_spike.h",
+      "sha256": "4412c287bac85335ac2321377beefd521ad26736665847030173a0d82d0fa95c"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_current_trend4.h",
+      "sha256": "857e838c19b7471493135127b3120f32e5fe0449559e2fc0ee6b4d91ef84fb0c"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_current_zero.h",
+      "sha256": "c29a715112c55b0a7bb5c803b462e6e1d0eb23fe8f53732f046197595e41619e"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_dq_audit.h",
+      "sha256": "6f1931d8e529b2cd35eff3eac8c3d7552627e68c0762a4e402222db20ac0114d"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_dq_decoupling.h",
+      "sha256": "e7c7295e7336f586c2b1070ba04e4530c59bac19bdcf475ca24ebf4037edeacc"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_encoder_timeout_diag.h",
+      "sha256": "82d21cf82378b53e49466926e945d91fd707c965adf08fb81d3be00fafa02841"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_fast_path_profile.h",
+      "sha256": "bbac07c7435c25bd3415889049fcec5bfd4c6bdda94b9dc70d0ae8db2429a92e"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_fast_trig.h",
+      "sha256": "d516da42a4fa80ebf50a1e6c742284719d86ca5516d36aeb9657005b58c5601e"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_feedback_binding_stm32.h",
+      "sha256": "9d53126d895115ba4c2ccf689bc402371f33f92e768f9ddcbaa1e05fb19f5056"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_feedback_guard_stm32.h",
+      "sha256": "8aba3800f5260f47e8378d2d05b50904bf6bc705cc885dec64a197e04dc549d6"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_feedback_safety_candidate.h",
+      "sha256": "87f28dd6dc5260c75e978bd92ee23d7c02a3e20a94c07d145e0e11f14cc1d1da"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_filtered_protection_candidate.h",
+      "sha256": "7db63b997d3b6ba36d77afc71926ee378d8ee636322103fa3a6c211868dbd7cb"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_guard_integer.h",
+      "sha256": "e88170f412066b1a6faa91fd823293a48b3c6bdee98941df6d6a0e607ee43b4f"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_hot_path.h",
+      "sha256": "cc36da7c4d6d229ea2481d5fef59c3654d1a84b2347386db38b7e16ad72cc457"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_irq_load.h",
+      "sha256": "ce6a14893d7b155df4739958c09aa47e120177a7bdd7d2405424589f27ef9e59"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_irq_sources.h",
+      "sha256": "e4026b4c8c959795f744ab8e9892c2e75c44c4c14a947f548bdc32ee99c62eb6"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_output_gate_evidence.h",
+      "sha256": "2b3685a4f0a0470d81f71d040d56e15033592abc0478a7e6d2ca25baac28b9fd"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_overcurrent_confirm.h",
+      "sha256": "d3ad09897b0b65aa250c43e474fd05cd7d6499fd260626a45ad2f73617277c92"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_overcurrent_shadow.h",
+      "sha256": "f4ef50f4e7748a5bcc16c2018a30a02857c699053a3d0a6a440493d07b5a5473"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_preempt_probe.h",
+      "sha256": "0d8fa065326fb5bdebe6b7202e1714436ad89107abc37683cea66f750ad1b0c7"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_protection_selftest.h",
+      "sha256": "fc6f5425432157a9d9e55b25896a4b51722a86b253bd8968beaf00f520755737"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_pwm_boundary.h",
+      "sha256": "77edf5ecc3edb470473988ad7dc106f68b824ff2c058233392037806b0446231"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_pwm_boundary_lite.h",
+      "sha256": "7e2e01dc1b7828a8e6d5ce9428cf3b1607f849d954217d31cd6a791c212f05f9"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_pwm_common_mode.h",
+      "sha256": "36f162aa39935509cbaff68adbe76438b37e25876a7d5d50d8c64f89d3f00aa0"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_pwm_pipeline.h",
+      "sha256": "5405f4560ac540131cec4ea9a11d8a21697fd4735f9c2a19efa7ad108f8500e8"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_pwm_write_probe.h",
+      "sha256": "33db87a7a9e3c4ec4fb52a99259656c77e3fb3f50e138f49587e0553c30d33a2"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_raw_observe_policy.h",
+      "sha256": "bbc564ff3cb2e77c40959953d327ec280d6b2e1a1c16b52cc16892c5a299d91f"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_rc_deferred_plan.h",
+      "sha256": "df6019e1aaa7035c9eff418e827872aeb74d24915c53aac35419320bff027f7a"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_repair_trace.h",
+      "sha256": "a9d6018c4c4fd7f660cfb873e2ce084fc2b3fc73a805aae671984c61e920fd89"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_rundown240_candidate.h",
+      "sha256": "8cb189029d43fd6b9f3d1851679eac25d30e441d1dd54c1113c1156dcaa1b987"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_startup_trace.h",
+      "sha256": "df9f09c0e1631becff063aab1eddac415e9302c465ebeba422abb58c6c55bd6a"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_timeout_diag.h",
+      "sha256": "94bd24f09e704bb066c2600d8b3f0d8400f12cb22fa532e6acbb033738728569"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_torque_chain_diag.h",
+      "sha256": "3dadab59404824f490bb5d01c6bffa3b16d14ee3469714f04c05d8ca32f613e3"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_zero_failure_trace.h",
+      "sha256": "69f6648877441bb57bae4e19e9051affd0d0181c53901b0904533fd1cf4172f2"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_zero_median.h",
+      "sha256": "98f5f8f076a1f47740d62306769086af1844a058c3e6437f0cf33a95f07070c0"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_zero_robust.h",
+      "sha256": "ec53b27c3705d590ec4a06fd6566470e45131191fd4ae5023bc017accacb26ee"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\foc_zero_valid_admission.h",
+      "sha256": "99a3a2a04d63695f465f3a00f5f5e749401e471a8bff8e54a2d2a159e0086c11"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\friction_calibration.h",
+      "sha256": "bf5ee2ea1b0b867bacfacd247a3e7a4eeabfc9a39044846852dad34df2523880"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\id_steady_stats.h",
+      "sha256": "a9367ca2cd6249e6ee9aeca83ac24af3ddb51eae31799cbc9809ccbb36dc9b5f"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\ka_full_diagnostic.h",
+      "sha256": "a465f5d894cab78dfc3db07fc40fbf98c4102668870fd0b88666be5367844300"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\ka_identification.h",
+      "sha256": "71849096afc5a85828433ffad7897d590f81224f5bc741ba68e2d766e8b6f3e3"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\ka_sync_diagnostic.h",
+      "sha256": "46ec37575672ed79ff82f56afe2b772f7bcf6e24fc0996885fe0961820d5d930"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\latest_original_profile.h",
+      "sha256": "ea6a33e88756c72ee53ebf0110f46a1f4eb9e9c129cd58c737988f2b2081cb7c"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\load_speed_contact_hold.h",
+      "sha256": "618f7ad2e91a3e117963cc845a23fee121b5999403b56e01b24f35246c790948"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\load_speed_policy.h",
+      "sha256": "7d0205a461590f2c9c85eb720481fb0fdb7bda815067c65ac538cb38a7bae60f"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\log_transfer_wire.h",
+      "sha256": "d9a0b967b3dca24d9b0eaef8229f95eb5a7f77d72c7bf3a2cbbda65bff748842"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\mechanical_dob_monitor.h",
+      "sha256": "5f92ebe50814e79cac3538ed3677911f21c79ac99645fdc2ff3f00c120497ba2"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\mechanical_dob_shadow.h",
+      "sha256": "68756b1926aa98dabc98a723522056866429651b97a1639569c9b263d64aab3a"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\mechanical_identification.h",
+      "sha256": "5fad29a17f430eda4b9a63a9bd65c1ce422f84c617046a7d16a41ddc97d10111"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\motor_control.h",
+      "sha256": "a2501917ecab8d1de6ad7f1bedd71162c2c22802c427c0bf772e7fafbacecec8"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\motor_identification.h",
+      "sha256": "9e0d682c9dc40df78dd47a2e762c1de359d297f367f5a471d2b2b6b9a38e0dcc"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\motor_rpc_wire.h",
+      "sha256": "d326b2481b8d1fe5c31587073ecb7acd8e0ead6e1f4169144542dbfbfbc1e104"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\network_v1.h",
+      "sha256": "5721e8ba84cff44d4d5288090cc0c9fc61bd4d51f7fec6238db3622663d264f6"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\official_log_transfer.h",
+      "sha256": "6d72cd226de45dcd168fa746d02c8f70895196823c0c0c826c94b0dd7d1071b9"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\original_closed_loop_profile.h",
+      "sha256": "8fb4e44b1348bef8e77a98ebaf71a4e5b1c4002d73f10d97e5b5ef4e5038c071"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\outer_completion_trace.h",
+      "sha256": "a006c46478bf22c55e7cd175d395c5259253196cd6cf1d3e83fce0c28506f94f"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\protected_closed_loop.h",
+      "sha256": "ad9c57e0f9abb523342193a0858f66d7594a4d152e78d313cb2889144e2e81d1"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\protected_readiness.h",
+      "sha256": "90c405dea4c0ff8f9a461dfeedec825e8af9cf7ad5ecf923bab77d9e115ee7e6"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\protocol_tx_buffer.h",
+      "sha256": "8118f73bb69f56c80c4d203d601f80a9ca2a6b1027d222de31585d0103d3ffe4"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\protocol_tx_format.h",
+      "sha256": "cc5adab14e200c78be95b8274b80f4269922c5bbbbd8d5c4a1979509e1ee6c00"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\psi_ke_identification.h",
+      "sha256": "172c13e6c43fbbb995e311c26d943f277f4c7b6ac688d075fd4884d9d8a821fa"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\pw_can_log.h",
+      "sha256": "d6724f716b8f205383e6fa0fd46d356196e59233a8e068bb070958f75d3e4e8e"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\pw_can_rpc.h",
+      "sha256": "5570b60cf9f88773ab7f21cfe58183b6b7f3aff06fee5bb0fd0dbd2c1b8ecd9d"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\pw_log_snapshot.h",
+      "sha256": "10bc98c3defd47cdf5e3347a67024e5b3e3b4e7748f9a791c8f8bd0262499e69"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\pw_log_store.h",
+      "sha256": "bf8bd14c9b0d04577e503465d23a6e579ddb1742daee9b842e655028c85084c2"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\pw_log_transfer_readonly.h",
+      "sha256": "e928dda455c9dee22714daa4462ddd261ae31842ebd10cdab9d6ae22b69c3885"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\pw_managed_buffer.h",
+      "sha256": "b2722921978e58eaa51cf4293c09ea96dff17ba2fbf61d5333e2a4527643d6fe"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\pw_router_rpc.h",
+      "sha256": "bf04bc15f18413d05ec314604103a34c0e0f71408506edfe73806a0958d5a0c7"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\pw_router_transfer.h",
+      "sha256": "d13c72420e805c040b8495105a146c85f9011472dcad1f15fc31b4a234f66f3a"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\router_network.h",
+      "sha256": "4241c51a0e53ea9546c8e18a187fe20ab23548c266a45b1392e8198166d6fd52"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\router_rpc_wire.h",
+      "sha256": "3dc7f26ea3b8188dea53cb89ade34550504fcfcf9c42cb8114bcce1b8c341767"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\router_transfer_wire.h",
+      "sha256": "6106dd3217476a8fc6129189e8e41c23b9d4f57d1f516ae7d3585beed2772401"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\router_uart_tx.h",
+      "sha256": "a8dd426764a1899b7a59f3f0872012686634f812da4f21666d8bf661365264fb"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\rpc_readonly.h",
+      "sha256": "420f1d8e7f809cbd5b764356d39f888d444df549032771058589021371c9076d"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\rpc_readonly_wire.h",
+      "sha256": "5db8e9c00c581f6cd743c85246aaa7035a22662a81a23b6372c867f975b63da6"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\safety_guard.h",
+      "sha256": "bec9bb4f36ea23c0a55b5a9db7def799f03de0489bf2e45e05586d901d889ebf"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\speed_accel_audit.h",
+      "sha256": "ff8628d2952acfb4d7042cd2f307aee4baec131a64aa5b59e2761b6baac84a50"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\speed_accel_feedforward.h",
+      "sha256": "922f875e7286bd7ffac14c1655b4926ea6d57a6a2854c1a784f07eedec81c6e3"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\speed_brake_track.h",
+      "sha256": "32690b53187c195a4f710c7cba48976cb867f7555b81afaa856c9b0c6b526b36"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\speed_bumpless.h",
+      "sha256": "9a7379b2373c0daff887a025c08c9b2f0fcd8642d737ebcc7f956ac83e6f618e"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\speed_friction_compensation.h",
+      "sha256": "ca6ba1ad9e5595e510c6581396653121c16b5de8409bdea7893c7ac8af3e2199"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\speed_pi_anti_windup.h",
+      "sha256": "5b019ea23942247e264263118854eab4934f8a367b39617ecde460802957547c"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\speed_scurve.h",
+      "sha256": "a54001067e946f2fdddf0b0ccbea44b9db0ff07529c99d8fab16200a9c54974d"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\speed_startup_brake.h",
+      "sha256": "5c547a8535b1a60371e5895b3ee0419db04d56db7346665802d08040546a3559"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\startup_timestamps.h",
+      "sha256": "f3c889ce787ad8fb2a3e96351ed0ee8ce307ccde933d04373056f78675a34a23"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\switch_feedback_core.h",
+      "sha256": "38a970a83533c84b221ee972866b75092a42f57471b4ab9613ce63f071c932db"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\switch_feedback_guard_stm32.h",
+      "sha256": "2635281e5b2b603e4b918b58ee594fa604a30368da0160396ab1d90bcb4d7479"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\tightening_intent_fsm.h",
+      "sha256": "3f6e3fa82559d8a50d5004e6f2eb83e6c1149b5390ae93359f26851d109981a8"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\tightening_rundown_guard.h",
+      "sha256": "a8a959d8bf423fc85cd97dcf48a79f40980245150f16fe2cd021ffe36cb7d623"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\tighten_params.h",
+      "sha256": "e0d75a17a2fd919fdebc78216c57dcb896e7437ca4129b893b4393b8cc52bdff"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\tighten_params_storage.h",
+      "sha256": "7348f2c0511b4cc7a2eb0e2738bb04fb9f620486bdf7fbdfb2ff57d5ed1c7352"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\tighten_synthetic_bench.h",
+      "sha256": "0ecf3e6491220fb8fd59ee53697cc5948f3426e702683e108a9a3a18016b25c7"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\transfer_can_wire.h",
+      "sha256": "0b30035ff34dcd6bd6bd0550dc3f44131cff863f8eaafb1f19851c1c0a187921"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\transfer_chunk_validation.h",
+      "sha256": "0830417183ee79054235d95e35471b74e8de4e6b1e3708a54dbf38c283382313"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\uart_firmware_transfer.h",
+      "sha256": "65c7dcb19962a3145029cdb9e302432f5ea43d20d28391bef68954feea52c0a3"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\uart_firmware_transfer_wire.h",
+      "sha256": "58ef5b8cb7223b8d3fcff591f6738ff9fbfc9d5d3708885e58f9c6f6bf4bf528"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\uart_line_parser.h",
+      "sha256": "f0ba5051b7eb4fdd05c4587bf26aa130b479272dc6efd67604ced278b9b4abfd"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\uart_rx_cursor.h",
+      "sha256": "3d2b1b4bef7f20d477f02702c30f3060056982fbf478953bc6adf7935cd5c65b"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\uart_tx_pool.h",
+      "sha256": "9a97f7bbddaccbe513f4c04fd1f27476c3150a4c0d7919f9c5f0bd463328bf97"
+    },
+    {
+      "path": "D:\\new project\\firmware_common\\uart_tx_reference.h",
+      "sha256": "78bf7b80323567e20830637d6c56717ffe3c69e8c0fbce51dbf31d28527daa9f"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\native\\dob_host.c",
+      "sha256": "6ad656bc60f878fcdeb8dffe2a5187e83b0a0946801c2e271bd95a1452862cba"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\native\\load_speed_contact_plant_sfun.c",
+      "sha256": "41fbc24c7390398b7bda69ee56c5debe9351c42492b0139603399a25b30f6798"
+    },
+    {
+      "path": "D:\\new project\\tools\\prepare_load_speed_contact.py",
+      "sha256": "7dee69db59b72b65400b13b5c1fd6ade6c2ff34716842974c16ae0e24d376d3e"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\build_load_speed_contact.m",
+      "sha256": "563cafa83221dcc7581a7bcb9804997c78db4fea8777d059e7071fb627d78dca"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\run_load_speed_contact.m",
+      "sha256": "416b76344f5bb2649d4827f8426898c482f144620fb3012422dfa6bf207b2351"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\load_speed_contact_inputs.m",
+      "sha256": "66d691fea6f175cfbb416c221702ace373d4ca3fd96a89317f8f8ffe3c7260fb"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\build_load_speed.m",
+      "sha256": "c1a32894899e7c723abe4907b2a5ba0d1307656dd1b30b8dcaf74c4b347474a7"
+    },
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\load_speed_inputs.m",
+      "sha256": "b44cc725656326e952f6efa605a3560f8276f4aad231a5b835ac3df04cec13fd"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "archived_sources": 163,
+  "archived_libraries": [
+    {
+      "role": "dll",
+      "sha256": "4cb14608e4a822cb1de732250422fa95e13d7c632a68ab76ba3f98cab94aa5c3",
+      "bytes": 112783,
+      "file": "contact_host.dll"
+    },
+    {
+      "role": "legacy_dll",
+      "sha256": "b999d89492df9cdaae33b18f34ebd544b09d306f87c4d4609d70993e990d6759",
+      "bytes": 110691,
+      "file": "legacy_host.dll"
+    }
+  ],
+  "firmware_builds": {
+    "DobLoadSpeedCandidate": {
+      "bin": {
+        "bytes": 228352,
+        "sha256": "06b0c15943965e06ed409ad4190adf9fda78ae20c4f8592c66cfb518d0e23160"
+      },
+      "elf": {
+        "bytes": 878728,
+        "sha256": "6f075dfd4b6017a4f3b2216d6deb3eb6f121152e5f7a41ff9b6bab35859164d8"
+      }
+    },
+    "DobLoadSpeedContactHoldCandidate": {
+      "bin": {
+        "bytes": 228712,
+        "sha256": "e9a96e62db1569272412e2363e3ea415c51f0e9888fcb2cc32b2681724dae90c"
+      },
+      "elf": {
+        "bytes": 878788,
+        "sha256": "b7e5f39336399fe2196d3ec1407771336523beab6b0bc755ab6e02dda6aeb237"
+      }
+    }
+  },
+  "hardware_access": false,
+  "note": "Software artifacts only. Archived SLX retains original workspace DLL paths; use archived DLL with matching ABI to replay.",
+  "extra_sources": [
+    {
+      "path": "docs/dob-load-speed-contact-hold-20261024.md",
+      "sha256": "7874aac7c8118d80ddd99de3dd3bb3491c925d96a474bac213d65d04ba5b5567"
+    },
+    {
+      "path": "simulation/dob_simulink/plot_load_speed_contact.m",
+      "sha256": "19eae47b48ca718a5625c7f625fdc4effd0e482b91016938211d7e1cdc7c771b"
+    },
+    {
+      "path": "tests/load_speed_contact_host.c",
+      "sha256": "53487d7befe922fc1d52cfe5ae2f58948311f57215242f4ce31532cded7e6d7b"
+    },
+    {
+      "path": "tests/test_load_speed_contact_hold.py",
+      "sha256": "c1535ec41450fb64a794f5b4edb7023af0e56e352286b59b159224626b77b364"
+    },
+    {
+      "path": "tests/test_load_speed_contact_port.py",
+      "sha256": "60bbd3c427be5362ecb6c1ca9d9d3850dfd0962082b822c1d67ce9dffc819c06"
+    },
+    {
+      "path": "tests/test_load_speed_contact_report.py",
+      "sha256": "cecfb72111a438205c71b247c5e0c6fb54b6ea37b2f07aed261bfdc90b71cd9c"
+    }
+  ],
+  "boundary_audit_pass": true,
+  "regression_tests": 32
+}

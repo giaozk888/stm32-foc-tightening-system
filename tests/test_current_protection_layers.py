@@ -1,4 +1,6 @@
 """Three explicit layers, host/hard-off only; no motor qualification."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import subprocess
 import unittest
@@ -44,7 +46,7 @@ class CurrentProtectionLayersTests(unittest.TestCase):
 
     def test_no_application_actuation_change(self):
         for slot in 'ab':
-            main=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            main=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             self.assertNotIn('FocProtection_',main)
             self.assertNotIn('foc_current_protection_layers.h',main)
             self.assertIn('physical_trip ||',main)

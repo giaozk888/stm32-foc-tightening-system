@@ -1,4 +1,6 @@
 """Native diagnostic command/gain guards; normal BEMF arithmetic stays unchanged."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import subprocess
 import sys
@@ -153,7 +155,7 @@ return 0;}
 
     def test_formal_b_not_enabled(self):
         self.assertNotIn('FOC_BEMF_GAIN_DIAG',(ROOT/'foc2_app_b/CMakeLists.txt').read_text())
-        main=(ROOT/'foc2_app_a/Core/Src/main.c').read_text()
+        main=read_app_source(ROOT/'foc2_app_a/Core/Src/main.c')
         self.assertIn('static volatile uint32_t bemf_gain_percent=0U;',main)
         self.assertLess(main.index('FocBemfGain_Apply(bemf_on'),
                         main.index('mag2 = vd * vd',main.index('FocBemfGain_Apply(bemf_on')))

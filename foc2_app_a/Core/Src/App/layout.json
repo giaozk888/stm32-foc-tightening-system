@@ -1,0 +1,172 @@
+{
+  "original_sha256": "2f5fca4119dc6c055b191e8c7ba2f5501072154add395fbeb7ce182d685095cc",
+  "modules": [
+    {
+      "path": "foc2_app_a/Core/Src/App/config/app_includes.inc",
+      "include": "App/config/app_includes.inc",
+      "prefix": "/* App A config/app_includes.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 20,
+      "end_line": 306
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/config/app_types.inc",
+      "include": "App/config/app_types.inc",
+      "prefix": "/* App A config/app_types.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 306,
+      "end_line": 405
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/config/app_config.inc",
+      "include": "App/config/app_config.inc",
+      "prefix": "/* App A config/app_config.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 405,
+      "end_line": 862
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/state/app_state.inc",
+      "include": "App/state/app_state.inc",
+      "prefix": "/* App A state/app_state.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 862,
+      "end_line": 1678
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/internal/app_declarations.inc",
+      "include": "App/internal/app_declarations.inc",
+      "prefix": "/* App A internal/app_declarations.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 1678,
+      "end_line": 1844
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/protocol/uart_transport.inc",
+      "include": "App/protocol/uart_transport.inc",
+      "prefix": "/* App A protocol/uart_transport.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 1844,
+      "end_line": 2347
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/control/motor_service.inc",
+      "include": "App/control/motor_service.inc",
+      "prefix": "/* App A control/motor_service.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 2347,
+      "end_line": 2619
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/application/tightening_results.inc",
+      "include": "App/application/tightening_results.inc",
+      "prefix": "/* App A application/tightening_results.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 2619,
+      "end_line": 3067
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/protocol/session_events.inc",
+      "include": "App/protocol/session_events.inc",
+      "prefix": "/* App A protocol/session_events.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 3067,
+      "end_line": 3796
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/storage/recipe_storage.inc",
+      "include": "App/storage/recipe_storage.inc",
+      "prefix": "/* App A storage/recipe_storage.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 3796,
+      "end_line": 3948
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/storage/boot_update.inc",
+      "include": "App/storage/boot_update.inc",
+      "prefix": "/* App A storage/boot_update.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 3948,
+      "end_line": 5020
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/protocol/command_dispatch.inc",
+      "include": "App/protocol/command_dispatch.inc",
+      "prefix": "/* App A protocol/command_dispatch.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 5020,
+      "end_line": 7127
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/protocol/router_protocol_tasks.inc",
+      "include": "App/protocol/router_protocol_tasks.inc",
+      "prefix": "/* App A protocol/router_protocol_tasks.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 7127,
+      "end_line": 7351
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/application/tightening_task.inc",
+      "include": "App/application/tightening_task.inc",
+      "prefix": "/* App A application/tightening_task.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 7351,
+      "end_line": 8232
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/diagnostics/health_monitor_tasks.inc",
+      "include": "App/diagnostics/health_monitor_tasks.inc",
+      "prefix": "/* App A diagnostics/health_monitor_tasks.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 8232,
+      "end_line": 8885
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/sensing/encoder_service.inc",
+      "include": "App/sensing/encoder_service.inc",
+      "prefix": "/* App A sensing/encoder_service.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 8885,
+      "end_line": 9215
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/diagnostics/value_format.inc",
+      "include": "App/diagnostics/value_format.inc",
+      "prefix": "/* App A diagnostics/value_format.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 9215,
+      "end_line": 9242
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/control/power_current_loop.inc",
+      "include": "App/control/power_current_loop.inc",
+      "prefix": "/* App A control/power_current_loop.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 9242,
+      "end_line": 9932
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/control/outer_loop.inc",
+      "include": "App/control/outer_loop.inc",
+      "prefix": "/* App A control/outer_loop.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 9932,
+      "end_line": 10974
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/sensing/pwm_adc_service.inc",
+      "include": "App/sensing/pwm_adc_service.inc",
+      "prefix": "/* App A sensing/pwm_adc_service.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 10974,
+      "end_line": 11702
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/sensing/adc_irq_binding.inc",
+      "include": "App/sensing/adc_irq_binding.inc",
+      "prefix": "/* App A sensing/adc_irq_binding.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 11702,
+      "end_line": 12011
+    },
+    {
+      "path": "foc2_app_a/Core/Src/App/startup/startup_task.inc",
+      "include": "App/startup/startup_task.inc",
+      "prefix": "/* App A startup/startup_task.inc: private binding, included once by main.c.\n * Keep the declared include order and original control/IRQ ownership. */\n",
+      "start_line": 12011,
+      "end_line": 12823
+    }
+  ],
+  "board_prefix": "/* Board bring-up only. No runtime control or IRQ callbacks. */\n#include \"app_board.h\"\n#include \"foc_adc_clock_stm32.h\"\n#ifndef UART_LOG_BAUD\n#define UART_LOG_BAUD 115200U\n#endif\n\n",
+  "original_board_prototypes": "void SystemClock_Config(void);\nstatic void MX_GPIO_Init(void);\nstatic void MX_TIM1_Init(void);\nstatic void MX_SPI1_Init(void);\nstatic void MX_LPUART1_UART_Init(void);\nstatic void MX_ADC1_Init(void);\nstatic void MX_ADC2_Init(void);\n",
+  "board_path": "foc2_app_a/Core/Src/App/board/app_board.c",
+  "board_marker": "/* APP_BOARD_DEFINITIONS_MOVED_TO_APP_BOARD_C */\n\n",
+  "scope": "A only; body-preserving source layout; board initializers become external across one cold boundary",
+  "original_lf_sha256": "2f5fca4119dc6c055b191e8c7ba2f5501072154add395fbeb7ce182d685095cc",
+  "preserved_source_pins": {
+    "foc2_app_a/Core/Src/main.c": "2f5fca4119dc6c055b191e8c7ba2f5501072154add395fbeb7ce182d685095cc",
+    "foc2_app_a/CMakeLists.txt": "e9fde6f98c0fe64f2b4e7c3358bfb826e54a054eb4ac579dbda3f3556662350d",
+    "foc2_app_a/CMakePresets.json": "89ea4fa5f5af8fbc661f247f88bb6a93e889b7c0529c5f398933b707f7360ff9",
+    "foc2_app_b/Core/Src/main.c": "1679d8b218fa139cfbd51952a44083bb9a98d05f6858544391255c4929a6d37f",
+    "foc2_app_b/CMakeLists.txt": "861f694c7807820db327810b9d80a5c943d41abc1644325dc5b6095e62193e41"
+  }
+}

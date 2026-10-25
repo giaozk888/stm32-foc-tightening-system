@@ -1,4 +1,6 @@
 """Raw-overrange continuation is diagnostic-only and physically hard-off."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import subprocess
 import unittest
@@ -45,7 +47,7 @@ class RawObserveTests(unittest.TestCase):
 
     def test_ab_default_trip_and_opt_in_binding(self):
         for slot in 'ab':
-            src=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            src=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             start=src.index('static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,\n')
             fn=src[start:src.index('static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)\n{',start)]
             self.assertIn('#else\n        physical_trip ||\n#endif',fn)

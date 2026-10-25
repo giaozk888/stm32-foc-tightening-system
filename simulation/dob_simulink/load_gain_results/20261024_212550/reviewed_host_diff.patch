@@ -1,0 +1,113 @@
+--- original/dob_host.c
+
++++ generated/load_gain_dob_host.c
+
+@@ -108,6 +108,7 @@
+
+         comp=DobFeedback_Update(&feedback,now+20,1000,
+             monitor.current.sample_us,monitor.current.disturbance_a,
+             (uint8_t)(monitor.current.valid&&monitor.running&&!monitor.frozen&&
++                !(monitor.current.status&DOB_MONITOR_SATURATED)&&
+                 DobObserve10_FeedbackSpeedQualified(monitor.current.omega_rad_s)),running,
+             fminf(.5f,cap_a/.05f));
+         result=SpeedFrictionDob_Apply(integral,candidate,p,trajectory.acceleration_rpm_s,
+--- original/load_speed_host.c
+
++++ generated/load_gain_host.c
+
+@@ -7,7 +7,7 @@
+
+ #define dob_host_restore base_host_restore
+ #define dob_host_observe base_host_observe
+ #define dob_host_configure base_host_configure
+-#include "dob_host.c"
++#include "load_gain_dob_host.c"
+ #undef dob_host_reset
+ #undef dob_host_step
+ #undef dob_host_state_size
+@@ -18,12 +18,17 @@
+
+ #include "dob_trend_shadow.h"
+ #if defined(DOB_LOAD_SPEED_CONTACT_HOLD)
+ #include "load_speed_contact_hold.h"
+-#define LOAD_SPEED_NY 66
++#define LOAD_SPEED_NY 80
+ static uint32_t contact_held,reacquire_us;
+ #else
+ #include "load_speed_scheduler.h"
+ #define LOAD_SPEED_NY 64
+ #endif
++#include "load_gain_policy.h"
++static LoadGainScheduler gains;
++static uint32_t gain_adaptive;
++static float gain_cap;
++static void gain_config(const double *c){gain_adaptive=c[3]!=0;gain_cap=isfinite(c[1])?fminf(.25f,fmaxf(0,(float)c[1])):0;}
+ static TighteningFsm process;
+ static DobTrendClassifier classification;
+ static LoadSpeedScheduler scheduling;
+@@ -35,6 +40,7 @@
+
+     DobTrendClassifier classification;
+     LoadSpeedScheduler scheduling;
+     uint32_t started;
++    LoadGainScheduler gains;uint32_t gain_adaptive;float gain_cap;
+     double time,cache[LOAD_SPEED_NY];
+ #if defined(DOB_LOAD_SPEED_CONTACT_HOLD)
+     uint32_t contact_held,reacquire_us;
+@@ -43,7 +49,7 @@
+
+ DOB_EXPORT unsigned dob_host_state_size(void){return sizeof(LoadSpeedSnapshot);}
+ DOB_EXPORT void dob_host_save(void *out){
+     LoadSpeedSnapshot s={0};base_host_save(&s.controller);s.process=process;s.classification=classification;
+-    s.scheduling=scheduling;s.started=wrapper_started;s.time=wrapper_time;
++    s.scheduling=scheduling;s.started=wrapper_started;s.time=wrapper_time;s.gains=gains;s.gain_adaptive=gain_adaptive;s.gain_cap=gain_cap;
+ #if defined(DOB_LOAD_SPEED_CONTACT_HOLD)
+     s.contact_held=contact_held;s.reacquire_us=reacquire_us;
+ #endif
+@@ -51,15 +57,15 @@
+
+ }
+ DOB_EXPORT void dob_host_restore(const void *in){
+     LoadSpeedSnapshot s;memcpy(&s,in,sizeof s);base_host_restore(&s.controller);process=s.process;
+-    classification=s.classification;scheduling=s.scheduling;wrapper_started=s.started;wrapper_time=s.time;
++    classification=s.classification;scheduling=s.scheduling;wrapper_started=s.started;wrapper_time=s.time;gains=s.gains;gain_adaptive=s.gain_adaptive;gain_cap=s.gain_cap;
+ #if defined(DOB_LOAD_SPEED_CONTACT_HOLD)
+     contact_held=s.contact_held;reacquire_us=s.reacquire_us;
+ #endif
+     memcpy(wrapper_cache,s.cache,sizeof wrapper_cache);
+ }
+-DOB_EXPORT void dob_host_configure(const double *c){base_host_configure(c);}
++DOB_EXPORT void dob_host_configure(const double *c){base_host_configure(c);gain_config(c);}
+ DOB_EXPORT void dob_host_reset(const double *c){
+-    base_host_reset(c);classification=(DobTrendClassifier){0};scheduling=(LoadSpeedScheduler){0};
++    base_host_reset(c);gains=(LoadGainScheduler){0};gain_config(c);classification=(DobTrendClassifier){0};scheduling=(LoadSpeedScheduler){0};
+     process=(TighteningFsm){0};wrapper_started=0;wrapper_time=-1;memset(wrapper_cache,0,sizeof wrapper_cache);
+ #if defined(DOB_LOAD_SPEED_CONTACT_HOLD)
+     contact_held=reacquire_us=0;
+@@ -94,6 +100,14 @@
+
+ #else
+     float target=LoadSpeed_Step(&scheduling,load_evidence);
+ #endif
++    uint32_t fresh=monitor.current.valid&&monitor.running&&!monitor.frozen&&
++        !(monitor.current.status&DOB_MONITOR_SATURATED)&&now+20-monitor.current.sample_us<=2000U&&
++        DobObserve10_FeedbackSpeedQualified(monitor.current.omega_rad_s);
++    uint32_t quality=fresh&&classification.valid&&now-classification.last_call<=2000U;
++    LoadGainEvidence ge={now,process.state,intent.control_mode==CONTROL_SPEED,protection!=TF_REASON_NONE,
++        feedback.enabled,gain_adaptive,quality,classification.state,classification.trend_valid,classification.trend_state,classification.mean,gain_cap};
++    dob_host_gain=LoadGain_Step(&gains,ge);
++    uint32_t consumed_source=monitor.current.sample_us;
+     double v[10];memcpy(v,u,sizeof v);v[0]=target;v[9]=intent.control_mode==CONTROL_SPEED&&u[9]!=0;
+     if(intent.reset_speed_integrator)integral=0;
+     double out[LOAD_SPEED_NY]={0};base_host_step(t,v,out);
+@@ -117,6 +131,9 @@
+
+     memcpy(out+33,extra,sizeof extra);
+ #if defined(DOB_LOAD_SPEED_CONTACT_HOLD)
+     out[64]=contact_held;out[65]=reacquire_us;
++    double gain_extra[]={gain_cap,gains.requested,gains.selected,gains.active,gains.reason,quality,
++        gains.high_us,gains.release_us,gains.transitions,gains.updates,gains.credit_us,gains.last_good_us,fresh,consumed_source};
++    memcpy(out+66,gain_extra,sizeof gain_extra);
+ #endif
+     DobTrendClassifier_Step(&classification,evidence);
+     memcpy(wrapper_cache,out,sizeof wrapper_cache);memcpy(y,out,sizeof wrapper_cache);wrapper_time=t;

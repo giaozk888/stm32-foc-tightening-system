@@ -1,0 +1,6 @@
+scene,criterion,passed
+no_load,false_compensation_not_worse_0.1mA,True
+unload,loaded_mae_not_worse_5percent_plus_0.1rpm,False
+unload,unload_peak_not_worse_1rpm,True
+unload,unload_recovery_not_worse_50ms,True
+contact_early,no_paired_completion_loss,True

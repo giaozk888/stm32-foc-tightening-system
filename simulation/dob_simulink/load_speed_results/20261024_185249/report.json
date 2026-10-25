@@ -1,0 +1,9 @@
+{
+  "completed": true,
+  "runs": 280,
+  "repeats": 10,
+  "results": "D:\\new project\\simulation\\dob_simulink\\load_speed_results\\20261024_185249",
+  "consumed_exogenous_verified": true,
+  "hardware_access": false,
+  "physical_performance_validated": false
+}

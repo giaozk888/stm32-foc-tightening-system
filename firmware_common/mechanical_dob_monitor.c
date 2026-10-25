@@ -1,4 +1,11 @@
 #include "mechanical_dob_monitor.h"
+#if defined(FOC_DOB_SHORT_LOW_RECOVERY)
+#include "dob_short_low_recovery.h"
+DobLowRecovery dob_low_recovery;
+#endif
+#if defined(FOC_DOB_WARMUP_AB)
+volatile uint32_t dob_warmup_tau=DOB_WARMUP_DEFAULT_TAU;
+#endif
 
 /* Source: mechanical-bidirectional-fit-1792713255600021200.json, 18 sessions.
  * Mechanical rad/s; dq A. Not absolute J/B/Kt; bias is a model intercept.
@@ -19,6 +26,9 @@ _Static_assert(sizeof(MechanicalDobMonitor)==856U,"DOB task-only RAM budget");
 #if defined(FOC_DOB_SPIKE_ADMISSION)
 DobCurrentAdmission dob_current_admission;
 #endif
+#if defined(FOC_DOB_SATURATION_CONTINUE)
+DobSaturationAudit dob_saturation_audit;
+#endif
 
 static void begin_write(MechanicalDobMonitor *s){++s->version;KaSync_Barrier();}
 static void end_write(MechanicalDobMonitor *s){KaSync_Barrier();++s->version;}
@@ -27,9 +37,15 @@ static void end_write(MechanicalDobMonitor *s){KaSync_Barrier();++s->version;}
 #include <string.h>
 void MechanicalDobMonitor_Rearm(MechanicalDobMonitor *s)
 {
+#if defined(FOC_DOB_SATURATION_CONTINUE)
+    dob_saturation_audit=(DobSaturationAudit){0};
+#endif
     /* Never transiently publish version=0 during a whole-struct assignment.
      * The odd version remains visible until all session payload is cleared. */
     begin_write(s);
+#if defined(FOC_DOB_SHORT_LOW_RECOVERY)
+    dob_low_recovery=(DobLowRecovery){0};
+#endif
     memset(s,0,offsetof(MechanicalDobMonitor,version));
     size_t tail=offsetof(MechanicalDobMonitor,version)+sizeof(s->version);
     memset((unsigned char *)s+tail,0,sizeof(*s)-tail);
@@ -42,6 +58,9 @@ void MechanicalDobMonitor_Lifecycle(MechanicalDobMonitor *s,uint8_t running,uint
         if (s->frozen==DOB_SHADOW_FAULT) return;
         begin_write(s);s->running=0;s->frozen=DOB_SHADOW_FAULT;
         MechanicalDob_Reset(&s->observer,DOB_SHADOW_FAULT);
+#if defined(FOC_DOB_SHORT_LOW_RECOVERY)
+        Dlr_After(&dob_low_recovery,s,0,0,0);
+#endif
 #if defined(FOC_DOB_SPIKE_ADMISSION)
         dob_current_admission.decision=DCA_STOP;
 #endif
@@ -51,6 +70,9 @@ void MechanicalDobMonitor_Lifecycle(MechanicalDobMonitor *s,uint8_t running,uint
         if (!s->running) return;
         begin_write(s);s->running=0;s->frozen=DOB_MONITOR_OFF;
         MechanicalDob_Reset(&s->observer,DOB_MONITOR_OFF);
+#if defined(FOC_DOB_SHORT_LOW_RECOVERY)
+        Dlr_After(&dob_low_recovery,s,0,0,0);
+#endif
 #if defined(FOC_DOB_SPIKE_ADMISSION)
         dob_current_admission.decision=DCA_STOP;
 #endif
@@ -69,18 +91,35 @@ void MechanicalDobMonitor_Observe(MechanicalDobMonitor *s,uint32_t now,uint32_t 
     uint32_t dt,float omega,uint8_t saturated,const MechanicalCurrent *c,uint8_t valid)
 {
     if (!s->running || s->frozen) return;
-    begin_write(s);++s->observations;
+    begin_write(s);
+#if defined(FOC_DOB_SHORT_LOW_RECOVERY)
+    Dlr_Before(&dob_low_recovery,s,enc,omega);
+#endif
+    ++s->observations;
 #if defined(FOC_DOB_ID_PRE_LPF_QUALITY)
     dob_current_admission.lpf_before=s->abs_id_lpf;
     dob_current_admission.filter_updated=0;
 #endif
     uint32_t status=0;
+#if defined(FOC_DOB_SATURATION_CONTINUE)
+    ++dob_saturation_audit.samples;
+    uint32_t limited=(saturated || (valid&&(c->flags&MEC_SATURATED)))?DOB_MONITOR_SATURATED:0U;
+    dob_saturation_audit.iq_limited+=(uint32_t)(saturated!=0);
+    dob_saturation_audit.voltage_limited+=(uint32_t)(valid&&(c->flags&MEC_SATURATED)!=0);
+    /* Actuator saturation is metadata, not corrupted measured current.
+     * ALL other source flags, finite/time/sequence checks remain mandatory. */
+    if (!valid || !isfinite(omega) || (valid &&
+        (!isfinite(c->iq) || !isfinite(c->id) || (c->flags&~(uint32_t)MEC_SATURATED)))) status|=DOB_MONITOR_CURRENT;
+#else
     if (!valid || !isfinite(omega) || (valid &&
         (!isfinite(c->iq) || !isfinite(c->id) || c->flags))) status|=DOB_MONITOR_CURRENT;
+#endif
     if (!dt || dt>2000U || now-enc>2000U || (valid &&
         (now-c->source_us>200U || c->published_us-c->source_us>100U))) status|=DOB_MONITOR_TIME;
+#if !defined(FOC_DOB_SATURATION_CONTINUE)
     if (saturated) status|=DOB_MONITOR_SATURATED;
     if (valid && (c->flags&MEC_SATURATED)) status|=DOB_MONITOR_SATURATED;
+#endif
     if (s->have_sample && (enc-s->last_encoder_us!=dt || (valid &&
         (!(uint32_t)(c->seq-s->last_seq) || (uint32_t)(c->seq-s->last_seq)>80U))))
         status|=DOB_MONITOR_SEQUENCE;
@@ -89,6 +128,9 @@ void MechanicalDobMonitor_Observe(MechanicalDobMonitor *s,uint32_t now,uint32_t 
         .omega_rad_s=isfinite(omega)?omega:0,.iq_a=valid&&isfinite(c->iq)?c->iq:0,
         .id_a=valid&&isfinite(c->id)?c->id:0};
     if (status) {
+#if defined(FOC_DOB_SATURATION_CONTINUE)
+        ++dob_saturation_audit.input_resets;
+#endif
         MechanicalDob_Reset(&s->observer,status);s->have_sample=0;
 #if defined(FOC_DOB_SPIKE_ADMISSION)
         DobAdmit_Invalidate(&dob_current_admission);
@@ -120,6 +162,9 @@ void MechanicalDobMonitor_Observe(MechanicalDobMonitor *s,uint32_t now,uint32_t 
         int admit=DobAdmit_Push(&dob_current_admission,enc,dt,c->id,c->iq);
 #endif
         if(admit<=0){
+#if defined(FOC_DOB_SATURATION_CONTINUE)
+            ++dob_saturation_audit.current_skips;
+#endif
             /* Every physical epoch remains checked for continuity. HOLD is
              * evidence-only invalid, never a repeated/fake current sample. */
             s->last_encoder_us=enc;s->last_seq=c->seq;
@@ -200,6 +245,21 @@ void MechanicalDobMonitor_Observe(MechanicalDobMonitor *s,uint32_t now,uint32_t 
     f.iq_matched_a=status?0:s->iq_lpf;f.disturbance_a=s->observer.disturbance_a;
 #if defined(FOC_DOB_SPIKE_ADMISSION)
 publish:
+#endif
+#if defined(FOC_DOB_SHORT_LOW_RECOVERY)
+    s->current=f;
+#if defined(FOC_DOB_SATURATION_CONTINUE)
+    s->current.status|=limited;
+#endif
+    Dlr_After(&dob_low_recovery,s,enc,omega,valid);
+    f=s->current;
+#endif
+#if defined(FOC_DOB_SATURATION_CONTINUE)
+    /* Keep the limited tag even through warmup/quarantine, so the independent
+     * feedback adapter follows its ORIGINAL hold/fade/expiry, never fresh FF. */
+    f.status|=limited;
+    if(limited&&f.valid)++dob_saturation_audit.limited_valid;
+    if(f.status&DOB_SHADOW_WARMUP)++dob_saturation_audit.warmup_frames;
 #endif
     s->current=f;
     if (f.valid) {

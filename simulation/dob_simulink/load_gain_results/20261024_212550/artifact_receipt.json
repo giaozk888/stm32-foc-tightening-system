@@ -1,0 +1,25 @@
+{
+  "archived_pin_entries": 429,
+  "firmware_image_unchanged": {
+    "foc2_app_a/build/DobLoadSpeedContactHoldCandidate/foc2.bin": true,
+    "foc2_app_a/build/DobLoadSpeedContactHoldCandidate/foc2.elf": true
+  },
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "native_regressions": 13,
+  "previous_load_speed_regressions": 28,
+  "runs": 420,
+  "note": "SLX uses original workspace DLL path. Archived DLL and exact source snapshots retained for matching ABI replay.",
+  "implementation_checks_pass": true,
+  "performance_screen_pass": false,
+  "performance_screen_failed": 5,
+  "plot_files": [
+    "contact_early_comparison.png",
+    "gain_mean_std.png",
+    "no_load_comparison.png",
+    "source_gap_comparison.png",
+    "step_comparison.png",
+    "unload_comparison.png"
+  ],
+  "result_document": "docs/dob-load-gain-stage3-results-20261025.md"
+}

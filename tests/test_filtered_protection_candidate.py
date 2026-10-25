@@ -1,4 +1,6 @@
 """Hardware-backed design candidate only; never a motor protection qualification."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import subprocess
 import unittest
@@ -52,7 +54,7 @@ class FilteredProtectionCandidateTests(unittest.TestCase):
         self.assertNotEqual(p.returncode, 0)
         self.assertIn('requires finite-value checks', p.stderr)
         for slot in 'ab':
-            src = (ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            src = read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             self.assertNotIn('FocFp_', src)
             self.assertNotIn('foc_filtered_protection_candidate.h', src)
             self.assertIn('physical_trip ||', src)

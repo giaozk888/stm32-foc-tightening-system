@@ -1,4 +1,6 @@
 """SB2 exact C kernel and recorded-input counterfactuals, never a motor model."""
+
+from app_source_view import read_app_source
 import ctypes as C
 import hashlib
 import json
@@ -131,7 +133,7 @@ class SpeedBumplessTests(unittest.TestCase):
 
     def test_production_calls_capture_prebleed_after_mode_reset_and_keep_clamps(self):
         for slot in 'ab':
-            text=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text()
+            text=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c')
             begin=text.index('if (mode != previous_mode)')
             capture=text.index('float sb2_previous_A=')
             apply=text.index('SpeedStartupBrakeResult guarded=SpeedBumpless_Apply')

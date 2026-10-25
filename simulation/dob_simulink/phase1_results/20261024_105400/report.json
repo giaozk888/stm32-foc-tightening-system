@@ -1,0 +1,49 @@
+{
+  "completed": true,
+  "pairs": 7,
+  "runs": 14,
+  "results": "D:\\new project\\simulation\\dob_simulink\\phase1_results\\20261024_105400",
+  "firmware_and_original_harness_unchanged": true,
+  "all_pairs_exactly_equal": true,
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "pairs_audit": [
+    {
+      "scenario": "no_load",
+      "seed": 1,
+      "max_control_truth_input_diff": 0
+    },
+    {
+      "scenario": "unload",
+      "seed": 1,
+      "max_control_truth_input_diff": 0
+    },
+    {
+      "scenario": "spike",
+      "seed": 1,
+      "max_control_truth_input_diff": 0
+    },
+    {
+      "scenario": "long_gap",
+      "seed": 1,
+      "max_control_truth_input_diff": 0
+    },
+    {
+      "scenario": "negative_step",
+      "seed": 1,
+      "max_control_truth_input_diff": 0
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 1,
+      "max_control_truth_input_diff": 0
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 1,
+      "max_control_truth_input_diff": 0
+    }
+  ],
+  "thresholds_calibrated": false,
+  "control_adaptation": false
+}

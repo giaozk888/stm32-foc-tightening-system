@@ -1,0 +1,1166 @@
+{
+  "audit_pass": true,
+  "model_runs": 4,
+  "profile_evaluations": 16,
+  "repeats": 1,
+  "rows_compared": 28004,
+  "four_profile_level_and_quality_identical": true,
+  "baseline_matches_previous": true,
+  "selection": {
+    "tau100_dwell80": {
+      "train": {
+        "eligible": true,
+        "checks": {
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_no_less_valid_time": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_no_less_valid_time": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_no_less_valid_time": true,
+          "real_measurement_transition_bound": true,
+          "real_torque_no_extra_fp": true,
+          "real_torque_no_extra_miss": true,
+          "real_torque_no_less_valid_time": true,
+          "real_torque_transition_bound": true
+        },
+        "score_s": 0.1412857142857144
+      },
+      "heldout": {
+        "eligible": false,
+        "checks": {},
+        "score_s": null
+      },
+      "all": {
+        "eligible": true,
+        "checks": {
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_no_less_valid_time": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_no_less_valid_time": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_no_less_valid_time": true,
+          "real_measurement_transition_bound": true,
+          "real_torque_no_extra_fp": true,
+          "real_torque_no_extra_miss": true,
+          "real_torque_no_less_valid_time": true,
+          "real_torque_transition_bound": true
+        },
+        "score_s": 0.1412857142857144
+      }
+    },
+    "tau100_dwell40": {
+      "train": {
+        "eligible": false,
+        "checks": {
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_no_less_valid_time": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_no_less_valid_time": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_no_less_valid_time": true,
+          "real_measurement_transition_bound": true,
+          "real_torque_no_extra_fp": false,
+          "real_torque_no_extra_miss": true,
+          "real_torque_no_less_valid_time": true,
+          "real_torque_transition_bound": false
+        },
+        "score_s": 0.10112500000000019
+      },
+      "heldout": {
+        "eligible": false,
+        "checks": {},
+        "score_s": null
+      },
+      "all": {
+        "eligible": false,
+        "checks": {
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_no_less_valid_time": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_no_less_valid_time": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_no_less_valid_time": true,
+          "real_measurement_transition_bound": true,
+          "real_torque_no_extra_fp": false,
+          "real_torque_no_extra_miss": true,
+          "real_torque_no_less_valid_time": true,
+          "real_torque_transition_bound": false
+        },
+        "score_s": 0.10112500000000019
+      }
+    },
+    "tau50_dwell80": {
+      "train": {
+        "eligible": false,
+        "checks": {
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_no_less_valid_time": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_no_less_valid_time": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_no_less_valid_time": true,
+          "real_measurement_transition_bound": true,
+          "real_torque_no_extra_fp": false,
+          "real_torque_no_extra_miss": false,
+          "real_torque_no_less_valid_time": true,
+          "real_torque_transition_bound": true
+        },
+        "score_s": 0.12950000000000003
+      },
+      "heldout": {
+        "eligible": false,
+        "checks": {},
+        "score_s": null
+      },
+      "all": {
+        "eligible": false,
+        "checks": {
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_no_less_valid_time": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_no_less_valid_time": true,
+          "real_measurement_no_extra_fp": true,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_no_less_valid_time": true,
+          "real_measurement_transition_bound": true,
+          "real_torque_no_extra_fp": false,
+          "real_torque_no_extra_miss": false,
+          "real_torque_no_less_valid_time": true,
+          "real_torque_transition_bound": true
+        },
+        "score_s": 0.12950000000000003
+      }
+    },
+    "tau50_dwell40": {
+      "train": {
+        "eligible": false,
+        "checks": {
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_no_less_valid_time": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_no_less_valid_time": true,
+          "real_measurement_no_extra_fp": false,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_no_less_valid_time": true,
+          "real_measurement_transition_bound": false,
+          "real_torque_no_extra_fp": false,
+          "real_torque_no_extra_miss": true,
+          "real_torque_no_less_valid_time": true,
+          "real_torque_transition_bound": false
+        },
+        "score_s": 0.09300000000000014
+      },
+      "heldout": {
+        "eligible": false,
+        "checks": {},
+        "score_s": null
+      },
+      "all": {
+        "eligible": false,
+        "checks": {
+          "unload_no_extra_fp": true,
+          "unload_no_extra_miss": true,
+          "unload_no_less_valid_time": true,
+          "short_gap_no_extra_fp": true,
+          "short_gap_no_extra_miss": true,
+          "short_gap_no_less_valid_time": true,
+          "real_measurement_no_extra_fp": false,
+          "real_measurement_no_extra_miss": true,
+          "real_measurement_no_less_valid_time": true,
+          "real_measurement_transition_bound": false,
+          "real_torque_no_extra_fp": false,
+          "real_torque_no_extra_miss": true,
+          "real_torque_no_less_valid_time": true,
+          "real_torque_transition_bound": false
+        },
+        "score_s": 0.09300000000000014
+      }
+    }
+  },
+  "train_winner": "tau100_dwell80",
+  "heldout_pass": false,
+  "recommendation": "tau100_dwell80",
+  "parameters_applied": false,
+  "summaries": [
+    {
+      "scenario": "unload",
+      "profile": "tau100_dwell80",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.1349999999999998,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.13400000000000034,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.1349999999999998,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 1,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.16000000000000014,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 0,
+      "missed_events_sum": 0
+    },
+    {
+      "scenario": "unload",
+      "profile": "tau100_dwell40",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.0950000000000002,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.0940000000000003,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.0950000000000002,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 1,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.16000000000000014,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 0,
+      "missed_events_sum": 0
+    },
+    {
+      "scenario": "unload",
+      "profile": "tau50_dwell80",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.125,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.125,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.125,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 1,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.16000000000000014,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 0,
+      "missed_events_sum": 0
+    },
+    {
+      "scenario": "unload",
+      "profile": "tau50_dwell40",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.08499999999999996,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.08499999999999996,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.08499999999999996,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 1,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.16000000000000014,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 0,
+      "missed_events_sum": 0
+    },
+    {
+      "scenario": "short_gap",
+      "profile": "tau100_dwell80",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.1349999999999998,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.13400000000000034,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.1349999999999998,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 0.9989130434782608,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.16000000000000014,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 0,
+      "missed_events_sum": 0
+    },
+    {
+      "scenario": "short_gap",
+      "profile": "tau100_dwell40",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.0950000000000002,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.0940000000000003,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.0950000000000002,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 0.9989130434782608,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.16000000000000014,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 0,
+      "missed_events_sum": 0
+    },
+    {
+      "scenario": "short_gap",
+      "profile": "tau50_dwell80",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.125,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.125,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.125,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 0.9989130434782608,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.16000000000000014,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 0,
+      "missed_events_sum": 0
+    },
+    {
+      "scenario": "short_gap",
+      "profile": "tau50_dwell40",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.08499999999999996,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.08499999999999996,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.08499999999999996,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 0.9989130434782608,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.16000000000000014,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 0,
+      "missed_events_sum": 0
+    },
+    {
+      "scenario": "real_measurement",
+      "profile": "tau100_dwell80",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.1429999999999998,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.15000000000000036,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.15000000000000036,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 0.9373913043478261,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.17900000000000027,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 0,
+      "missed_events_sum": 0
+    },
+    {
+      "scenario": "real_measurement",
+      "profile": "tau100_dwell40",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.10000000000000009,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.1070000000000002,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.1070000000000002,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 0.9373913043478261,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.17900000000000027,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 0,
+      "missed_events_sum": 0
+    },
+    {
+      "scenario": "real_measurement",
+      "profile": "tau50_dwell80",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.13600000000000012,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.14100000000000001,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.14100000000000001,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 0.9373913043478261,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.17900000000000027,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 0,
+      "missed_events_sum": 0
+    },
+    {
+      "scenario": "real_measurement",
+      "profile": "tau50_dwell40",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 9.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 2,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.09299999999999997,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.09800000000000075,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.09800000000000075,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 0.9373913043478261,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.17900000000000027,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 2,
+      "missed_events_sum": 0
+    },
+    {
+      "scenario": "real_torque",
+      "profile": "tau100_dwell80",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 11.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 5,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 1,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.15800000000000036,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.15800000000000036,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 0.9371739130434783,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.17799999999999994,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 1,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 0,
+      "fall_hits": 1,
+      "false_events_sum": 5,
+      "missed_events_sum": 1
+    },
+    {
+      "scenario": "real_torque",
+      "profile": "tau100_dwell40",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 22.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 10,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.10899999999999999,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.11500000000000021,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.11500000000000021,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 0.9371739130434783,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.17799999999999994,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 1,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 10,
+      "missed_events_sum": 0
+    },
+    {
+      "scenario": "real_torque",
+      "profile": "tau50_dwell80",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 13.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 10,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 2,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 0.9371739130434783,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.17799999999999994,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 1,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 1,
+        "std": null
+      },
+      "rise_hits": 0,
+      "fall_hits": 0,
+      "false_events_sum": 10,
+      "missed_events_sum": 2
+    },
+    {
+      "scenario": "real_torque",
+      "profile": "tau50_dwell40",
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 30.0,
+        "std": null
+      },
+      "false_events": {
+        "n_available": 1,
+        "mean": 21,
+        "std": null
+      },
+      "missed_events": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.10499999999999998,
+        "std": null
+      },
+      "fall_delay_s": {
+        "n_available": 1,
+        "mean": 0.10800000000000054,
+        "std": null
+      },
+      "max_delay_s": {
+        "n_available": 1,
+        "mean": 0.10800000000000054,
+        "std": null
+      },
+      "trend_valid_rate": {
+        "n_available": 1,
+        "mean": 0.9371739130434783,
+        "std": null
+      },
+      "high_clear_s": {
+        "n_available": 1,
+        "mean": 0.17799999999999994,
+        "std": null
+      },
+      "pre_event_rising": {
+        "n_available": 1,
+        "mean": 1,
+        "std": null
+      },
+      "pre_unload_falling": {
+        "n_available": 1,
+        "mean": 0,
+        "std": null
+      },
+      "rise_hits": 1,
+      "fall_hits": 1,
+      "false_events_sum": 21,
+      "missed_events_sum": 0
+    }
+  ],
+  "trace_audit": [
+    {
+      "scenario": "unload",
+      "seed": 1,
+      "rows": 7001,
+      "invalid_profile_frames": 3232,
+      "sha256": "0897955bafef683d0440373a19c111a1b6fc44b1929ec7c88fa1e2e15ac6ab81"
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 1,
+      "rows": 7001,
+      "invalid_profile_frames": 3252,
+      "sha256": "719754a5049ef31fd4d28b8df3e8a3b79174da40ff7b0d58c5025ca03ef7595f"
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 1,
+      "rows": 7001,
+      "invalid_profile_frames": 4384,
+      "sha256": "b913cbbd913dd0ac6db09aea14a7184e72bee45f88a14aa8c0ddd3160c9faf15"
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 1,
+      "rows": 7001,
+      "invalid_profile_frames": 4388,
+      "sha256": "2b8c4b424226edc893133733be2f7475614eb67e60ed9c0881b73c665565f434"
+    }
+  ],
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "audit_source_sha256": "46bcb427faab9caaad6e781302532c099eb3b9d262492975256e96e7d8bf5bbe"
+}

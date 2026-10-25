@@ -1,3 +1,5 @@
+
+from app_source_view import read_app_source
 import hashlib
 import json
 from pathlib import Path
@@ -49,7 +51,7 @@ class OuterCompletionTests(unittest.TestCase):
         flush='static void '+function(source,'OuterObservation_Flush')
         task=function(source,'ProtectedLoop_TaskService')
         task='static void '+task[:task.index('if (update==HAL_BUSY) return;')+len('if (update==HAL_BUSY) return;')]+'\n}'
-        raw=(ROOT/'foc2_app_a/Core/Src/main.c').read_text()
+        raw=read_app_source(ROOT/'foc2_app_a/Core/Src/main.c')
         start=raw.index('static struct {',raw.index('static OuterCompletionTrace outer_completion_trace;'))
         pending=raw[start:raw.index('} outer_observation;',start)+len('} outer_observation;')]
         code=r'''

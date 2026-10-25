@@ -1,0 +1,522 @@
+{
+  "audit_pass": true,
+  "pairs": 4,
+  "rows_compared": 28004,
+  "pair_repeats": 1,
+  "acceptance": {
+    "real_level_transition_ratio_max": 0.5,
+    "short_gap_unavailable_max_ms": 8,
+    "no_load_false_high_max": 0.01,
+    "high_detect_max_s": 0.8
+  },
+  "gates": {
+    "real_torque_level_switches_halved": true,
+    "short_gap_recovers_without_dob_reset": true,
+    "long_gap_invalidates_and_resets_once": true,
+    "unload_high_detect_within_bound": true
+  },
+  "all_declared_gates_pass": true,
+  "groups": {
+    "unload:0": {
+      "valid_rate": {
+        "n_available": 1,
+        "mean": 1.0,
+        "std": null
+      },
+      "transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 1,
+        "mean": 0.0,
+        "std": null
+      },
+      "event_dob_resets": {
+        "n_available": 1,
+        "mean": 0.0,
+        "std": null
+      },
+      "high_recall": {
+        "n_available": 1,
+        "mean": 0.770625,
+        "std": null
+      },
+      "false_high_rate": {
+        "n_available": 1,
+        "mean": 0.0183333333333333,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.0550000000000002,
+        "std": null
+      },
+      "high_delay_s": {
+        "n_available": 1,
+        "mean": 0.367,
+        "std": null
+      },
+      "release_delay_s": {
+        "n_available": 1,
+        "mean": 0.0549999999999997,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 1,
+        "mean": 0.374,
+        "std": null
+      }
+    },
+    "unload:1": {
+      "valid_rate": {
+        "n_available": 1,
+        "mean": 1.0,
+        "std": null
+      },
+      "transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 1,
+        "mean": 0.0,
+        "std": null
+      },
+      "event_dob_resets": {
+        "n_available": 1,
+        "mean": 0.0,
+        "std": null
+      },
+      "high_recall": {
+        "n_available": 1,
+        "mean": 0.883125,
+        "std": null
+      },
+      "false_high_rate": {
+        "n_available": 1,
+        "mean": 0.0533333333333333,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.135,
+        "std": null
+      },
+      "high_delay_s": {
+        "n_available": 1,
+        "mean": 0.187,
+        "std": null
+      },
+      "release_delay_s": {
+        "n_available": 1,
+        "mean": 0.133999999999999,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 1,
+        "mean": 0.218,
+        "std": null
+      }
+    },
+    "short_gap:0": {
+      "valid_rate": {
+        "n_available": 1,
+        "mean": 0.892826086956522,
+        "std": null
+      },
+      "transitions": {
+        "n_available": 1,
+        "mean": 6.0,
+        "std": null
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 1,
+        "mean": 493.0,
+        "std": null
+      },
+      "event_dob_resets": {
+        "n_available": 1,
+        "mean": 3.0,
+        "std": null
+      },
+      "high_recall": {
+        "n_available": 1,
+        "mean": 0.4625,
+        "std": null
+      },
+      "false_high_rate": {
+        "n_available": 1,
+        "mean": 0.0183333333333333,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.0550000000000002,
+        "std": null
+      },
+      "high_delay_s": {
+        "n_available": 1,
+        "mean": 0.367,
+        "std": null
+      },
+      "release_delay_s": {
+        "n_available": 1,
+        "mean": 0.0549999999999997,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 1,
+        "mean": 0.374,
+        "std": null
+      }
+    },
+    "short_gap:1": {
+      "valid_rate": {
+        "n_available": 1,
+        "mean": 0.998913043478261,
+        "std": null
+      },
+      "transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 1,
+        "mean": 5.0,
+        "std": null
+      },
+      "event_dob_resets": {
+        "n_available": 1,
+        "mean": 0.0,
+        "std": null
+      },
+      "high_recall": {
+        "n_available": 1,
+        "mean": 0.88,
+        "std": null
+      },
+      "false_high_rate": {
+        "n_available": 1,
+        "mean": 0.0533333333333333,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.135,
+        "std": null
+      },
+      "high_delay_s": {
+        "n_available": 1,
+        "mean": 0.187,
+        "std": null
+      },
+      "release_delay_s": {
+        "n_available": 1,
+        "mean": 0.133999999999999,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 1,
+        "mean": 0.218,
+        "std": null
+      }
+    },
+    "long_gap:0": {
+      "valid_rate": {
+        "n_available": 1,
+        "mean": 0.88695652173913,
+        "std": null
+      },
+      "transitions": {
+        "n_available": 1,
+        "mean": 6.0,
+        "std": null
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 1,
+        "mean": 520.0,
+        "std": null
+      },
+      "event_dob_resets": {
+        "n_available": 1,
+        "mean": 30.0,
+        "std": null
+      },
+      "high_recall": {
+        "n_available": 1,
+        "mean": 0.445625,
+        "std": null
+      },
+      "false_high_rate": {
+        "n_available": 1,
+        "mean": 0.0183333333333333,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.0550000000000002,
+        "std": null
+      },
+      "high_delay_s": {
+        "n_available": 1,
+        "mean": 0.367,
+        "std": null
+      },
+      "release_delay_s": {
+        "n_available": 1,
+        "mean": 0.0549999999999997,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 1,
+        "mean": 0.374,
+        "std": null
+      }
+    },
+    "long_gap:1": {
+      "valid_rate": {
+        "n_available": 1,
+        "mean": 0.88695652173913,
+        "std": null
+      },
+      "transitions": {
+        "n_available": 1,
+        "mean": 6.0,
+        "std": null
+      },
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 6.0,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 1,
+        "mean": 520.0,
+        "std": null
+      },
+      "event_dob_resets": {
+        "n_available": 1,
+        "mean": 1.0,
+        "std": null
+      },
+      "high_recall": {
+        "n_available": 1,
+        "mean": 0.558125,
+        "std": null
+      },
+      "false_high_rate": {
+        "n_available": 1,
+        "mean": 0.0533333333333333,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.135,
+        "std": null
+      },
+      "high_delay_s": {
+        "n_available": 1,
+        "mean": 0.187,
+        "std": null
+      },
+      "release_delay_s": {
+        "n_available": 1,
+        "mean": 0.133999999999999,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 1,
+        "mean": 0.218,
+        "std": null
+      }
+    },
+    "real_torque:0": {
+      "valid_rate": {
+        "n_available": 1,
+        "mean": 0.937173913043478,
+        "std": null
+      },
+      "transitions": {
+        "n_available": 1,
+        "mean": 45.0,
+        "std": null
+      },
+      "trend_transitions": {
+        "n_available": 0,
+        "mean": null,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 1,
+        "mean": 3.0,
+        "std": null
+      },
+      "event_dob_resets": {
+        "n_available": 1,
+        "mean": 0.0,
+        "std": null
+      },
+      "high_recall": {
+        "n_available": 1,
+        "mean": 0.065,
+        "std": null
+      },
+      "false_high_rate": {
+        "n_available": 1,
+        "mean": 0.0,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.0700000000000003,
+        "std": null
+      },
+      "high_delay_s": {
+        "n_available": 1,
+        "mean": 0.495,
+        "std": null
+      },
+      "release_delay_s": {
+        "n_available": 1,
+        "mean": 0.0659999999999998,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 1,
+        "mean": 0.294,
+        "std": null
+      }
+    },
+    "real_torque:1": {
+      "valid_rate": {
+        "n_available": 1,
+        "mean": 0.937173913043478,
+        "std": null
+      },
+      "transitions": {
+        "n_available": 1,
+        "mean": 4.0,
+        "std": null
+      },
+      "trend_transitions": {
+        "n_available": 1,
+        "mean": 11.0,
+        "std": null
+      },
+      "max_unavailable_ms": {
+        "n_available": 1,
+        "mean": 3.0,
+        "std": null
+      },
+      "event_dob_resets": {
+        "n_available": 1,
+        "mean": 0.0,
+        "std": null
+      },
+      "high_recall": {
+        "n_available": 1,
+        "mean": 0.831875,
+        "std": null
+      },
+      "false_high_rate": {
+        "n_available": 1,
+        "mean": 0.056,
+        "std": null
+      },
+      "rise_delay_s": {
+        "n_available": 1,
+        "mean": 0.0,
+        "std": null
+      },
+      "high_delay_s": {
+        "n_available": 1,
+        "mean": 0.169,
+        "std": null
+      },
+      "release_delay_s": {
+        "n_available": 1,
+        "mean": 0.157999999999999,
+        "std": null
+      },
+      "return_light_delay_s": {
+        "n_available": 1,
+        "mean": 0.218,
+        "std": null
+      }
+    }
+  },
+  "pairs_audit": [
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 808,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "unload",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 3,
+      "recovery_endpoints": 2,
+      "invalid_feature_epochs": 813,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "short_gap",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 5,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1238,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "long_gap",
+      "seed": 1
+    },
+    {
+      "rows": 7001,
+      "held_missing_epochs": 0,
+      "recovery_endpoints": 0,
+      "invalid_feature_epochs": 1097,
+      "baseline_matches_historical": true,
+      "control_truth_inputs_identical": true,
+      "scenario": "real_torque",
+      "seed": 1
+    }
+  ],
+  "control_adaptation": false,
+  "physical_performance_validated": false,
+  "audit_source_sha256": "b8502e6ea7ea6a4240315a8e87995399ed874f18173f2b1914a6dadd082b874c"
+}

@@ -1,0 +1,53 @@
+{
+  "mode": "full",
+  "scenarios": [
+    "no_load",
+    "step",
+    "ramp",
+    "unload",
+    "spike",
+    "id_anomaly",
+    "source_gap",
+    "noise",
+    "replay",
+    "negative_load",
+    "contact_early",
+    "contact_late",
+    "stop",
+    "fault"
+  ],
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    61,
+    62,
+    63,
+    64,
+    65
+  ],
+  "variants": [
+    "off",
+    "fixed",
+    "adaptive"
+  ],
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "fast_restart": false,
+  "actual_plant_parameters_logged": true,
+  "speed_scheduling": false,
+  "max_gain": 0.25,
+  "gain_rise_per_s": 1,
+  "gain_fall_per_s": 2.5,
+  "saturation_feedback_guard_aligned_to_mcu": true,
+  "acceptance": {
+    "iq_limit_a": 0.500001,
+    "dob_limit_a": 0.025001,
+    "gain_max": 0.250001,
+    "strict_jerk_rpm_s2": 1000.2,
+    "false_contact": 0,
+    "no_new_process_failures": true
+  }
+}

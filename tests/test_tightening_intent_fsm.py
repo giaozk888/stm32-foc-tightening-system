@@ -1,4 +1,6 @@
 """Run the real C process core and backend contract; never hardware."""
+
+from app_source_view import read_app_source
 import hashlib
 import json
 from pathlib import Path
@@ -74,7 +76,7 @@ class IntentFsmTests(unittest.TestCase):
                       'CONTROL_MODE','OUTCOME','FAULT_REASON'):
             self.assertIn(field+'=',binding)
         for slot in 'ab':
-            src=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text()
+            src=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c')
             self.assertIn('MotorJob_HandleUartStart(request_id);',src)
             self.assertIn('MotorJob_QueueStop(request_id);',src)
             self.assertIn('OK STATUS STAGE=',src)

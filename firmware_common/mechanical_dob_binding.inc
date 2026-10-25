@@ -7,9 +7,70 @@ static int32_t MechanicalDob_Fixed(float value,float scale)
     if (v< -2147483000.f) return -2147483000;
     return (int32_t)v;
 }
+#if defined(FOC_DOB_WARMUP_AB)
+#include "dob_warmup_ab_binding.inc"
+#endif
 static uint8_t MechanicalDob_ObserverCommand(const char *cmd,char *out,size_t size)
 {
+#if defined(FOC_DOB_WARMUP_AB)
+    if(DobWarmupAb_Command(cmd,out,size))return 1;
+#endif
     const MechanicalNormalizedModel *m=&mechanical_dob_identified_model;
+#if defined(FOC_DOB_RECOVERY_TIMING)
+    if(!strcmp(cmd,"MOTOR TEST MECH DOB RECOVERY CFG")){
+        snprintf(out,size,"OK DOBREC ABI=1 RECORDS=3 BYTES=48 PENDING=1 RESOLUTION_US=1000 READ=HALTED_RAM DEFAULT_TAU=3 WINDOW_MS=75");return 1;
+    }
+#endif
+#if defined(FOC_DOB_SATURATION_CONTINUE)
+    if(!strcmp(cmd,"MOTOR TEST MECH DOB SAT CFG")){
+        snprintf(out,size,"OK DOBSAT V=1 EST_ON_LIMIT=1 FB_ON_LIMIT=0 INPUT_GATES=ORIGINAL HOLD_US=5000 ZERO_US=20000");return 1;
+    }
+    if(!strcmp(cmd,"MOTOR TEST MECH DOB SAT STATS")){
+        snprintf(out,size,"OK DOBSAT N=%lu IQ=%lu V=%lu VALID=%lu RESET=%lu FB_BLOCK=%lu SKIP=%lu WARM=%lu",
+            (unsigned long)dob_saturation_audit.samples,(unsigned long)dob_saturation_audit.iq_limited,
+            (unsigned long)dob_saturation_audit.voltage_limited,(unsigned long)dob_saturation_audit.limited_valid,
+            (unsigned long)dob_saturation_audit.input_resets,(unsigned long)dob_saturation_audit.feedback_blocks,
+            (unsigned long)dob_saturation_audit.current_skips,(unsigned long)dob_saturation_audit.warmup_frames);return 1;
+    }
+#endif
+#if defined(FOC_NORMAL_RUN_TRIP500)
+    if(!strcmp(cmd,"MOTOR TEST MECH DOB LIMITS")){
+        snprintf(out,size,"OK DOBLIMITS TARGET_RPM=%u GUARD_RPM=%u SPEED_TRIP_RPM=%lu IQ_LIMIT_MA=%lu TRAVEL_DEG=%u LEASE_US=%lu",
+            FOC_RUNDOWN240_TARGET_RPM,CL_OVERSPEED_RPM,(unsigned long)SPEED_OVERSPEED_RPM,
+            (unsigned long)(FOC_RUNDOWN240_IQ_LIMIT_A*1000.f),FOC_RUNDOWN240_MAX_TRAVEL_DEG,
+            (unsigned long)CL_MAX_US);return 1;
+    }
+#endif
+#if defined(FOC_DOB_TREND_SHADOW)
+#if defined(FOC_DOB_TREND_WINDOW75)
+    if(!strcmp(cmd,"MOTOR TEST MECH DOB WINDOW CFG")){
+        snprintf(out,size,"OK DOBWINDOW WINDOW_MS=75 MIN_GOOD=45 MIN_SPAN_US=45000 TREND_TAU_US=100000 TREND_DWELL_US=80000 LEVEL_DWELL_US=30000");return 1;
+    }
+#endif
+#if defined(FOC_DOB_TREND_CONTINUOUS)
+    if(!strcmp(cmd,"MOTOR TEST MECH DOB TREND CFG")){
+        snprintf(out,size,"OK TREND ABI=2 SHADOW=1 TAU_US=100000 DWELL_US=80000 RECORD_US=60000 POINTS=138 EVENTS=32 CONTINUOUS=1");return 1;
+    }
+    if(!strcmp(cmd,"MOTOR TEST MECH DOB TREND")){
+        snprintf(out,size,"OK TREND ABI=2 FLAGS=%lu N=%lu RECORDS=%lu EVENTS=%lu RWRAP=%lu EWRAP=%lu LAST_US=%lu",
+            (unsigned long)dob_trend_continuous.flags,(unsigned long)dob_trend_continuous.observations,
+            (unsigned long)dob_trend_continuous.record_count,(unsigned long)dob_trend_continuous.event_count,
+            (unsigned long)dob_trend_continuous.record_overflow,(unsigned long)dob_trend_continuous.event_dropped,
+            (unsigned long)dob_trend_continuous.last_record_us);return 1;
+    }
+#else
+    if(!strcmp(cmd,"MOTOR TEST MECH DOB TREND CFG")){
+        snprintf(out,size,"OK TREND ABI=1 SHADOW=1 TAU_US=100000 DWELL_US=80000 SPAN_US=100000 GAP_US=20000 RECORD_US=8000 POINTS=144 PROXY_UA=10000");return 1;
+    }
+    if(!strcmp(cmd,"MOTOR TEST MECH DOB TREND")){
+        snprintf(out,size,"OK TREND FLAGS=%lu N=%lu ARM_US=%lu RISE_US=%lu CONFIRM_US=%lu FALL_US=%lu RELEASE_US=%lu",
+            (unsigned long)dob_trend_shadow.flags,(unsigned long)dob_trend_shadow.observations,
+            (unsigned long)dob_trend_shadow.arm_us,(unsigned long)dob_trend_shadow.proxy_rise_us,
+            (unsigned long)dob_trend_shadow.trend_rise_us,(unsigned long)dob_trend_shadow.proxy_fall_us,
+            (unsigned long)dob_trend_shadow.trend_fall_us);return 1;
+    }
+#endif
+#endif
 #if defined(FOC_DOB_CONTACT20_OBSERVE10)
     if(!strcmp(cmd,"MOTOR TEST MECH DOB SPEEDS")){
         snprintf(out,size,"OK DOBSPEED CONTACT_RPM=20 OBS_MIN_MRPM=10000 FB_MIN_MRPM=20000 RAM_ONLY=1");return 1;

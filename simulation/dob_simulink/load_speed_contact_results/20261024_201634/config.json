@@ -1,0 +1,29 @@
+{
+  "scenarios": [
+    "no_load",
+    "contact_early",
+    "contact_late",
+    "contact_cancel",
+    "source_gap",
+    "unload",
+    "stop",
+    "fault"
+  ],
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    61,
+    62,
+    63,
+    64,
+    65
+  ],
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "fixture_release_after_contact_s": 0.08,
+  "workspace_source_time_shift_s": -1E-9,
+  "pi_and_protections_unchanged": true
+}

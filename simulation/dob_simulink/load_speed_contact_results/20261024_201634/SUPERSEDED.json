@@ -1,0 +1,6 @@
+{
+  "accepted_for_performance": false,
+  "reason": "Independent prefix audit failed after resume. Dedicated probe confirmed non-tunable plant parameters remained cached under Fast Restart. Requested parameter metadata was not actual consumption evidence.",
+  "replacement": "20261024_203525",
+  "preserve_original_files": true
+}

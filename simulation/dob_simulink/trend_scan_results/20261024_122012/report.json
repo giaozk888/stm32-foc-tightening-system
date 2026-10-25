@@ -1,0 +1,37 @@
+{
+  "completed": true,
+  "model_runs": 4,
+  "classification_evaluations": 16,
+  "repeats": 1,
+  "control_adaptation": false,
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "frozen_sources_unchanged": true,
+  "runs": [
+    {
+      "scenario": "unload",
+      "seed": 1,
+      "rows": 7001,
+      "profile_count": 4
+    },
+    {
+      "scenario": "short_gap",
+      "seed": 1,
+      "rows": 7001,
+      "profile_count": 4
+    },
+    {
+      "scenario": "real_measurement",
+      "seed": 1,
+      "rows": 7001,
+      "profile_count": 4
+    },
+    {
+      "scenario": "real_torque",
+      "seed": 1,
+      "rows": 7001,
+      "profile_count": 4
+    }
+  ],
+  "results": "D:\\new project\\simulation\\dob_simulink\\trend_scan_results\\20261024_122012"
+}

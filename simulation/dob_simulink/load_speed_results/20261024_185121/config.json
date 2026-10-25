@@ -1,0 +1,25 @@
+{
+  "mode": "smoke",
+  "scenarios": [
+    "no_load",
+    "step",
+    "contact_early"
+  ],
+  "seeds": 1,
+  "repeats": 1,
+  "hardware_access": false,
+  "policy_fixed_before_runs": true,
+  "physical_performance_validated": false,
+  "feedback_gain": 0.25,
+  "iq_limit": 0.5,
+  "workspace_source_time_shift_s": -1E-9,
+  "acceptance": {
+    "false_contact": 0,
+    "command_limit_a": 0.500001,
+    "target_floor_rpm": 120,
+    "max_accel_rpm_s": 200.01,
+    "max_jerk_rpm_s2": 1000.2,
+    "no_new_faults": true,
+    "missed_contact": 0
+  }
+}

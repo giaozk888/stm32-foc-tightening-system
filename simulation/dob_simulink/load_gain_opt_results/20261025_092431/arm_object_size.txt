@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+    764	      0	     56	    820	    334	tmp/load_gain_opt_arm_probe.o

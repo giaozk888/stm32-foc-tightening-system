@@ -1,4 +1,6 @@
 """Offline contracts for the two-slot locked diagnostic profile."""
+
+from app_source_view import read_app_source
 import re
 import unittest
 from pathlib import Path
@@ -8,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class LockedProfileTests(unittest.TestCase):
     def test_both_slot_startups_divert_before_normal_initialization(self):
         for slot in "ab":
-            text = (ROOT / f"foc2_app_{slot}/Core/Src/main.c").read_text(encoding="utf-8")
+            text = read_app_source(ROOT / f"foc2_app_{slot}/Core/Src/main.c",encoding="utf-8")
             start = text[text.index("static void StartupTask(void *argument)\n{"):]
             self.assertLess(start.index("ZeroRetest_RunForever();"), start.index("PW_Kvs_Init()"))
             self.assertLess(start.index("ZeroRetest_RunForever();"), start.index("PWM_StartAll();"))

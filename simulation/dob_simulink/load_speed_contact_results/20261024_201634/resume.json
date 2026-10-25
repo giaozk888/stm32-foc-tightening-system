@@ -1,0 +1,11 @@
+{
+  "completed_before_resume": 91,
+  "source_changes": [
+    {
+      "path": "D:\\new project\\simulation\\dob_simulink\\run_load_speed_contact.m",
+      "old": "0c2abbb0630226963e065a914312da287fd269df6d5f8a2dba402f9a154ba77b",
+      "new": "416b76344f5bb2649d4827f8426898c482f144620fb3012422dfa6bf207b2351",
+      "meaning": "Resume orchestration only; controller and plant unchanged"
+    }
+  ]
+}

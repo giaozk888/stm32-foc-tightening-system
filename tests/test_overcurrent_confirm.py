@@ -1,4 +1,6 @@
 """Offline candidate tests, explicitly not powered protection qualification."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import unittest
 import test_median_control_integration as binding
@@ -11,7 +13,7 @@ class OvercurrentConfirmTests(unittest.TestCase):
 
     def test_candidate_cannot_silently_change_application_gate(self):
         for slot in 'ab':
-            src=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            src=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             self.assertNotIn('foc_overcurrent_confirm.h',src)
             self.assertNotIn('FocOcConfirm_',src)
             self.assertIn('physical_trip ||',src)

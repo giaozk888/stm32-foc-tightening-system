@@ -1,4 +1,6 @@
 """Actual firmware four-point core, runtime include and locked zero binding."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import subprocess
 import unittest
@@ -34,7 +36,7 @@ class ProductionTrend4Tests(reference.TrendCandidateTests):
 
     def test_ab_control_and_safety_contracts(self):
         for slot in 'ab':
-            source=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            source=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             function=source[source.index('static void FOC_CurrentLoopStep(uint16_t u_raw, uint16_t v_raw,\n'):
                             source.index('static HAL_StatusTypeDef FOC_EncoderSpeedUpdate(float dt_s)\n{')]
             self.assertIn('FocTrend4_RawTrip(u_physical, v_physical',function)

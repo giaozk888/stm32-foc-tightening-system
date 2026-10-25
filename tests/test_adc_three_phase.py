@@ -1,6 +1,8 @@
 """Actual C adapter/CRC under a HAL model and offline transcript contracts.
 No electrical, timing, powered control, UART or SWD validation.
 """
+
+from app_source_view import read_app_source
 import ctypes
 from pathlib import Path
 import random
@@ -129,7 +131,7 @@ class ThreePhaseExportTests(unittest.TestCase):
             cmake = (ROOT / f"foc2_app_{slot}/CMakeLists.txt").read_text(encoding="utf-8")
             self.assertIn('option(ADC_DMA_THREE_PHASE_DIAGNOSTIC', cmake)
             self.assertIn('ADC_DMA_THREE_PHASE_DIAGNOSTIC AND NOT ADC_DMA_RAW_DIAGNOSTIC', cmake)
-            main = (ROOT / f"foc2_app_{slot}/Core/Src/main.c").read_text(encoding="utf-8")
+            main = read_app_source(ROOT / f"foc2_app_{slot}/Core/Src/main.c",encoding="utf-8")
             self.assertIn("iw_A = -(iu_A + iv_A);", main)
         console = (ROOT / "firmware_common/adc_three_phase_console.inc").read_text(encoding="utf-8")
         for key in ('"ADC 3PH SAMPLE"',

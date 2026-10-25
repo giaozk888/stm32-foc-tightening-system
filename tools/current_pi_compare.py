@@ -8,6 +8,7 @@ import ctypes
 import json
 import math
 from pathlib import Path
+from app_a_source_layout import read_app_source
 import subprocess
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -19,7 +20,7 @@ class State(ctypes.Structure):
 
 
 def pi_source():
-    source=(ROOT/'foc2_app_a/Core/Src/main.c').read_text('utf-8')
+    source=read_app_source(ROOT/'foc2_app_a/Core/Src/main.c',encoding='utf-8')
     start=source.index('    err_d = foc_id_ref_A - id_A;')
     end=source.index('#endif /* Exclusive voltage diagnostic, original current PI otherwise. */',start)
     return source[start:end]

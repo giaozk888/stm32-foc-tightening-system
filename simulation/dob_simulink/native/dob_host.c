@@ -8,6 +8,10 @@
 #include "speed_scurve.h"
 #include "speed_bumpless.h"
 #include "dob_contact20_observe10.h"
+#if defined(DOB_OFFLINE_SOURCE_GAP_FIX)
+#include "offline_source_gap.h"
+static OfflineSourceGap source_gap;
+#endif
 
 float dob_host_gain=.25f;
 static MechanicalDobMonitor monitor;
@@ -17,6 +21,9 @@ static float integral,speed_lpf,cap_a,travel;
 static unsigned resets,epoch_resets,reset_reason,fault,have_speed;
 static double last_time=-1,cached[DOB_NY];
 typedef struct {
+#if defined(DOB_OFFLINE_SOURCE_GAP_FIX)
+    OfflineSourceGap source_gap;
+#endif
     MechanicalDobMonitor monitor;
     DobCurrentAdmission admission;
     DobFeedbackCandidate feedback;
@@ -28,6 +35,9 @@ typedef struct {
 unsigned dob_host_state_size(void){return (unsigned)sizeof(OfflineSnapshot);}
 void dob_host_save(void *buffer){
     OfflineSnapshot s={0};
+#if defined(DOB_OFFLINE_SOURCE_GAP_FIX)
+    s.source_gap=source_gap;
+#endif
     s.monitor=monitor;s.admission=dob_current_admission;s.feedback=feedback;s.trajectory=trajectory;
     s.integral=integral;s.speed_lpf=speed_lpf;s.cap_a=cap_a;s.travel=travel;s.gain=dob_host_gain;
     s.resets=resets;s.epoch_resets=epoch_resets;s.reset_reason=reset_reason;s.fault=fault;s.have_speed=have_speed;
@@ -35,6 +45,9 @@ void dob_host_save(void *buffer){
 }
 void dob_host_restore(const void *buffer){
     OfflineSnapshot s;memcpy(&s,buffer,sizeof s);
+#if defined(DOB_OFFLINE_SOURCE_GAP_FIX)
+    source_gap=s.source_gap;
+#endif
     monitor=s.monitor;dob_current_admission=s.admission;feedback=s.feedback;trajectory=s.trajectory;
     integral=s.integral;speed_lpf=s.speed_lpf;cap_a=s.cap_a;travel=s.travel;dob_host_gain=s.gain;
     resets=s.resets;epoch_resets=s.epoch_resets;reset_reason=s.reset_reason;fault=s.fault;have_speed=s.have_speed;
@@ -52,6 +65,9 @@ void dob_host_configure(const double *config){
     if(!feedback.enabled)DobFeedback_Clear(&feedback);
 }
 void dob_host_reset(const double *config) {
+#if defined(DOB_OFFLINE_SOURCE_GAP_FIX)
+    memset(&source_gap,0,sizeof source_gap);
+#endif
     memset(&monitor,0,sizeof monitor);memset(&feedback,0,sizeof feedback);
     memset(&dob_current_admission,0,sizeof dob_current_admission);
     dob_host_configure(config);
@@ -99,9 +115,17 @@ void dob_host_step(double time_s,const double *u,double *y) {
         integral=result.speed.integral_a;
         MechanicalCurrent c={2,(uint32_t)(time_s*20000+.5)+20,now-20,now,id,iq,
             u[7]!=0?MEC_SATURATED:0};
+#if defined(DOB_OFFLINE_SOURCE_GAP_FIX)
+        OfflineSourceGap_Observe(&source_gap,&monitor,now+20,now-(uint32_t)u[8],1000,
+#else
         MechanicalDobMonitor_Observe(&monitor,now+20,now-(uint32_t)u[8],1000,
+#endif
             speed_lpf*(2*pi/60),result.speed.saturated,&c,(uint8_t)(u[6]!=0));
-    }else{DobFeedback_Clear(&feedback);integral=0;comp=0;}
+    }else{DobFeedback_Clear(&feedback);integral=0;comp=0;
+#if defined(DOB_OFFLINE_SOURCE_GAP_FIX)
+        source_gap.pending=0;
+#endif
+    }
     double out[DOB_NY]={ref,speed_lpf,trajectory.acceleration_rpm_s,
         result.speed.iq_pi_a,result.speed.iq_ff_a,result.iq_fric_a,
         result.speed.iq_raw_a,result.speed.iq_ref_a,integral,comp,
@@ -123,7 +147,11 @@ void dob_host_observe(const double *u,double *y){
     MechanicalDobMonitor_Lifecycle(&monitor,(uint8_t)u[12],(uint8_t)u[13]);
     MechanicalCurrent c={2,(uint32_t)u[6],(uint32_t)u[7],(uint32_t)u[8],
         (float)u[4],(float)u[5],(uint32_t)u[11]};
+#if defined(DOB_OFFLINE_SOURCE_GAP_FIX)
+    OfflineSourceGap_Observe(&source_gap,&monitor,(uint32_t)u[0],(uint32_t)u[1],(uint32_t)u[2],
+#else
     MechanicalDobMonitor_Observe(&monitor,(uint32_t)u[0],(uint32_t)u[1],(uint32_t)u[2],
+#endif
         (float)u[3],(uint8_t)u[10],&c,(uint8_t)u[9]);
     memset(y,0,DOB_NY*sizeof(double));
     y[10]=monitor.current.disturbance_a;y[11]=monitor.current.valid;y[12]=monitor.current.status;

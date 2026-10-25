@@ -1,4 +1,6 @@
 """Offline-only actual C execution and A/B integration contracts."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import subprocess
 import unittest
@@ -26,7 +28,7 @@ class MedianControlTests(unittest.TestCase):
 
     def test_both_slots_use_shared_primitive_and_publish_after_validation(self):
         for slot in 'ab':
-            src = (ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text(encoding='utf-8')
+            src = read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c',encoding='utf-8')
             calibration = src[src.index('static HAL_StatusTypeDef ADC_RunZeroCalibrate(void)\n{'):
                               src.index('void HAL_ADCEx_InjectedConvCpltCallback')]
             self.assertLess(calibration.index('FocCurrentMedian_Begin'),

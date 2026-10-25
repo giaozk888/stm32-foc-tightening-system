@@ -1,3 +1,5 @@
+
+from app_source_view import read_app_source
 from pathlib import Path
 import subprocess
 import unittest
@@ -46,7 +48,7 @@ class ProtectedLoopTests(unittest.TestCase):
         self.assertIn('boot.pending_slot==BOOT_SLOT_NONE',binding)
         self.assertIn('boot.attempts_left==0U',binding)
         for slot in 'ab':
-            source=(ROOT/f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            source=read_app_source(ROOT/f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             self.assertIn('ProtectedLoop_TaskService();',source)
             self.assertIn('ProtectedLoop_Shutdown();',source)
             self.assertIn('#include "protected_adc_irq.inc"',source)

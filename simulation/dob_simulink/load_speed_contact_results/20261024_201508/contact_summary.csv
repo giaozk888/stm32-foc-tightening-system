@@ -1,0 +1,5 @@
+scene,revision,n,done_count,timeout_count,contact_entries_n,contact_entries_mean,contact_entries_std,cancel_events_n,cancel_events_mean,cancel_events_std,target_raise_on_contact_n,target_raise_on_contact_mean,target_raise_on_contact_std,contact_entry_rpm_n,contact_entry_rpm_mean,contact_entry_rpm_std,done_s_n,done_s_mean,done_s_std,slow_ms_n,slow_ms_mean,slow_ms_std,max_iq_a_n,max_iq_a_mean,max_iq_a_std,iq_sat_ms_n,iq_sat_ms_mean,iq_sat_ms_std,max_jerk_rpm_s2_n,max_jerk_rpm_s2_mean,max_jerk_rpm_s2_std,unload_recovery_ms_n,unload_recovery_ms_mean,unload_recovery_ms_std
+contact_early,legacy,1,1,0,1,1,0,1,0,0,1,1,0,1,0.0,0,1,6.042,0,1,1785.0,0,1,0.5,0,1,223,0,1,1000.000000000199,0,0,,
+contact_early,candidate,1,1,0,1,1,0,1,0,0,1,0,0,1,0.0,0,1,6.042,0,1,2035.0,0,1,0.5,0,1,222,0,1,1000.000000000199,0,0,,
+contact_cancel,legacy,1,0,1,1,1,0,1,0,0,1,1,0,1,0.0,0,0,,,1,5622.0,0,1,0.5,0,1,54,0,1,1000.2365466207259,0,0,,
+contact_cancel,candidate,1,0,1,1,1,0,1,1,0,1,0,0,1,0.0,0,0,,,1,5897.0,0,1,0.5,0,1,52,0,1,1000.1227017492056,0,0,,

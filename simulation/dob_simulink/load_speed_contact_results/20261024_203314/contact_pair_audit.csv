@@ -1,0 +1,3 @@
+scene,seed,exogenous_identical,prefix_outputs_identical,first_hold_index
+contact_early,1,True,True,3941
+contact_cancel,1,True,True,3941

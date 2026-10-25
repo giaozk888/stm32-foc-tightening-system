@@ -1,0 +1,28 @@
+{
+  "unique_source_pins": 285,
+  "regressions": 50,
+  "new_runs": 420,
+  "reference_runs": 420,
+  "hardware_access": false,
+  "physical_performance_validated": false,
+  "hardware_tested_A_image_unchanged": true,
+  "caveat": "Archived SLX uses original workspace DLL path; archived DLL and exact ABI/source snapshots retained.",
+  "implementation_checks_pass": true,
+  "performance_pass": {
+    "adaptive": false,
+    "fast": true,
+    "floor": true,
+    "combined": true
+  },
+  "plot_files": [
+    "no_load_optimisation.png",
+    "optimisation_mean_std.png",
+    "source_gap_optimisation.png",
+    "step_optimisation.png",
+    "unload_optimisation.png"
+  ],
+  "report_document": "docs/dob-load-gain-optimisation-results-20261025.md",
+  "verified_unique_audit_pins": 287,
+  "all_source_pins_unchanged": true,
+  "normal_configuration_replaced": false
+}

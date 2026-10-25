@@ -1,4 +1,6 @@
 """Offline raw CRC/reference and locked-service source contracts; no hardware."""
+
+from app_source_view import read_app_source
 import ctypes
 from pathlib import Path
 import random
@@ -128,7 +130,7 @@ class DmaContracts(unittest.TestCase):
         for slot in "ab":
             cmake = (ROOT / f"foc2_app_{slot}/CMakeLists.txt").read_text(encoding="utf-8")
             self.assertIn("ADC_DMA_RAW_DIAGNOSTIC AND NOT ZERO_RETEST_BOOT", cmake)
-            main = (ROOT / f"foc2_app_{slot}/Core/Src/main.c").read_text(encoding="utf-8")
+            main = read_app_source(ROOT / f"foc2_app_{slot}/Core/Src/main.c",encoding="utf-8")
             self.assertIn("AdcDmaDiag_Error(hadc);", main)
 
 

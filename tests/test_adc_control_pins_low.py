@@ -1,4 +1,6 @@
 """Offline GPIO/HAL model; never connects to a board."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import subprocess
 import sys
@@ -116,7 +118,7 @@ class ActiveLowTests(unittest.TestCase):
 
     def test_default_off_and_startup_order_both_slots(self):
         for slot in "ab":
-            source = (ROOT / f"foc2_app_{slot}/Core/Src/main.c").read_text(encoding="utf-8")
+            source = read_app_source(ROOT / f"foc2_app_{slot}/Core/Src/main.c",encoding="utf-8")
             init = source[source.index("  MX_GPIO_Init();"):]
             self.assertLess(init.index("MX_TIM1_Init();"), init.index("AdcControlPins_InitLow();"))
             self.assertLess(init.index("AdcControlPins_InitLow();"), init.index("MX_ADC1_Init();"))

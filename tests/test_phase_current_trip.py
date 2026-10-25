@@ -1,4 +1,6 @@
 """Offline source/predicate contracts, not powered current-protection validation."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import re
 import subprocess
@@ -11,7 +13,7 @@ class PhaseCurrentTripTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.sources = [
-            (ROOT / f"foc2_app_{slot}/Core/Src/main.c").read_text(encoding="utf-8")
+            read_app_source(ROOT / f"foc2_app_{slot}/Core/Src/main.c",encoding="utf-8")
             for slot in "ab"
         ]
 

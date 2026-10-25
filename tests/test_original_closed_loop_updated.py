@@ -1,4 +1,6 @@
 """Offline original-control numeric/profile checks; never touches hardware."""
+
+from app_source_view import read_app_source
 import hashlib
 import json
 from pathlib import Path
@@ -50,7 +52,7 @@ class UpdatedOriginalControl(unittest.TestCase):
         names = ('FOC_CURRENT_TRIP_A', 'RUN_ZERO_MAX_DELTA_COUNTS', 'FOC_TS_S',
                  'MOTOR_SPEED_IQ_LIMIT_A', 'MOTOR_DIRECT_IQ_LIMIT_A', 'FOC_VOLTAGE_LIMIT_V')
         for slot in 'ab':
-            source = (ROOT / f'foc2_app_{slot}/Core/Src/main.c').read_text('utf-8')
+            source = read_app_source(ROOT / f'foc2_app_{slot}/Core/Src/main.c','utf-8')
             arguments = []
             for name in names:
                 value = re.search(r'^#define\s+' + name + r'\s+([0-9.]+f?)\b', source, re.M)[1]

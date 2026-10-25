@@ -110,3 +110,8 @@ slprj/
 /simulation/dob_simulink/**/feedback_aware_results/
 /simulation/dob_simulink/**/feedback_aware_smoke/
 # Selected small result summaries are intentionally tracked in this snapshot.
+
+# Rebuildable Simulink models and large plotting traces; preserve local evidence.
+/simulation/dob_simulink/*_work/*.slx
+/simulation/dob_simulink/*_results/**/*.slx
+/simulation/dob_simulink/*_results/**/plot_inputs/

@@ -1,4 +1,6 @@
 """Actual C guard + extracted production FSM regressions; no hardware."""
+
+from app_source_view import read_app_source
 from pathlib import Path
 import re
 import subprocess
@@ -33,7 +35,7 @@ class RundownTests(unittest.TestCase):
         self.run_c('guard',(ROOT/'tests/rundown_guard_host.c').read_text())
 
     def actual_switch_source(self,protected=False):
-        text=(ROOT/'foc2_app_a/Core/Src/main.c').read_text()
+        text=read_app_source(ROOT/'foc2_app_a/Core/Src/main.c')
         enums='\n'.join(re.findall(r'typedef enum\s*\{[^}]+\}\s*(?:TighteningTestStage_t|TighteningOutcome_t);',text))
         block=extract_braces(text,text.index('switch (tightening_test_stage)',text.index('static void TighteningTask(void *argument)\n{')))
         return ('#define FOC_PROTECTED_CLOSED_LOOP 1\n' if protected else '')+(ROOT/'tests/rundown_fsm_host_prefix.h').read_text()+'\n'+enums+'''
@@ -171,7 +173,7 @@ int main(void) {
 ''')
 
     def test_both_slots_identical_fsm_and_reset_before_start(self):
-        texts=[(ROOT/f'foc2_app_{s}/Core/Src/main.c').read_text() for s in 'ab']
+        texts=[read_app_source(ROOT/f'foc2_app_{s}/Core/Src/main.c') for s in 'ab']
         blocks=[extract_braces(x,x.index('static void TighteningTask(void *argument)\n{')) for x in texts]
         self.assertEqual(*blocks)
         for text in texts:

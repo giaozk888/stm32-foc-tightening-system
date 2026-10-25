@@ -10,6 +10,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+from app_a_source_layout import read_app_source
 import re
 import subprocess
 import zlib
@@ -70,7 +71,7 @@ def handoff():
 
 
 def compile_quantizer(out):
-    source=(ROOT/'foc2_app_a/Core/Src/main.c').read_text()
+    source=read_app_source(ROOT/'foc2_app_a/Core/Src/main.c')
     # Take the unchanged real inverse Park -> centered SVPWM arithmetic.
     start=source.index('    v_alpha = vd * c - vq * s;')
     body=source[start:source.index('    PWM_SetDuty(du, dv, dw);',start)]

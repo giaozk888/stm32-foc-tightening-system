@@ -1,0 +1,5 @@
+scene,seed,revision,contact_entries,cancel_events,target_raise_on_contact,contact_entry_rpm,done,done_s,timeout,slow_ms,max_iq_a,iq_sat_ms,max_jerk_rpm_s2,unload_recovery_ms
+contact_early,1,legacy,1,0,1,0.0,True,6.042,False,1785.0,0.5,223,1000.000000000199,
+contact_early,1,candidate,1,0,0,0.0,True,6.042,False,2035.0,0.5,222,1000.000000000199,
+contact_cancel,1,legacy,1,0,1,0.0,False,,True,5622.0,0.5,54,1000.2365466207259,
+contact_cancel,1,candidate,1,1,0,0.0,False,,True,5897.0,0.5,52,1000.1227017492056,
